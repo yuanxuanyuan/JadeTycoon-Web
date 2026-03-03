@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  min-height: 100vh;
+  display: block;
+}
+
+body {
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* ── 原石浮动 ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0)   rotate(-1deg); }
+  50%       { transform: translateY(-7px) rotate(1deg); }
+}
+
+/* ── 切割震动 ── */
+@keyframes crack {
+  0%   { transform: scale(1)    rotate(0deg); }
+  15%  { transform: scale(1.12) rotate(-4deg); filter: brightness(1.8); }
+  35%  { transform: scale(0.91) rotate(4deg); }
+  55%  { transform: scale(1.07) rotate(-2deg); }
+  75%  { transform: scale(0.97) rotate(1deg); }
+  100% { transform: scale(1)    rotate(0deg); filter: brightness(1); }
+}
+
+/* ── Toast 飞入 ── */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(50px) scale(0.88); }
+  to   { opacity: 1; transform: translateX(0)     scale(1); }
+}
+
+/* ── 传说原石光芒扫过 ── */
+@keyframes legendaryShine {
+  0%   { background-position: -300% center; }
+  100% { background-position:  300% center; }
+}
+
+/* ── 传说原石脉冲 ── */
+@keyframes legendaryPulse {
+  0%, 100% { box-shadow: 0 0 18px #d9770688, 0 0 4px #d9770644; }
+  50%       { box-shadow: 0 0 30px #d97706bb, 0 0 12px #d9770666; }
+}
+
+/* ── 升级小红点脉冲 ── */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* ── 市场卡片悬停 ── */
+.market-card-hover {
+  transition: all 0.25s ease !important;
+}
+.market-card-hover:hover {
+  transform: translateY(-3px) scale(1.015) !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.55) !important;
+}
+
+/* ── 刷新按钮 ── */
+.refresh-btn:hover {
+  background: rgba(51,65,85,0.9) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(100,116,139,0.7) !important;
+}
+
+/* ── 升级按钮 ── */
+.upgrade-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ── 日志按钮 ── */
+.log-btn:hover {
+  background: rgba(30,58,138,0.4) !important;
+  border-color: rgba(96,165,250,0.5) !important;
+  transform: translateY(-1px);
+}
+
+/* ── 传说光带 ── */
+.legendary-shine {
+  animation: legendaryShine 3s linear infinite;
+}
+
+/* ── 动画 class ── */
+.animate-float  { animation: float  3.5s ease-in-out infinite; }
+.animate-crack  { animation: crack  0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+.toast-enter    { animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+/* ── 直播弹幕滚动 ── */
+@keyframes barrageScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-200vw); }
+}
+
+/* ── 滚动条美化 ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: rgba(13,20,36,0.5); }
+::-webkit-scrollbar-thumb { background: rgba(51,65,85,0.8); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(71,85,105,0.9); }
+
+/* ── 移动端响应式 ── */
+@media (max-width: 768px) {
+  html { font-size: 14px; -webkit-text-size-adjust: 100%; }
+  .app-header-inner { padding: 0 12px !important; height: auto !important; min-height: 54px; flex-wrap: wrap; gap: 8px; padding-top: 8px !important; padding-bottom: 8px !important; }
+  .app-header-stats { flex-wrap: wrap; gap: 6px; justify-content: flex-start !important; }
+  .app-main { flex-direction: column !important; padding: 12px !important; gap: 12px !important; }
+  .app-aside { width: 100% !important; max-width: 100%; }
+  .app-workbench-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important; gap: 10px !important; }
+  .app-tip-grid { grid-template-columns: 1fr 1fr !important; }
+  .toast-container { bottom: 12px !important; right: 12px !important; left: 12px !important; max-width: 100%; }
+  .menu-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .menu-container { padding: 16px !important; max-width: 100%; }
+}
+@media (max-width: 480px) {
+  html { font-size: 13px; }
+  .app-header-stats .stat-cell { min-width: 70px !important; padding: 4px 8px !important; font-size: 11px !important; }
+  .app-workbench-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .app-tip-grid { grid-template-columns: 1fr !important; }
+}
