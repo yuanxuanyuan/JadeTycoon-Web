@@ -123,7 +123,32 @@ body {
 }
 @media (max-width: 480px) {
   html { font-size: 13px; }
-  .app-header-stats .stat-cell { min-width: 70px !important; padding: 4px 8px !important; font-size: 11px !important; }
+  .app-header-stats .stat-cell { min-width: 64px !important; padding: 4px 8px !important; font-size: 10px !important; }
+  .app-header-stats .stat-cell p:last-child { font-size: 12px !important; }
   .app-workbench-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .app-tip-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── 弹窗移动端优化 ── */
+@media (max-width: 768px) {
+  .modal-overlay { padding: 8px !important; align-items: flex-end !important; }
+  .npc-modal-box { height: 92vh !important; max-height: 92dvh !important; border-radius: 20px 20px 0 0 !important; }
+  .npc-modal-body { flex-direction: column !important; }
+  .npc-modal-left { width: 100% !important; max-height: 42vh !important; border-right: none !important; border-bottom: 1px solid rgba(30,41,59,.6) !important; flex-shrink: 0 !important; }
+  .npc-modal-right { flex: 1 !important; min-height: 0 !important; padding: 12px !important; }
+  .npc-modal-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+}
+
+@media (max-width: 480px) {
+  .npc-modal-left { max-height: 38vh !important; padding: 8px !important; }
+  .npc-modal-right { padding: 10px !important; }
+  .npc-modal-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+}
+
+/* 人脉档案弹窗移动端 */
+@media (max-width: 768px) {
+  .npc-roster-modal { height: 92vh !important; max-height: 92dvh !important; border-radius: 20px 20px 0 0 !important; }
+  .npc-roster-body { flex-direction: column !important; }
+  .npc-roster-left { width: 100% !important; max-height: 200px !important; border-right: none !important; border-bottom: 1px solid rgba(30,41,59,.6) !important; flex-shrink: 0 !important; }
+  .npc-roster-right { flex: 1 !important; min-height: 0 !important; padding: 14px !important; overflow-y: auto !important; }
 }

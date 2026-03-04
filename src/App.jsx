@@ -1628,18 +1628,18 @@ function NpcModal({ stone, npcRelations, onSellToNpc, onClose, npcOfferMult = 1,
   const selData  = selected ? offerMap[selected.id] : null
 
   return (
-    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.82)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
-      <div onClick={e => e.stopPropagation()} style={{
+    <div onClick={onClose} className="modal-overlay" style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.82)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:12 }}>
+      <div onClick={e => e.stopPropagation()} className="npc-modal-box" style={{
         background:'linear-gradient(160deg,#060d1c,#0c1a30)',
         border:`1px solid ${isBrick ? 'rgba(239,68,68,.45)' : 'rgba(51,65,85,.75)'}`,
-        borderRadius:22, width:'100%', maxWidth:860, height:'88vh',
+        borderRadius:22, width:'100%', maxWidth:860, height:'88vh', maxHeight:'95dvh',
         display:'flex', flexDirection:'column',
         boxShadow:`0 32px 80px ${isBrick ? 'rgba(180,30,30,.55)' : 'rgba(0,0,0,.85)'}`, overflow:'hidden',
       }}>
 
         {/* ── 顶栏 ── */}
-        <div style={{ padding:'14px 20px', borderBottom:`1px solid ${isBrick ? 'rgba(239,68,68,.22)' : 'rgba(30,41,59,.65)'}`, background: isBrick ? 'rgba(35,6,6,.85)' : 'rgba(8,15,28,.75)', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+        <div style={{ padding:'12px 14px', borderBottom:`1px solid ${isBrick ? 'rgba(239,68,68,.22)' : 'rgba(30,41,59,.65)'}`, background: isBrick ? 'rgba(35,6,6,.85)' : 'rgba(8,15,28,.75)', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8, minWidth:0, flex:1 }}>
             <span style={{ fontSize:20 }}>{isBrick ? '⚠️' : '🤝'}</span>
             <div>
               <p style={{ fontWeight:800, fontSize:15, color: isBrick ? '#fca5a5' : '#f1f5f9', margin:0 }}>
@@ -1655,10 +1655,10 @@ function NpcModal({ stone, npcRelations, onSellToNpc, onClose, npcOfferMult = 1,
         </div>
 
         {/* ── 主体：左侧网格 + 右侧详情 ── */}
-        <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
+        <div className="npc-modal-body" style={{ flex:1, display:'flex', overflow:'hidden', minHeight:0 }}>
 
           {/* 左侧：NPC 网格 */}
-          <div style={{ width: selected ? 300 : '100%', flexShrink:0, overflowY:'auto', padding:'12px', borderRight: selected ? '1px solid rgba(30,41,59,.6)' : 'none', transition:'width .25s' }}>
+          <div className="npc-modal-left" style={{ width: selected ? 300 : '100%', flexShrink:0, overflowY:'auto', padding:'12px', borderRight: selected ? '1px solid rgba(30,41,59,.6)' : 'none', transition:'width .25s' }}>
             {isBrick && (
               <div style={{ marginBottom:10, padding:'7px 12px', background:'rgba(127,29,29,.35)', borderRadius:10, border:'1px solid rgba(239,68,68,.25)', display:'flex', gap:8, alignItems:'flex-start' }}>
                 <span style={{ fontSize:13, flexShrink:0 }}>🎭</span>
@@ -1669,7 +1669,7 @@ function NpcModal({ stone, npcRelations, onSellToNpc, onClose, npcOfferMult = 1,
               </div>
             )}
 
-            <div style={{ display:'grid', gridTemplateColumns: selected ? '1fr 1fr' : 'repeat(4,1fr)', gap:8 }}>
+            <div className="npc-modal-grid" style={{ display:'grid', gridTemplateColumns: selected ? '1fr 1fr' : 'repeat(4,1fr)', gap:8 }}>
               {availableNpcs.map(npc => {
                 const d = offerMap[npc.id]
                 const effOffer = Math.round(d.offer * npcOfferMult)
@@ -1747,7 +1747,7 @@ function NpcModal({ stone, npcRelations, onSellToNpc, onClose, npcOfferMult = 1,
             const riskLabel = detectRiskLabel(npc.detectChance)
             const riskPct   = Math.round(npc.detectChance * 100)
             return (
-              <div style={{ flex:1, overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', gap:12 }}>
+              <div className="npc-modal-right" style={{ flex:1, overflowY:'auto', padding:'16px', display:'flex', flexDirection:'column', gap:12, minWidth:0 }}>
 
                 {/* 头像 + 名片 */}
                 <div style={{ display:'flex', gap:14, alignItems:'flex-start' }}>
@@ -2235,19 +2235,19 @@ function NpcRosterPanel({ npcRelations, onClose }) {
   const riskLabel = detectRiskLabel(npc.detectChance)
 
   return (
-    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.80)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
-      <div onClick={e => e.stopPropagation()} style={{
+    <div className="modal-overlay" onClick={onClose} style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.80)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:12 }}>
+      <div onClick={e => e.stopPropagation()} className="npc-roster-modal" style={{
         background:'linear-gradient(160deg,#060d1c,#0c1a30)',
         border:'1px solid rgba(51,65,85,.7)',
-        borderRadius:22, width:'100%', maxWidth:900, height:'88vh',
+        borderRadius:22, width:'100%', maxWidth:900, height:'88vh', maxHeight:'95dvh',
         display:'flex', flexDirection:'column',
         boxShadow:'0 32px 80px rgba(0,0,0,.85)', overflow:'hidden',
       }}>
 
         {/* 顶栏 */}
-        <div style={{ padding:'14px 20px', borderBottom:'1px solid rgba(30,41,59,.6)', background:'rgba(8,15,28,.8)', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <span style={{ fontSize:20 }}>👥</span>
+        <div style={{ padding:'12px 14px', borderBottom:'1px solid rgba(30,41,59,.6)', background:'rgba(8,15,28,.8)', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8, minWidth:0, flex:1 }}>
+            <span style={{ fontSize:18 }}>👥</span>
             <div>
               <p style={{ fontWeight:800, fontSize:15, color:'#f1f5f9', margin:0 }}>人脉关系档案</p>
               <p style={{ fontSize:11, color:'#334155', margin:0 }}>与 NPC 交易越多，关系越亲密，报价越高，特权越多</p>
@@ -2257,10 +2257,10 @@ function NpcRosterPanel({ npcRelations, onClose }) {
         </div>
 
         {/* 主体 */}
-        <div style={{ flex:1, display:'flex', overflow:'hidden' }}>
+        <div className="npc-roster-body" style={{ flex:1, display:'flex', overflow:'hidden', minHeight:0 }}>
 
           {/* ── 左侧：NPC 列表 ── */}
-          <div style={{ width:200, flexShrink:0, overflowY:'auto', borderRight:'1px solid rgba(30,41,59,.6)', padding:'8px 6px' }}>
+          <div className="npc-roster-left" style={{ width:200, flexShrink:0, overflowY:'auto', borderRight:'1px solid rgba(30,41,59,.6)', padding:'8px 6px' }}>
             {NPC_LIST.map(n => {
               const nd    = npcRelations[n.id] || 0
               const nlv   = getNpcLevel(nd)
@@ -2301,7 +2301,7 @@ function NpcRosterPanel({ npcRelations, onClose }) {
           </div>
 
           {/* ── 右侧：详情 ── */}
-          <div style={{ flex:1, overflowY:'auto', padding:'20px 22px', display:'flex', flexDirection:'column', gap:14 }}>
+          <div className="npc-roster-right" style={{ flex:1, overflowY:'auto', padding:'20px 22px', display:'flex', flexDirection:'column', gap:14, minWidth:0 }}>
 
             {/* 头像名片区 */}
             <div style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
@@ -4326,7 +4326,7 @@ export default function App() {
               { label:'交易次数',  value:`${totalDeals} 次`,                                                        color:'#94a3b8',                                                big:false },
               { label:'私人藏馆',  value:`${collection.length} 件`,                                                color:'#fde68a',                                                big:false },
             ].map(stat => (
-              <div key={stat.label} onClick={stat.label==='私人藏馆' ? ()=>setShowCollection(true):undefined} style={{ background:'rgba(15,23,42,.8)', border:'1px solid rgba(30,41,59,.8)', borderRadius:10, padding:'5px 12px', textAlign:'center', minWidth:stat.big?115:85, cursor:stat.label==='私人藏馆'?'pointer':'default' }}>
+              <div key={stat.label} className="stat-cell" onClick={stat.label==='私人藏馆' ? ()=>setShowCollection(true):undefined} style={{ background:'rgba(15,23,42,.8)', border:'1px solid rgba(30,41,59,.8)', borderRadius:10, padding:'5px 12px', textAlign:'center', minWidth:stat.big?115:85, cursor:stat.label==='私人藏馆'?'pointer':'default' }}>
                 <p style={{ fontSize:9, color:'#334155', margin:0, marginBottom:2 }}>{stat.label}</p>
                 <p style={{ fontSize:stat.big?17:14, fontWeight:800, color:stat.color, margin:0, fontVariantNumeric:'tabular-nums' }}>{stat.value}</p>
               </div>
