@@ -2756,17 +2756,24 @@ function BlindAuctionModal({ stone, money, onSubmitBid, onClose }) {
   if (!stone) return null
   const base = stone.auctionBasePrice ?? stone.price
   const minBid = Math.max(100, Math.round(base * 0.3))
+  const handleSubmit = () => {
+    const n = parseInt(bid, 10)
+    if (!isNaN(n) && n >= minBid && n <= money) {
+      onSubmitBid(stone, n)
+      onClose()
+    }
+  }
   return (
-    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:292, background:'rgba(0,0,0,.7)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#1a0a0a,#2d1810)', border:'1px solid rgba(217,119,6,.5)', borderRadius:16, padding:24, maxWidth:400 }}>
+    <div onClick={onClose} className="modal-overlay modal-scroll-lock" style={{ position:'fixed', inset:0, zIndex:500, background:'rgba(0,0,0,.82)', display:'flex', alignItems:'center', justifyContent:'center', padding:16, overflow:'auto', WebkitOverflowScrolling:'touch' }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#1a0a0a,#2d1810)', border:'1px solid rgba(217,119,6,.5)', borderRadius:16, padding:24, maxWidth:400, width:'100%', margin:'auto' }}>
         <h3 style={{ margin:'0 0 8px', color:'#fef3c7' }}>🏷️ 暗标公盘</h3>
         <p style={{ color:'#94a3b8', fontSize:12, marginBottom:8 }}>「{stone.name}」参考底价 ¥{base.toLocaleString()}</p>
         <p style={{ color:'#64748b', fontSize:11, marginBottom:16 }}>系统将模拟2位NPC出价，你的出价需高于二者才能夺得</p>
         <input type="number" value={bid} onChange={e=>setBid(e.target.value)} placeholder={`最低 ¥${minBid.toLocaleString()}`} min={minBid} max={money}
-          style={{ width:'100%', padding:12, background:'#1e293b', border:'1px solid #475569', borderRadius:8, color:'#f1f5f9', fontSize:14, marginBottom:12 }} />
+          style={{ width:'100%', padding:12, background:'#1e293b', border:'1px solid #475569', borderRadius:8, color:'#f1f5f9', fontSize:16, marginBottom:12 }} />
         <div style={{ display:'flex', gap:10 }}>
-          <button onClick={()=>{const n=parseInt(bid,10);if(!isNaN(n)&&n>=minBid&&n<=money){onSubmitBid(stone,n);onClose()}}} style={{ flex:1, padding:12, background:'linear-gradient(135deg,#b45309,#d97706)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer' }}>提交竞标</button>
-          <button onClick={onClose} style={{ padding:12, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer' }}>放弃</button>
+          <button type="button" onClick={handleSubmit} style={{ flex:1, padding:14, minHeight:48, background:'linear-gradient(135deg,#b45309,#d97706)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer', touchAction:'manipulation' }}>提交竞标</button>
+          <button type="button" onClick={onClose} style={{ padding:14, minHeight:48, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer', touchAction:'manipulation' }}>放弃</button>
         </div>
       </div>
     </div>
@@ -3292,6 +3299,16 @@ export default function App() {
   const inventoryRef= useRef([])
   const bangYigeTriggeredRef = useRef(false)
   inventoryRef.current = inventory
+
+  // 弹窗打开时锁定 body 滚动，防止主界面在移动端被拖动
+  const hasModal = !!(stoneDetail || bargainStone || bargainQte || auctionBidStone || carvingStone || liveSellStone || liveAuctionData || showUpgrade || showLog || showWorkbenchLog || showCollection || showNpcRoster || npcTarget || showPhone || showLaoChen || showGiftModal || pendingEvent || showBlackMarket || gameOverInfo || lastDebtInfo || showLiveStreamUpgrade || bangYigeMessage)
+  useEffect(() => {
+    if (hasModal) {
+      const prev = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = prev }
+    }
+  }, [hasModal])
 
   const addToast = useCallback((text) => {
     const id = ++toastId.current
@@ -4261,7 +4278,7 @@ export default function App() {
 
   // ── 游戏主界面 ──
   return (
-    <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'linear-gradient(160deg,#020617 0%,#060f1e 45%,#020a14 100%)', color:'#e2e8f0', fontFamily:"'Microsoft YaHei','PingFang SC',system-ui,sans-serif" }}>
+    <div className={hasModal ? 'app-root modal-open' : 'app-root'} style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'linear-gradient(160deg,#020617 0%,#060f1e 45%,#020a14 100%)', color:'#e2e8f0', fontFamily:"'Microsoft YaHei','PingFang SC',system-ui,sans-serif" }}>
 
       {/* ── 顶部导航 ── */}
       <header style={{ flexShrink:0, position:'sticky', top:0, zIndex:50, background:'rgba(2,6,23,.88)', backdropFilter:'blur(18px)', borderBottom:'1px solid rgba(30,41,59,.55)', boxShadow:'0 4px 24px rgba(0,0,0,.45)' }}>
@@ -4391,7 +4408,7 @@ export default function App() {
       )}
 
       {/* ── 主内容（原石市场 + 切割工作台）── */}
-      <main style={{ flex:1, minHeight:0, overflowY:'auto', overflowX:'hidden' }}>
+      <main className="app-main-scroll" style={{ flex:1, minHeight:0, overflowY:'auto', overflowX:'hidden' }}>
         <div className="app-main" style={{ maxWidth:1300, margin:'0 auto', padding:'20px 24px', display:'flex', gap:18, alignItems:'flex-start', flexWrap:'wrap' }}>
 
         {/* ── 左栏：市场 ── */}
