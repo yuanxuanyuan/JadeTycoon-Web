@@ -2438,12 +2438,13 @@ function NpcAccessoryModal({ accessory, npcRelations, onSellToNpc, onClose, npcO
   const selData = selected ? offerMap[selected.id] : null
 
   return (
-    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:410, background:'rgba(0,0,0,.82)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:12 }}>
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:460, background:'rgba(0,0,0,.82)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:12 }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#064e3b,#022c22)', border:'1px solid rgba(45,212,191,.5)', borderRadius:22, width:'100%', maxWidth:800, maxHeight:'88vh', display:'flex', flexDirection:'column', overflow:'hidden' }}>
         <div style={{ padding:'12px 14px', borderBottom:'1px solid rgba(45,212,191,.3)', background:'rgba(5,46,22,.7)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <div>
             <p style={{ fontWeight:800, fontSize:15, color:'#5eead4', margin:0 }}>🤝 找 NPC 卖饰品</p>
             <p style={{ fontSize:11, color:'#94a3b8', margin:0 }}>{accessory.emoji} 「{accessory.name}」· {accessory.typeName} · 估价 ¥{baseValue.toLocaleString()}</p>
+            <p style={{ fontSize:10, color:'#64748b', margin:'4px 0 0' }}>成交将消耗 1 次行动</p>
           </div>
           <button onClick={onClose} style={{ background:'rgba(30,41,59,.7)', border:'1px solid rgba(51,65,85,.5)', borderRadius:8, padding:'5px 12px', color:'#64748b', fontSize:12, cursor:'pointer' }}>✕</button>
         </div>
@@ -2588,7 +2589,7 @@ function LiveSellModal({ stone, cutValueMult, onConfirm, onClose }) {
 function LiveSellAccessoryModal({ accessory, onConfirm, onClose }) {
   if (!accessory) return null
   return (
-    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.8)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:460, background:'rgba(0,0,0,.8)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#581c87,#0f172a)', border:'1px solid rgba(192,132,252,.5)', borderRadius:18, padding:24, maxWidth:380 }}>
         <h3 style={{ margin:'0 0 8px', color:'#e9d5ff' }}>📺 直播售卖饰品</h3>
         <p style={{ color:'#94a3b8', fontSize:12, marginBottom:12 }}>
@@ -2645,7 +2646,7 @@ function LiveAuctionProcessModal({ data, viewerState = {}, onComplete }) {
   const item = data.accessory || data.stone
   const stoneLabel = data.accessory ? data.accessory.typeName : (data.isBlind ? '未切原石 · 盲拍' : data.stone.cutResult?.name || data.stone.name)
   return (
-    <div style={{ position:'fixed', inset:0, zIndex:410, background:'rgba(0,0,0,.88)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+    <div style={{ position:'fixed', inset:0, zIndex:470, background:'rgba(0,0,0,.88)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
       <div onClick={e=>e.stopPropagation()} style={{ background: data.isBlind ? 'linear-gradient(160deg,#7c2d12,#0f172a)' : 'linear-gradient(160deg,#581c87,#0f172a)', border: `1px solid ${data.isBlind ? 'rgba(251,146,60,.5)' : 'rgba(192,132,252,.5)'}`, borderRadius:18, padding:24, maxWidth:480, width:'100%', maxHeight:'85vh', overflowY:'auto' }}>
         <h3 style={{ margin:'0 0 12px', color: data.isBlind ? '#fed7aa' : '#e9d5ff' }}>{data.isBlind ? '🎲 直播盲拍中' : '📺 直播竞拍中'}</h3>
         <p style={{ color:'#94a3b8', fontSize:12, marginBottom:16 }}>「{item.name}」{stoneLabel}</p>
@@ -4466,6 +4467,11 @@ export default function App() {
     }
   }, [gameMode, currentDay, debtIndex, money, isGameOver, addLog, addToast])
 
+  // 背包售罄时自动关闭
+  useEffect(() => {
+    if (showBackpack && jadeAccessories.length === 0) setShowBackpack(false)
+  }, [showBackpack, jadeAccessories.length])
+
   // 开始/重开指定剧本
   const startScript = useCallback((modeKey) => {
     const script = SCRIPT_MODES[modeKey]
@@ -5815,8 +5821,8 @@ export default function App() {
         <BackpackPanel
           accessories={jadeAccessories}
           onSell={handleSellAccessory}
-          onSellNpc={(id)=>{ setShowBackpack(false); setNpcAccessoryTarget(id); }}
-          onLiveSell={(id)=>{ const a = jadeAccessories.find(x=>x.id===id); if(a){ setShowBackpack(false); setLiveSellAccessory(a); } }}
+          onSellNpc={(id)=>{ setNpcAccessoryTarget(id); }}
+          onLiveSell={(id)=>{ const a = jadeAccessories.find(x=>x.id===id); if(a){ setLiveSellAccessory(a); } }}
           onGift={handleLivestreamGiftAccessory}
           onClose={()=>setShowBackpack(false)}
           liveStreamLevel={liveStreamLevel}
