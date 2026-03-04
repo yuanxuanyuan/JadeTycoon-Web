@@ -115,30 +115,37 @@ const EVENT_POOL_NEGATIVE = [
 //  每逢以 5 结尾的天数（5,15,25...）右下角弹出黑市按钮
 // ═══════════════════════════════════════════════════════════
 const RELICS = {
-  purple_flashlight: {
-    id: 'purple_flashlight',
-    name: '紫光手电',
-    icon: '🔮',
-    desc: '切出砖头料的概率硬性降低 10%',
-    price: 125000,
-    effect: 'brickReduce',
-  },
-  silver_tongue: {
-    id: 'silver_tongue',
-    name: '巧舌如簧',
-    icon: '💬',
-    desc: '卖砖头料被识破时，好感度下降减半',
-    price: 100000,
-    effect: 'detectPenaltyHalf',
-  },
-  gold_knife: {
-    id: 'gold_knife',
-    name: '镶金切刀',
-    icon: '🔪',
-    desc: '所有切出结果的基础估值 ×1.2',
-    price: 150000,
-    effect: 'cutValueBoost',
-  },
+  purple_flashlight: { id:'purple_flashlight', name:'紫光手电', icon:'🔮', desc:'切出砖头料的概率硬性降低 10%', price:125000, effect:'brickReduce' },
+  silver_tongue: { id:'silver_tongue', name:'巧舌如簧', icon:'💬', desc:'卖砖头料被识破时，好感度下降减半', price:100000, effect:'detectPenaltyHalf' },
+  gold_knife: { id:'gold_knife', name:'镶金切刀', icon:'🔪', desc:'所有切出结果的基础估值 ×1.2', price:150000, effect:'cutValueBoost' },
+  jade_buddha: { id:'jade_buddha', name:'翡翠佛像', icon:'🙏', desc:'每日第一次切石成功率微升', price:80000, effect:'passive' },
+  luck_charm: { id:'luck_charm', name:'转运符', icon:'🍀', desc:'收藏品升值速率 +2%', price:95000, effect:'passive' },
+  magnifier: { id:'magnifier', name:'高倍放大镜', icon:'🔍', desc:'打灯准确率小幅提升', price:72000, effect:'passive' },
+  snake_oil: { id:'snake_oil', name:'祖传蛇油', icon:'🫗', desc:'NPC 砍价时多 5% 让步空间', price:55000, effect:'passive' },
+  red_envelope: { id:'red_envelope', name:'开门红信封', icon:'🧧', desc:'每局开局资金 +5000', price:60000, effect:'passive' },
+  old_newspaper: { id:'old_newspaper', name:'矿脉旧报纸', icon:'📰', desc:'市场刷新费用 -8%', price:68000, effect:'passive' },
+  crystal_ball: { id:'crystal_ball', name:'水晶球', icon:'🔮', desc:'随机事件触发率 +3%', price:110000, effect:'passive' },
+  tea_set: { id:'tea_set', name:'大师茶具', icon:'🫖', desc:'雕刻师灵感衰减减缓', price:88000, effect:'passive' },
+  tiger_eye: { id:'tiger_eye', name:'虎眼石', icon:'🐅', desc:'直播观众好感加成 +1', price:75000, effect:'passive' },
+  dragon_scale: { id:'dragon_scale', name:'龙鳞片', icon:'🐉', desc:'帝王绿切割概率微升', price:180000, effect:'passive' },
+  phoenix_feather: { id:'phoenix_feather', name:'凤凰羽', icon:'🪶', desc:'冰种以上概率 +2%', price:140000, effect:'passive' },
+  tortoise_shell: { id:'tortoise_shell', name:'龟甲', icon:'🐢', desc:'债务日可延迟 1 天（每局限 1 次）', price:200000, effect:'passive' },
+  owl_totem: { id:'owl_totem', name:'猫头鹰图腾', icon:'🦉', desc:'擦窗看走眼概率降低', price:92000, effect:'passive' },
+  coin_purse: { id:'coin_purse', name:'聚财钱袋', icon:'👛', desc:'直接售出时估值 +3%', price:65000, effect:'passive' },
+  incense_stick: { id:'incense_stick', name:'开光香', icon:'🪔', desc:'枯木禅师取货时间 -1 天', price:78000, effect:'passive' },
+  silk_glove: { id:'silk_glove', name:'蚕丝手套', icon:'🧤', desc:'切石时手感更稳', price:45000, effect:'passive' },
+  midnight_oil: { id:'midnight_oil', name:'挑灯夜战油', icon:'🕯', desc:'每日操作次数 +1（当日）', price:120000, effect:'passive' },
+  mirror_shard: { id:'mirror_shard', name:'照妖镜碎片', icon:'🪞', desc:'砖头料被识破时人品不减', price:160000, effect:'passive' },
+  crane_pendant: { id:'crane_pendant', name:'仙鹤吊坠', icon:'🦩', desc:'养生·李叔每日可多接 1 单', price:95000, effect:'passive' },
+  pearl_string: { id:'pearl_string', name:'珍珠串', icon:'📿', desc:'与女性 NPC 交易好感 +1', price:58000, effect:'passive' },
+  iron_abacus: { id:'iron_abacus', name:'铁算盘', icon:'🧮', desc:'公斤料成本 -5%', price:42000, effect:'passive' },
+  ghost_mask: { id:'ghost_mask', name:'傩面', icon:'😈', desc:'鬼手·阿九碎料概率 -5%', price:130000, effect:'passive' },
+  lotus_seed: { id:'lotus_seed', name:'莲籽', icon:'🌸', desc:'褚石翁点石成金概率 +2%', price:165000, effect:'passive' },
+  wine_gourd: { id:'wine_gourd', name:'酒葫芦', icon:'🍶', desc:'赌徒·刀疤暴击率 +5%', price:98000, effect:'passive' },
+  ink_stone: { id:'ink_stone', name:'端砚', icon:'🖌', desc:'神秘·影最高倍率 +0.2', price:115000, effect:'passive' },
+  fox_tail: { id:'fox_tail', name:'狐尾', icon:'🦊', desc:'暗标竞拍出价洞察', price:135000, effect:'passive' },
+  moon_token: { id:'moon_token', name:'月令牌', icon:'🌙', desc:'每月 5 日黑市多刷 1 件', price:88000, effect:'passive' },
+  sun_dial: { id:'sun_dial', name:'日晷', icon:'☀️', desc:'时间流逝更从容', price:50000, effect:'passive' },
 }
 const RELIC_IDS = Object.keys(RELICS)
 
@@ -147,9 +154,11 @@ const RELIC_IDS = Object.keys(RELICS)
 // ═══════════════════════════════════════════════════════════
 const LIVE_STREAM_LEVELS = [
   { level:0, name:'未开启', cost:0, desc:'暂无直播间' },
-  { level:1, name:'初级直播间', cost:150000, desc:'可开播，20名观众入场', slotCount:5 },
-  { level:2, name:'中级直播间', cost:400000, desc:'观众消费意愿+10%', slotCount:8 },
-  { level:3, name:'高级直播间', cost:900000, desc:'观众消费意愿+25%，可连播', slotCount:12 },
+  { level:1, name:'初级直播间', cost:150000, desc:'可开播，50人观众底池，拍卖5-15轮', slotCount:5 },
+  { level:2, name:'中级直播间', cost:400000, desc:'观众出价+10%，拍卖6-18轮', slotCount:7 },
+  { level:3, name:'高级直播间', cost:700000, desc:'观众出价+18%，拍卖7-22轮', slotCount:9 },
+  { level:4, name:'豪华直播间', cost:1100000, desc:'观众出价+25%，拍卖8-26轮', slotCount:11 },
+  { level:5, name:'顶级直播间', cost:1600000, desc:'观众出价+35%，拍卖10-30轮，可连播', slotCount:14 },
 ]
 
 // ═══════════════════════════════════════════════════════════
@@ -160,81 +169,208 @@ const RED_OR_FLOWER = ['flower']  // 枯木禅师不雕：花青(多色/见血)
 const CHU_HATE = ['brick','waxy']  // 褚石翁极度嫌弃
 const CHU_LOVE = ['glass','imperial']  // 褚石翁偏爱
 
+// 翡翠饰品品类与雕刻师专长
+const JADE_PRODUCT_TYPES = {
+  bracelet:   { id:'bracelet',   name:'手镯',   names:['冰糯镯','贵妃镯','圆条镯','扁条镯','福镯','平安镯'], emoji:'⭕' },
+  peace_buckle:{ id:'peace_buckle',name:'平安扣', names:['平安扣','如意扣','福字扣','简约扣','玉璧扣','团圆扣'], emoji:'🌀' },
+  bead_string: { id:'bead_string', name:'珠串',   names:['108佛珠','18子','单圈','多圈','混色串','精品串'], emoji:'📿' },
+  ring_face:  { id:'ring_face',  name:'戒面',   names:['蛋面','马眼','水滴','随形','椭圆形','方形'], emoji:'💍' },
+  pendant_buddha: { id:'pendant_buddha', name:'佛公挂件', names:['笑佛','弥勒佛','佛公牌','站佛','坐佛'], emoji:'🙏' },
+  pendant_guan_yin: { id:'pendant_guan_yin', name:'观音挂件', names:['观音牌','渡海观音','送子观音','站观音','观音吊坠'], emoji:'✨' },
+  pendant_dragon: { id:'pendant_dragon', name:'龙牌挂件', names:['龙牌','龙凤牌','夔龙','螭龙','云龙'], emoji:'🐉' },
+  carving_landscape: { id:'carving_landscape', name:'山水雕件', names:['山水牌','山子','屏风雕','山水摆件','远山近水'], emoji:'⛰️' },
+  carving_animal: { id:'carving_animal', name:'兽类雕件', names:['貔貅','瑞兽','生肖','龙凤呈祥','五福临门'], emoji:'🦁' },
+  carving_misc:   { id:'carving_misc',   name:'杂项雕件', names:['平安牌','无事牌','竹节','葫芦','福豆'], emoji:'🏺' },
+}
+const JADE_GRADES = [
+  { id:'white',  name:'白档', color:'#e2e8f0', multRange:[0.6,0.9] },
+  { id:'green',  name:'绿档', color:'#4ade80', multRange:[0.9,1.2] },
+  { id:'blue',  name:'蓝档', color:'#60a5fa', multRange:[1.0,1.4] },
+  { id:'purple', name:'紫档', color:'#c084fc', multRange:[1.2,1.8] },
+  { id:'orange', name:'橙档', color:'#fb923c', multRange:[1.5,2.2] },
+  { id:'red',    name:'红档', color:'#f87171', multRange:[2.0,3.5] },
+]
+// 饰品档位映射到 NPC 料子等级（用于报价逻辑）
+const GRADE_TO_CUT = { white:'brick', green:'waxy', blue:'flower', purple:'ice', orange:'glass', red:'imperial' }
+// 种水、颜色、尺寸差分池
+const JADE_JING_TYPES = ['豆种','糯种','细糯种','冰糯种','冰种','高冰','玻璃种']
+const JADE_COLORS = ['油青色','白底青','晴水','紫罗兰','帝王绿','阳绿','菠菜绿','墨翠','黄翡','红翡','翠丝种','飘花','三彩']
+const CUT_TO_GRADE_BIAS = { brick:0, waxy:1, flower:1, ice:2, glass:3, imperial:4 }
+function rollProductGrade(cutId, mult) {
+  const bias = CUT_TO_GRADE_BIAS[cutId] ?? 1
+  const idx = Math.min(5, Math.max(0, Math.floor(bias + (mult - 1) * 2) + (Math.random() < 0.3 ? 1 : 0)))
+  return JADE_GRADES[Math.min(idx, 5)]
+}
+function rollSizeDesc(typeId) {
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)]
+  const cm = (v) => Number(v).toFixed(1) + 'cm'
+  switch (typeId) {
+    case 'peace_buckle': {
+      const thick = rnd(0.3, 1.0)
+      const dia = rnd(3.5, 8.5)
+      return `厚${cm(thick)} 直径${cm(dia)}`
+    }
+    case 'bracelet': {
+      const kou = rndInt(52, 60)
+      const width = rnd(0.8, 1.8)
+      return `圈口${kou} 条宽${cm(width)}`
+    }
+    case 'bead_string': {
+      const beadDia = rnd(0.6, 1.4)
+      const count = pick([18, 36, 54, 108])
+      return `珠径${cm(beadDia)} ${count}颗`
+    }
+    case 'ring_face': {
+      const a = rnd(0.5, 1.5)
+      const b = rnd(0.4, 1.2)
+      return `长${cm(a)} 宽${cm(b)}`
+    }
+    case 'pendant_buddha':
+    case 'pendant_guan_yin':
+    case 'pendant_dragon': {
+      const h = rnd(2.5, 5.5)
+      const w = rnd(1.8, 4.5)
+      const t = rnd(0.4, 1.0)
+      return `高${cm(h)} 宽${cm(w)} 厚${cm(t)}`
+    }
+    case 'carving_landscape':
+    case 'carving_animal':
+    case 'carving_misc':
+    default: {
+      const l = rnd(3.5, 8.0)
+      const w = rnd(2.5, 5.5)
+      return `长${cm(l)} 宽${cm(w)}`
+    }
+  }
+}
+function generateJadeProduct(productTypeId, grade, masterId, baseValue) {
+  const t = Object.values(JADE_PRODUCT_TYPES).find(x => x.id === productTypeId) || JADE_PRODUCT_TYPES.carving_misc
+  const g = JADE_GRADES.find(x => x.id === grade?.id) || JADE_GRADES[1]
+  const name = t.names[Math.floor(Math.random() * t.names.length)]
+  const [lo, hi] = g.multRange
+  const mult = rnd(lo, hi)
+  const value = Math.round(baseValue * mult)
+  const gradeIdx = JADE_GRADES.findIndex(x => x.id === g.id)
+  const jadeJing = JADE_JING_TYPES[Math.min(gradeIdx + rndInt(0, 2), JADE_JING_TYPES.length - 1)]
+  const jadeColor = JADE_COLORS[Math.floor(Math.random() * JADE_COLORS.length)]
+  const sizeDesc = rollSizeDesc(t.id)
+  const desc = `${jadeJing}，${jadeColor}，${sizeDesc}`
+  return {
+    id: Date.now() + Math.random(),
+    name: `${name}·${g.name}`,
+    typeId: t.id,
+    typeName: t.name,
+    grade: g.id,
+    gradeName: g.name,
+    gradeColor: g.color,
+    emoji: t.emoji,
+    value,
+    masterId,
+    createdAt: Date.now(),
+    jadeJing,
+    jadeColor,
+    sizeDesc,
+    desc,
+  }
+}
+function pickProductTypeForMaster(master) {
+  const ids = master?.productTypeIds || ['carving_misc']
+  return ids[Math.floor(Math.random() * ids.length)]
+}
+
 const ARTIST_MASTERS = [
+  { id:'shouzhuo_huatuo', name:'华师傅', icon:'⭕', title:'手镯华佗', personality:'一丝不苟',
+    noPreference: true, productTypeIds: ['bracelet','peace_buckle'],
+    specialty:'手镯工艺登峰造极', baseMult: [1.3, 1.7],
+    skillName:'手镯无双', skillDesc:'手镯、平安扣专精，成品 1.3~1.7x',
+    interactCosts: { kafei: 5000 }, interactGains: { kafei: 10 },
+  },
+  { id:'pingankou_tianwang', name:'李天王', icon:'🌀', title:'平安扣天王', personality:'沉稳内敛',
+    noPreference: true, productTypeIds: ['peace_buckle','ring_face'],
+    specialty:'平安扣雕工一绝', baseMult: [1.25, 1.65],
+    skillName:'平安扣大师', skillDesc:'平安扣、戒面专精，成品 1.25~1.65x',
+    interactCosts: { chabei: 6000 }, interactGains: { chabei: 10 },
+  },
+  { id:'zhuchuan_dashen', name:'阿福', icon:'📿', title:'珠串大神', personality:'细致耐心',
+    noPreference: true, productTypeIds: ['bead_string','carving_misc'],
+    specialty:'珠串、佛珠手到擒来', baseMult: [1.2, 1.6],
+    skillName:'珠串专家', skillDesc:'珠串、杂项专精，成品 1.2~1.6x',
+    interactCosts: { xianghuo: 5000 }, interactGains: { xianghuo: 9 },
+  },
   { id:'chu_shi_weng', name:'褚石翁', icon:'🎎', title:'非遗宗师', personality:'高傲古板',
-    hateGrades: CHU_HATE, loveGrades: CHU_LOVE, specialty:'山水大牌、传世玉玺',
+    hateGrades: CHU_HATE, loveGrades: CHU_LOVE, productTypeIds: ['carving_landscape','pendant_guan_yin','carving_misc'],
     skillName:'点石成金', skillDesc:'加工极品料时概率刻出传世之作(x10)，全市NPC涨好感',
     skillChance: 0.15, skillMult: 10,
-    interactCosts: { dahongpao: 25000, weiqi: 0 }, interactGains: { dahongpao: 50, weiqi: 40 },
+    interactCosts: { dahongpao: 25000, weiqi: 0 }, interactGains: { dahongpao: 12, weiqi: 8 },
   },
   { id:'gui_shou_a9', name:'鬼手·阿九', icon:'💀', title:'疯子天才', personality:'废土朋克',
-    loveFlaw: true, specialty:'猎奇骷髅雕件、化瑕为瑜',
+    loveFlaw: true, productTypeIds: ['carving_animal','carving_misc'],
     skillName:'灵光乍现', skillDesc:'带裂/癣料子：40%碎料血亏，10%绝世妖孽(x30)',
     crushChance: 0.4, jackpotChance: 0.1, jackpotMult: 30,
-    interactCosts: { qingba: 12000, baijiu: 0 }, interactGains: { qingba: 60, baijiu: 100 },
+    interactCosts: { qingba: 12000, baijiu: 0 }, interactGains: { qingba: 14, baijiu: 35 },
     sickDays: 3,
   },
   { id:'qiao_niang_jinyan', name:'巧娘·金燕', icon:'💰', title:'商业奇才', personality:'见钱眼开',
-    noPreference: true, specialty:'流水线手镯、戒面、珠串',
+    noPreference: true, productTypeIds: ['bracelet','ring_face','bead_string'],
     skillName:'极限压榨', skillDesc:'必定多掏2戒面，无风险，倍率上限2x',
     maxMult: 2, extraRings: 2,
-    interactCosts: { hongbao: 50000 }, interactGains: { hongbao: 100 },
+    interactCosts: { hongbao: 50000, xiaohongbao: 15000 }, interactGains: { hongbao: 18, xiaohongbao: 10 },
   },
   { id:'kumu_chan_shi', name:'枯木禅师', icon:'🧘', title:'佛系高僧', personality:'随缘',
     acceptGrades: ['waxy','ice','glass','imperial'], rejectGrades: RED_OR_FLOWER,
-    specialty:'观音、佛公', noRed: true,
-    skillName:'佛光开光', skillDesc:'需3天取货，成品带开光词缀，文化/市井NPC出价3x',
-    deliveryDays: 3, kaiguangMult: 3,
-    interactCosts: { xianghuo: 8000, chanzhen: 0 }, interactGains: { xianghuo: 45, chanzhen: 35 },
+    productTypeIds: ['pendant_guan_yin','pendant_buddha','bead_string'], noRed: true,
+    skillName:'佛光开光', skillDesc:'需3天取货，成品带开光，倍率随石料契合波动 1.6~2.4x',
+    deliveryDays: 3, kaiguangMult: 2.5, baseMult: [1.6, 2.4],
+    interactCosts: { xianghuo: 8000, chanzhen: 0, fashi: 20000 }, interactGains: { xianghuo: 10, chanzhen: 8, fashi: 16 },
   },
   { id:'kuai_shou_laotie', name:'快手·老铁', icon:'⚡', title:'效率王', personality:'雷厉风行',
-    noPreference: true, specialty:'快速手镯、戒面',
+    noPreference: true, productTypeIds: ['bracelet','ring_face'],
     skillName:'闪电出活', skillDesc:'不挑料，秒出活，倍率稳定 1.2x',
     baseMult: 1.2,
-    interactCosts: { kafei: 3000 }, interactGains: { kafei: 30 },
+    interactCosts: { kafei: 3000 }, interactGains: { kafei: 8 },
   },
   { id:'men_sao_ajie', name:'闷骚·阿杰', icon:'😶', title:'冰料专精', personality:'内敛挑剔',
-    acceptGrades: ['ice','glass','imperial'], specialty:'冰种观音、玻璃佛',
+    acceptGrades: ['ice','glass','imperial'], productTypeIds: ['pendant_guan_yin','pendant_buddha'],
     skillName:'静水深流', skillDesc:'只雕冰种以上，成品 1.3~1.6x 看心情',
     baseMult: [1.3, 1.6],
-    interactCosts: { chabei: 5000 }, interactGains: { chabei: 40 },
+    interactCosts: { chabei: 5000 }, interactGains: { chabei: 10 },
   },
   { id:'hua_lao_wang', name:'话痨·王大嘴', icon:'🗣', title:'全能唠嗑', personality:'热情健谈',
-    noPreference: true, specialty:'什么都雕，边雕边聊',
+    noPreference: true, productTypeIds: ['carving_misc','pendant_dragon'],
     skillName:'随缘加成', skillDesc:'给啥雕啥，成品 0.9~1.5x 随机波动',
     baseMult: [0.9, 1.5],
-    interactCosts: { laopi: 8000 }, interactGains: { laopi: 50 },
+    interactCosts: { laopi: 8000 }, interactGains: { laopi: 12 },
   },
   { id:'du_tu_daobai', name:'赌徒·刀疤', icon:'🎲', title:'冒险狂人', personality:'冒险激进',
-    noPreference: true, specialty:'赌石雕，不成功便成仁',
+    noPreference: true, productTypeIds: ['ring_face','carving_animal'],
     skillName:'梭哈一击', skillDesc:'30%血亏(0.5x)，20%暴击(3x)，50%正常',
     gambleChance: 0.3, gambleMult: 0.5, jackpotChance: 0.2, jackpotMult: 3,
-    interactCosts: { maotai: 18000 }, interactGains: { maotai: 70 },
+    interactCosts: { maotai: 18000 }, interactGains: { maotai: 15 },
   },
   { id:'yang_sheng_lishu', name:'养生·李叔', icon:'☕', title:'午休大师', personality:'佛系养生',
-    noPreference: true, specialty:'精品小件，每天只接一单',
+    noPreference: true, productTypeIds: ['peace_buckle','pendant_buddha','carving_misc'],
     skillName:'精雕细琢', skillDesc:'每天限1单，倍率 1.4x 稳',
     baseMult: 1.4, dailyLimit: 1,
-    interactCosts: { hongzao: 4000 }, interactGains: { hongzao: 35 },
+    interactCosts: { hongzao: 4000 }, interactGains: { hongzao: 9 },
   },
   { id:'wanmei_sujie', name:'完美主义·苏姐', icon:'✨', title:'吹毛求疵', personality:'挑剔完美',
     acceptGrades: ['glass','imperial'], rejectGrades: ['brick','waxy','flower'],
-    specialty:'无瑕观音、极品摆件',
+    productTypeIds: ['pendant_guan_yin','carving_landscape','pendant_dragon'],
     skillName:'零瑕疵', skillDesc:'只接玻璃/帝王，成品必 1.5x 起',
     baseMult: [1.5, 1.8],
-    interactCosts: { xiangnai: 12000 }, interactGains: { xiangnai: 55 },
+    interactCosts: { xiangnai: 12000 }, interactGains: { xiangnai: 14 },
   },
   { id:'xue_tu_xiaodou', name:'学徒·小豆', icon:'🌱', title:'勤奋新手', personality:'勤奋好学',
-    noPreference: true, specialty:'练手料、便宜盘货',
+    noPreference: true, productTypeIds: ['carving_misc'],
     skillName:'成长波动', skillDesc:'工费低，成品 0.8~1.3x 波动大',
     baseMult: [0.8, 1.3], laborFeePct: 0.03,
-    interactCosts: { keben: 2000 }, interactGains: { keben: 25 },
+    interactCosts: { keben: 2000 }, interactGains: { keben: 6 },
   },
   { id:'shenmi_ying', name:'神秘·影', icon:'🌑', title:'暗影雕师', personality:'神秘莫测',
-    noPreference: true, specialty:'随机风格，随机结果',
-    skillName:'混沌之手', skillDesc:'完全随机，0.5x~2.5x 开盲盒',
-    baseMult: [0.5, 2.5],
-    interactCosts: { mima: 15000 }, interactGains: { mima: 60 },
+    noPreference: true, productTypeIds: ['carving_animal','carving_misc','pendant_dragon'],
+    skillName:'混沌之手', skillDesc:'完全随机，0.5x~3.25x 开盲盒（高潜）',
+    baseMult: [0.5, 3.25],
+    interactCosts: { mima: 15000 }, interactGains: { mima: 14 },
   },
 ]
 
@@ -253,30 +389,127 @@ function computeCarvingBoost(master, cutResultId) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  20 名直播间观众：好感度影响消费意愿
+//  50 名直播间观众：人设、买卖习惯、口头禅
+//  habit: aggressive=激进加价 | conservative=稳健 | impulsive=冲动 | steady=平稳 | bargain=捡漏型
 // ═══════════════════════════════════════════════════════════
 const LIVE_VIEWERS = [
-  { id:'viewer_1', name:'翠迷小王', icon:'👤', baseWillingness:0.7 },
-  { id:'viewer_2', name:'玉姐', icon:'👩', baseWillingness:0.65 },
-  { id:'viewer_3', name:'收藏家老林', icon:'👨', baseWillingness:0.8 },
-  { id:'viewer_4', name:'小白新手', icon:'🧑', baseWillingness:0.5 },
-  { id:'viewer_5', name:'土豪阿明', icon:'💰', baseWillingness:0.9 },
-  { id:'viewer_6', name:'行家老陈', icon:'👴', baseWillingness:0.75 },
-  { id:'viewer_7', name:'学生小美', icon:'👧', baseWillingness:0.45 },
-  { id:'viewer_8', name:'珠宝店老板', icon:'🏪', baseWillingness:0.85 },
-  { id:'viewer_9', name:'路人甲', icon:'🙂', baseWillingness:0.55 },
-  { id:'viewer_10', name:'网红主播', icon:'📱', baseWillingness:0.7 },
-  { id:'viewer_11', name:'赌石狂人', icon:'🎲', baseWillingness:0.95 },
-  { id:'viewer_12', name:'低调富豪', icon:'🕴️', baseWillingness:0.6 },
-  { id:'viewer_13', name:'翡翠发烧友', icon:'💎', baseWillingness:0.88 },
-  { id:'viewer_14', name:'萌新观望', icon:'👀', baseWillingness:0.4 },
-  { id:'viewer_15', name:'老主顾阿强', icon:'🤝', baseWillingness:0.82 },
-  { id:'viewer_16', name:'宝妈翠翠', icon:'👩', baseWillingness:0.58 },
-  { id:'viewer_17', name:'企业家老李', icon:'👔', baseWillingness:0.78 },
-  { id:'viewer_18', name:'好奇宝宝', icon:'👶', baseWillingness:0.35 },
-  { id:'viewer_19', name:'专业买手', icon:'📋', baseWillingness:0.9 },
-  { id:'viewer_20', name:'佛系观众', icon:'😌', baseWillingness:0.5 },
+  { id:'viewer_1', name:'翠迷小王', icon:'👤', baseWillingness:0.7, habit:'steady', phrases:['这块我要了','翠翠的必须支持'] },
+  { id:'viewer_2', name:'玉姐', icon:'👩', baseWillingness:0.65, habit:'conservative', phrases:['再看看吧','好料不等人呐'] },
+  { id:'viewer_3', name:'收藏家老林', icon:'👨', baseWillingness:0.8, habit:'aggressive', phrases:['入藏！','传家宝级别'] },
+  { id:'viewer_4', name:'小白新手', icon:'🧑', baseWillingness:0.5, habit:'impulsive', phrases:['冲冲冲！','看不懂但好厉害'] },
+  { id:'viewer_5', name:'土豪阿明', icon:'💰', baseWillingness:0.9, habit:'aggressive', phrases:['钱不是问题','包圆了'] },
+  { id:'viewer_6', name:'行家老陈', icon:'👴', baseWillingness:0.75, habit:'conservative', phrases:['值这个价','老眼光不会错'] },
+  { id:'viewer_7', name:'学生小美', icon:'👧', baseWillingness:0.45, habit:'bargain', phrases:['省点生活费','再便宜点嘛'] },
+  { id:'viewer_8', name:'珠宝店老板', icon:'🏪', baseWillingness:0.85, habit:'steady', phrases:['进货价合适','店里好卖'] },
+  { id:'viewer_9', name:'路人甲', icon:'🙂', baseWillingness:0.55, habit:'steady', phrases:['凑个热闹','随便看看'] },
+  { id:'viewer_10', name:'网红主播', icon:'📱', baseWillingness:0.7, habit:'impulsive', phrases:['直播间老铁冲！','流量来了'] },
+  { id:'viewer_11', name:'赌石狂人', icon:'🎲', baseWillingness:0.95, habit:'aggressive', phrases:['梭哈！','不差这一口'] },
+  { id:'viewer_12', name:'低调富豪', icon:'🕴️', baseWillingness:0.6, habit:'conservative', phrases:['低调低调','闷声发财'] },
+  { id:'viewer_13', name:'翡翠发烧友', icon:'💎', baseWillingness:0.88, habit:'aggressive', phrases:['我的梦中情翠！','绝了绝了'] },
+  { id:'viewer_14', name:'萌新观望', icon:'👀', baseWillingness:0.4, habit:'bargain', phrases:['先学学','不敢乱跟'] },
+  { id:'viewer_15', name:'老主顾阿强', icon:'🤝', baseWillingness:0.82, habit:'steady', phrases:['老熟人了','回头客'] },
+  { id:'viewer_16', name:'宝妈翠翠', icon:'👩', baseWillingness:0.58, habit:'conservative', phrases:['给娃攒的','当嫁妆'] },
+  { id:'viewer_17', name:'企业家老李', icon:'👔', baseWillingness:0.78, habit:'steady', phrases:['送客户正好','面子工程'] },
+  { id:'viewer_18', name:'好奇宝宝', icon:'👶', baseWillingness:0.35, habit:'impulsive', phrases:['好漂亮呀','想摸摸'] },
+  { id:'viewer_19', name:'专业买手', icon:'📋', baseWillingness:0.9, habit:'steady', phrases:['客户指定款','转手有赚'] },
+  { id:'viewer_20', name:'佛系观众', icon:'😌', baseWillingness:0.5, habit:'bargain', phrases:['随缘随缘','不强求'] },
+  { id:'viewer_21', name:'拆迁户老刘', icon:'🏠', baseWillingness:0.92, habit:'aggressive', phrases:['拆迁款还没花完','任性一把'] },
+  { id:'viewer_22', name:'微商阿芳', icon:'💄', baseWillingness:0.62, habit:'impulsive', phrases:['发朋友圈有排面','代理拿货'] },
+  { id:'viewer_23', name:'矿二代小吴', icon:'⛏️', baseWillingness:0.85, habit:'aggressive', phrases:['我家矿出的','见多识广'] },
+  { id:'viewer_24', name:'退休张姨', icon:'👵', baseWillingness:0.52, habit:'conservative', phrases:['养老金省着花','攒一辈子了'] },
+  { id:'viewer_25', name:'程序员阿杰', icon:'💻', baseWillingness:0.48, habit:'bargain', phrases:['加班费不容易','理性消费'] },
+  { id:'viewer_26', name:'主播大V', icon:'🌟', baseWillingness:0.88, habit:'impulsive', phrases:['直播间家人们冲','带货素材'] },
+  { id:'viewer_27', name:'古玩摊主', icon:'🏺', baseWillingness:0.72, habit:'conservative', phrases:['搭着卖','老物件配翠'] },
+  { id:'viewer_28', name:'富二代小马', icon:'🚗', baseWillingness:0.95, habit:'aggressive', phrases:['零花钱而已','我爸买单'] },
+  { id:'viewer_29', name:'导游王姐', icon:'🗺️', baseWillingness:0.58, habit:'steady', phrases:['带团见过世面','游客爱买'] },
+  { id:'viewer_30', name:'风水大师', icon:'🔮', baseWillingness:0.75, habit:'impulsive', phrases:['此物旺财','开光必备'] },
+  { id:'viewer_31', name:'餐厅老板', icon:'🍜', baseWillingness:0.65, habit:'steady', phrases:['摆店里撑场面','镇店之宝'] },
+  { id:'viewer_32', name:'保险经理', icon:'📑', baseWillingness:0.55, habit:'conservative', phrases:['资产配置','抗通胀'] },
+  { id:'viewer_33', name:'健身教练', icon:'💪', baseWillingness:0.5, habit:'bargain', phrases:['戴手上显档次','蛋白粉钱省点'] },
+  { id:'viewer_34', name:'夜场妈咪', icon:'💃', baseWillingness:0.82, habit:'aggressive', phrases:['姑娘们要撑场面','不差钱'] },
+  { id:'viewer_35', name:'包工头老赵', icon:'🪚', baseWillingness:0.78, habit:'steady', phrases:['工程款下来了','送礼用'] },
+  { id:'viewer_36', name:'留学生小林', icon:'✈️', baseWillingness:0.6, habit:'impulsive', phrases:['带回去送导师','国粹'] },
+  { id:'viewer_37', name:'茶馆老板娘', icon:'🍵', baseWillingness:0.68, habit:'conservative', phrases:['雅间摆件','茶配翠'] },
+  { id:'viewer_38', name:'炒股大哥', icon:'📈', baseWillingness:0.7, habit:'impulsive', phrases:['今天涨停赚的','梭哈翡翠'] },
+  { id:'viewer_39', name:'瑜伽老师', icon:'🧘', baseWillingness:0.52, habit:'bargain', phrases:['能量石','平静心灵'] },
+  { id:'viewer_40', name:'房产中介', icon:'🏢', baseWillingness:0.8, habit:'steady', phrases:['客户看房送伴手礼','高端大气'] },
+  { id:'viewer_41', name:'纹身师阿龙', icon:'🖋️', baseWillingness:0.55, habit:'impulsive', phrases:['艺术感爆棚','收藏癖'] },
+  { id:'viewer_42', name:'律师陈女士', icon:'⚖️', baseWillingness:0.72, habit:'conservative', phrases:['婚前财产','保值'] },
+  { id:'viewer_43', name:'快递小哥', icon:'📦', baseWillingness:0.42, habit:'bargain', phrases:['跑腿赚的辛苦钱','先看看'] },
+  { id:'viewer_44', name:'美容院老板', icon:'💆', baseWillingness:0.76, habit:'steady', phrases:['VIP客户送礼','精致生活'] },
+  { id:'viewer_45', name:'书法爱好者', icon:'🖌️', baseWillingness:0.64, habit:'conservative', phrases:['文房雅玩','书配翠'] },
+  { id:'viewer_46', name:'电竞少年', icon:'🎮', baseWillingness:0.45, habit:'impulsive', phrases:['皮肤钱省下来','二次元配色'] },
+  { id:'viewer_47', name:'花店小妹', icon:'🌸', baseWillingness:0.5, habit:'bargain', phrases:['搭配花束用','小预算'] },
+  { id:'viewer_48', name:'寺庙住持', icon:'⛩️', baseWillingness:0.68, habit:'conservative', phrases:['结缘之物','开光供奉'] },
+  { id:'viewer_49', name:'海外代购', icon:'🛒', baseWillingness:0.9, habit:'aggressive', phrases:['老外抢着要','跨境爆款'] },
+  { id:'viewer_50', name:'榜一大哥', icon:'👑', baseWillingness:0.98, habit:'aggressive', phrases:['全场我包了','给主播面子'] },
 ]
+
+// 粉丝等级 0=路人 1=铁粉 2=舰长 3=神豪
+const FAN_LEVEL_NAMES = ['路人','铁粉','舰长','神豪']
+// 钱包状态 正常 暴富 破产 黑粉
+const WALLET_STATUS_NAMES = { normal:'正常', rich:'暴富', bankrupt:'破产', black:'黑粉' }
+const FAN_BADGE_STYLES = {
+  0: { bg:'#64748b', color:'#e2e8f0', label:'路人' },
+  1: { bg:'#2563eb', color:'#93c5fd', label:'铁粉' },
+  2: { bg:'#7c3aed', color:'#c4b5fd', label:'舰长' },
+  3: { bg:'linear-gradient(135deg,#d97706,#fbbf24)', color:'#fff', label:'神豪' },
+}
+const BLACK_FAN_BADGE = { bg:'#1f2937', color:'#9ca3af', label:'黑粉' }
+
+function createDefaultViewerState() {
+  return Object.fromEntries(LIVE_VIEWERS.map(v => [v.id, {
+    favorability: 0,
+    fanLevel: 0,
+    walletStatus: 'normal',
+    transactionCount: 0,
+    brickCount: 0,
+  }]))
+}
+
+function migrateViewerState(payload) {
+  const state = payload?.viewerState || {}
+  const favMap = payload?.viewerFavorability || {}
+  return Object.fromEntries(LIVE_VIEWERS.map(v => {
+    const s = (state[v.id] && typeof state[v.id] === 'object') ? state[v.id] : {}
+    return [v.id, {
+      favorability: s.favorability ?? favMap[v.id] ?? 0,
+      fanLevel: s.fanLevel ?? 0,
+      walletStatus: s.walletStatus ?? 'normal',
+      transactionCount: s.transactionCount ?? 0,
+      brickCount: s.brickCount ?? 0,
+    }]
+  }))
+}
+
+function evolveViewerAfterPurchase(viewerStateMap, vid, actualValue, paidPrice, isBrick, opts = {}) {
+  const s = { ...(viewerStateMap[vid] || createDefaultViewerState()[vid]) }
+  s.transactionCount = (s.transactionCount || 0) + 1
+  if (isBrick) s.brickCount = (s.brickCount || 0) + 1
+
+  // 盲拍切垮：30% 概率破产或黑化
+  if (opts.blindCutDown && (s.walletStatus === 'normal' || s.walletStatus === 'rich')) {
+    if (Math.random() < 0.3) s.walletStatus = Math.random() < 0.67 ? 'bankrupt' : 'black'
+  }
+
+  // 升级粉丝等级：累计交易3次→铁粉，好感≥20→舰长
+  if (s.transactionCount >= 3 && s.fanLevel < 1) s.fanLevel = 1
+  if (s.favorability >= 20 && s.fanLevel < 2) s.fanLevel = 2
+
+  // 钱包演化：切涨/高性价比→暴富概率；砖头料→破产/黑粉（破产/黑粉后不再参与后续演化）
+  if (s.walletStatus === 'bankrupt' || s.walletStatus === 'black') return s
+
+  const ratio = paidPrice > 0 ? actualValue / paidPrice : 0
+  if (ratio >= 1.5 && s.walletStatus === 'normal' && Math.random() < 0.25) {
+    s.walletStatus = 'rich'
+    if (s.favorability >= 15 && s.fanLevel < 3) s.fanLevel = 3
+  }
+  if (isBrick && s.brickCount >= 2 && s.walletStatus === 'normal') {
+    if (Math.random() < 0.3) s.walletStatus = 'bankrupt'
+    else if (Math.random() < 0.2) s.walletStatus = 'black'
+  }
+  return s
+}
 
 // ═══════════════════════════════════════════════════════════
 //  手机私信：对话树 { id, npcId, type, msg, options: [{ text, affinityDelta, nextId? }] }
@@ -334,12 +567,47 @@ const LIVESTREAM_CUT = {
   tipPerHypeCutSuccess: 800,
   tipPerHypeCutFail: 100,
 }
-const BARRAGE_CUT_SUCCESS = ['牛逼！','涨了涨了！','主播666','打赏走起','值了值了','这料绝了']
-const BARRAGE_CUT_FAIL = ['退钱！','主播又在坑人','就这？','翻车了','血亏','取关取关']
+// 切石/盲拍弹幕：每人约10条储备，格式「观众名：评论」
+const VIEWER_BARRAGE_PHRASES = {
+  cutSuccess: ['牛逼！','涨了涨了！','主播666','打赏走起','值了值了','这料绝了','切涨了！','稳赚','主播靠谱','老铁没白跟'],
+  cutFail: ['退钱！','主播又在坑人','就这？','翻车了','血亏','取关取关','切垮了呀！','又亏了','主播翻车','凉了凉了'],
+  blindUp: ['代客主刀神了！','主播帮老铁切涨了！','这波值了值了！','主播信誉拉满','老铁赚翻了','盲拍切涨666','买主赚麻了','赌对了','主播给力','盲拍也能涨'],
+  blindDown: ['代客主刀翻车','主播坑老铁了','盲拍切垮惨案','老铁血亏','这波主播要背锅','信誉危机','买主凉了','盲拍有风险','血亏现场','切垮了呀！'],
+}
+function generateViewerBarrages(phraseKey, count, type) {
+  const pool = VIEWER_BARRAGE_PHRASES[phraseKey] || VIEWER_BARRAGE_PHRASES.cutSuccess
+  const viewers = LIVE_VIEWERS.slice().sort(() => Math.random() - 0.5)
+  const phrases = pool.slice().sort(() => Math.random() - 0.5)
+  return Array.from({ length: count }, (_, i) => {
+    const v = viewers[i % viewers.length]
+    return { id: Date.now() + Math.random() + i, text: `${v.icon} ${v.name}：${phrases[i % phrases.length]}`, type: type || 'normal' }
+  })
+}
+
+// 预测弹幕（吃瓜群众）：按场口/产地生成
+const PREDICTION_BARRAGES = {
+  '木那': ['木那容易裂，买主悬了','木那至尊赌性大，坐等开奖','木那出帝王绿概率高，但也容易垮','雪花棉木那，祝你好运'],
+  '莫西沙': ['莫西沙裂多，行内都知道','种水料但裂要命','莫西沙高冰多，就看裂了','裂裂裂，莫西沙祖传'],
+  '大马坎': ['大马坎黄翡多，颜色稳','黄加绿稳赚','大马坎花青概率高','色彩料，买主有眼光'],
+  '后江': ['后江保本率高','后江稳，适合新手','皮薄肉细，后江靠谱'],
+  '会卡': ['会卡裂多，买主小心','会卡水长但裂绺多','会卡赌裂，刺激'],
+  '帕敢': ['帕敢老场口，稳','帕敢品质下限高','老坑料，看好'],
+  '南齐': ['南齐整体偏稳','南齐糯种花青多','中小料稳场'],
+  '龙塘': ['龙塘种老色正','玻璃种概率略高','龙塘好料'],
+  '抹谷': ['抹谷翡翠中规中矩','抹谷以红蓝宝石闻名','翡翠产量少'],
+  '其他': ['杂矿混采，赌性大','小场口料，看运气','吃瓜吃瓜','盲拍刺激','坐等开奖'],
+}
+function generatePredictionBarrages(stone) {
+  const originId = stone?.originId || '其他'
+  const pool = PREDICTION_BARRAGES[originId] || PREDICTION_BARRAGES['其他']
+  const count = Math.min(4, Math.max(2, Math.floor(pool.length * 0.6)))
+  const shuffled = [...pool].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count).map(t => ({ id: Date.now() + Math.random(), text: t, type: 'prediction' }))
+}
 const WORKBENCH_MAX_VISIBLE = 8  // 工作台最多显示 2 排（每排约 4 块），超出移入 LOG
 
 function computeModifiers(activeEffects) {
-  const m = { marketPrice:1, npcOffer:1, cutQuality:0, brickDetect:1 }
+  const m = { marketPrice:1, npcOffer:0.5, cutQuality:0, brickDetect:1 }  // NPC 出价基础减半，事件倍率仍生效
   ;(activeEffects || []).forEach(e => {
     if (e.modifiers?.marketPrice) m.marketPrice *= e.modifiers.marketPrice
     if (e.modifiers?.npcOffer) m.npcOffer *= e.modifiers.npcOffer
@@ -1131,6 +1399,65 @@ const CUT_RESULTS = [
 ]
 const CUT_MAP = Object.fromEntries(CUT_RESULTS.map(r => [r.id, r]))
 
+// 切石结果随机台词（不同 NPC 随机出字）
+const CUT_PHRASES = {
+  brick: [
+    { text: '💔 全是裂！亏大了！' },
+    { npcId: 'lao_wang', text: '这料废了，裂太多' },
+    { npcId: 'master_chen', text: '砖头，没法做' },
+    { npcId: 'zhang_zong', text: '废料，不在考虑范围' },
+    { text: '裂绺满身，血亏' },
+    { npcId: 'xiao_mei', text: '完了完了，粉丝要骂' },
+    { text: '🧱 砖头料！' },
+  ],
+  waxy: [
+    { text: '😌 糯种，刚好保本。' },
+    { npcId: 'lao_wang', text: '糯种，按市价来' },
+    { npcId: 'master_chen', text: '种水一般，勉强能雕' },
+    { text: '保本了' },
+    { npcId: 'xiao_mei', text: '糯种还行，能卖' },
+  ],
+  flower: [
+    { text: '🌸 花青种！小赚一笔！' },
+    { npcId: 'xiao_mei', text: '颜色漂亮，粉丝肯定爱' },
+    { npcId: 'lao_wang', text: '花青，小赚' },
+    { text: '花青，微赚' },
+    { npcId: 'master_chen', text: '颜色活泼，能做' },
+  ],
+  ice: [
+    { text: '❄️ 冰种！大赚了！' },
+    { npcId: 'master_chen', text: '冰种！好料' },
+    { npcId: 'zhang_zong', text: '种水不错' },
+    { text: '冰种通透，赚' },
+    { npcId: 'xiao_mei', text: '冰种！直播间爆了' },
+  ],
+  glass: [
+    { text: '💠 玻璃种！超级暴赚！' },
+    { npcId: 'zhang_zong', text: '玻璃种，稀缺' },
+    { npcId: 'master_chen', text: '种水极佳' },
+    { text: '玻璃种！' },
+    { npcId: 'lao_wang', text: '老坑玻璃，少见' },
+  ],
+  imperial: [
+    { text: '🎉👑 帝王绿！一夜暴富！' },
+    { npcId: 'zhang_zong', text: '帝王绿，传家之宝' },
+    { npcId: 'master_chen', text: '万里挑一' },
+    { text: '帝王绿！！！' },
+    { npcId: 'xiao_mei', text: '帝王绿！直播间要炸' },
+  ],
+}
+function getRandomCutPhrase(resultId, npcList = []) {
+  const pool = CUT_PHRASES[resultId] || [{ text: CUT_MAP[resultId]?.message || '切完了' }]
+  const item = pool[Math.floor(Math.random() * pool.length)]
+  const npc = item.npcId && npcList.find(n => n.id === item.npcId)
+  if (npc) return `${npc.icon} ${npc.name}：${item.text}`
+  if (!item.npcId && npcList.length > 0 && Math.random() < 0.4) {
+    const r = npcList[Math.floor(Math.random() * npcList.length)]
+    return `${r.icon} ${r.name}：${item.text}`
+  }
+  return item.text
+}
+
 // ═══════════════════════════════════════════════════════════
 //  品质样式
 // ═══════════════════════════════════════════════════════════
@@ -1148,6 +1475,194 @@ const QUALITY_CONFIG = {
 function rnd(min, max) { return min + Math.random() * (max - min) }
 function rndInt(min, max) { return Math.floor(rnd(min, max + 1)) }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)] }
+
+//  Box-Muller 近似：3-15 轮正态分布，均值约 9
+function rndNormal(mean, std, minV, maxV) {
+  const u1 = Math.random(), u2 = Math.random()
+  const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+  return Math.round(Math.max(minV, Math.min(maxV, mean + z * std)))
+}
+// 原石盲拍估值倍率（按切出概率加权期望）
+const BLIND_AUCTION_EXPECTED_MULT = CUT_RESULTS.reduce((s, r) => s + r.multiplier * r.baseProbability, 0) / CUT_RESULTS.reduce((s, r) => s + r.baseProbability, 0)
+
+// 直播拍卖：支持成品与未切原石（盲拍），含跟风出价、粉丝等级、钱包状态
+function runLiveAuction(stone, viewerFavorability, liveStreamLevel, relicCutValueMult, currentDay, viewerState = {}, viewerFavorabilityBonus = 0) {
+  const isRaw = !stone.cutResult
+  const cutVal = isRaw
+    ? Math.round(stone.price * BLIND_AUCTION_EXPECTED_MULT * relicCutValueMult)
+    : Math.round(stone.price * stone.cutResult.multiplier * (stone.polished?.qualityBoost || 1) * relicCutValueMult)
+  const levelBonus = [1, 1, 1.1, 1.18, 1.25, 1.35][liveStreamLevel] ?? 1
+  const slotCount = LIVE_STREAM_LEVELS[liveStreamLevel]?.slotCount || 5
+  const roundRange = liveStreamLevel >= 5 ? [10, 30] : liveStreamLevel >= 4 ? [8, 26] : liveStreamLevel >= 3 ? [7, 22] : liveStreamLevel >= 2 ? [6, 18] : [5, 15]
+  const rounds = rndNormal((roundRange[0] + roundRange[1]) / 2, 3, roundRange[0], roundRange[1])
+  const shuffled = [...LIVE_VIEWERS].sort(() => Math.random() - 0.5)
+  const pool = shuffled.filter(v => (viewerState[v.id]?.walletStatus || 'normal') !== 'bankrupt')
+  const participants = pool.slice(0, Math.min(slotCount + 2, 12))
+  const tycoons = participants.filter(v => (viewerState[v.id]?.fanLevel ?? 0) === 3)
+  const isRivalry = tycoons.length >= 2 && Math.random() < 0.2
+  const rivalPair = isRivalry && tycoons.length >= 2 ? [tycoons[0], tycoons[1]] : []
+  const todaySeed = (currentDay || 1) * 7919
+  const todayHot = new Set(participants.filter((_, i) => ((todaySeed + i) % 7) < 2).map(v => v.id))
+  const todayCold = new Set(participants.filter((_, i) => ((todaySeed + i + 3) % 11) < 2).map(v => v.id))
+  const blackFanIds = new Set(participants.filter(v => (viewerState[v.id]?.walletStatus) === 'black').map(v => v.id))
+  const bids = []
+  const active = new Map()
+  participants.forEach(v => {
+    const vs = viewerState[v.id] || {}
+    const fav = (viewerFavorability[v.id] || 0) + viewerFavorabilityBonus
+    let will = v.baseWillingness + Math.min(0.5, fav * 0.04)
+    if (todayHot.has(v.id)) will *= 1.15
+    if (todayCold.has(v.id)) will *= 0.85
+    if (blackFanIds.has(v.id)) will *= 0.6
+    let walletMult = (vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1
+    if (isRivalry && rivalPair.some(r => r.id === v.id)) { will *= 3; walletMult *= 3 }
+    const init = blackFanIds.has(v.id)
+      ? Math.round(cutVal * 0.2 / 100) * 100
+      : Math.round(cutVal * rnd(0.7, 0.9) / 100) * 100
+    active.set(v.id, { viewer: v, bid: Math.max(init, cutVal * 0.2), will, fanLevel: vs.fanLevel ?? 0, walletStatus: vs.walletStatus || 'normal', walletMult })
+  })
+  const opening = [...active.entries()].sort((a, b) => b[1].bid - a[1].bid).slice(0, 3)
+  opening.forEach(([vid, { viewer, bid }], i) => {
+    bids.push({ round: 1, viewer, bid, phrase: pick(viewer.phrases || ['开个价']) })
+  })
+  if (isRivalry && rivalPair.length >= 2) {
+    bids.push({ round: 1, system: true, rivalry: true, text: `【系统】${rivalPair[0].name}和${rivalPair[1].name}杠上了！开始斗气竞价！` })
+  }
+  let bandwagonRoundsLeft = 0
+  for (let r = 1; r < rounds; r++) {
+    if (bandwagonRoundsLeft > 0) bandwagonRoundsLeft--
+    const entries = [...active.entries()]
+    if (entries.length <= 1) break
+    const leader = entries.reduce((a, b) => a[1].bid > b[1].bid ? a : b)
+    const challengers = entries.filter(([vid]) => vid !== leader[0]).sort((a, b) => b[1].will - a[1].will)
+    let raised = false
+    for (const [vid, { viewer, bid, will, fanLevel }] of challengers) {
+      const bandwagonBoost = bandwagonRoundsLeft > 0 ? 1.1 : 1
+      const effWill = will * bandwagonBoost
+      const h = viewer.habit || 'steady'
+      let raiseChance = h === 'aggressive' ? 0.85 : h === 'impulsive' ? 0.6 : h === 'steady' ? 0.45 : h === 'conservative' ? 0.3 : 0.2
+      if (blackFanIds.has(vid)) raiseChance *= 0.3
+      if (Math.random() < raiseChance) {
+        const step = h === 'aggressive' ? rnd(0.05, 0.15) : h === 'impulsive' ? rnd(0.04, 0.12) : rnd(0.03, 0.08)
+        const vs = viewerState[vid] || {}
+        const wm = active.get(vid)?.walletMult ?? ((vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1)
+        const newBid = Math.round((leader[1].bid + cutVal * step) / 100) * 100
+        const maxBid = blackFanIds.has(vid)
+          ? Math.round(cutVal * 0.25 / 100) * 100
+          : Math.round(cutVal * effWill * levelBonus * wm * rnd(1.3, 1.8) / 100) * 100
+        if (newBid > leader[1].bid && newBid <= maxBid) {
+          active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult: wm })
+          bids.push({ round: r + 1, viewer, bid: newBid, phrase: pick(viewer.phrases || ['跟']) })
+          raised = true
+          if (fanLevel >= 2) bandwagonRoundsLeft = 2
+          break
+        }
+      }
+    }
+    if (!raised && challengers.length > 0 && Math.random() < 0.6) {
+      const [vid, { viewer, bid, will, fanLevel, walletMult: wm }] = pick(challengers)
+      const vs = viewerState[vid] || {}
+      const walletMult = wm ?? ((vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1)
+      const effWill = will * (bandwagonRoundsLeft > 0 ? 1.1 : 1)
+      const newBid = Math.round((leader[1].bid + cutVal * rnd(0.02, 0.08)) / 100) * 100
+      const maxBid = blackFanIds.has(vid) ? cutVal * 0.25 : cutVal * effWill * levelBonus * walletMult * 1.5
+      if (newBid <= maxBid) {
+        active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult })
+        bids.push({ round: r + 1, viewer, bid: newBid, phrase: pick(viewer.phrases || ['再加一点']) })
+        if (fanLevel >= 2) bandwagonRoundsLeft = 2
+      }
+    }
+  }
+  const final = [...active.values()]
+  const winner = final.reduce((a, b) => a.bid > b.bid ? a : b)
+  return { bids, winner: { viewer: winner.viewer, bid: winner.bid }, isRivalry: !!isRivalry, rivalNames: rivalPair.map(r => r.name) }
+}
+
+// 直播拍卖饰品（成品，无切割）
+function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel, currentDay, viewerState = {}, viewerFavorabilityBonus = 0) {
+  const cutVal = accessory.value
+  const levelBonus = [1, 1, 1.1, 1.18, 1.25, 1.35][liveStreamLevel] ?? 1
+  const slotCount = LIVE_STREAM_LEVELS[liveStreamLevel]?.slotCount || 5
+  const roundRange = liveStreamLevel >= 5 ? [10, 30] : liveStreamLevel >= 4 ? [8, 26] : liveStreamLevel >= 3 ? [7, 22] : liveStreamLevel >= 2 ? [6, 18] : [5, 15]
+  const rounds = rndNormal((roundRange[0] + roundRange[1]) / 2, 3, roundRange[0], roundRange[1])
+  const shuffled = [...LIVE_VIEWERS].sort(() => Math.random() - 0.5)
+  const pool = shuffled.filter(v => (viewerState[v.id]?.walletStatus || 'normal') !== 'bankrupt')
+  const participants = pool.slice(0, Math.min(slotCount + 2, 12))
+  const tycoons = participants.filter(v => (viewerState[v.id]?.fanLevel ?? 0) === 3)
+  const isRivalry = tycoons.length >= 2 && Math.random() < 0.2
+  const rivalPair = isRivalry && tycoons.length >= 2 ? [tycoons[0], tycoons[1]] : []
+  const todaySeed = (currentDay || 1) * 7919
+  const todayHot = new Set(participants.filter((_, i) => ((todaySeed + i) % 7) < 2).map(v => v.id))
+  const todayCold = new Set(participants.filter((_, i) => ((todaySeed + i + 3) % 11) < 2).map(v => v.id))
+  const blackFanIds = new Set(participants.filter(v => (viewerState[v.id]?.walletStatus) === 'black').map(v => v.id))
+  const bids = []
+  const active = new Map()
+  participants.forEach(v => {
+    const vs = viewerState[v.id] || {}
+    const fav = (viewerFavorability[v.id] || 0) + viewerFavorabilityBonus
+    let will = v.baseWillingness + Math.min(0.5, fav * 0.04)
+    if (todayHot.has(v.id)) will *= 1.15
+    if (todayCold.has(v.id)) will *= 0.85
+    if (blackFanIds.has(v.id)) will *= 0.6
+    let walletMult = (vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1
+    if (isRivalry && rivalPair.some(r => r.id === v.id)) { will *= 3; walletMult *= 3 }
+    const init = blackFanIds.has(v.id) ? Math.round(cutVal * 0.2 / 100) * 100 : Math.round(cutVal * rnd(0.7, 0.9) / 100) * 100
+    active.set(v.id, { viewer: v, bid: Math.max(init, cutVal * 0.2), will, fanLevel: vs.fanLevel ?? 0, walletStatus: vs.walletStatus || 'normal', walletMult })
+  })
+  const opening = [...active.entries()].sort((a, b) => b[1].bid - a[1].bid).slice(0, 3)
+  opening.forEach(([vid, { viewer, bid }], i) => {
+    bids.push({ round: 1, viewer, bid, phrase: pick(viewer.phrases || ['开个价']) })
+  })
+  if (isRivalry && rivalPair.length >= 2) {
+    bids.push({ round: 1, system: true, rivalry: true, text: `【系统】${rivalPair[0].name}和${rivalPair[1].name}杠上了！开始斗气竞价！` })
+  }
+  let bandwagonRoundsLeft = 0
+  for (let r = 1; r < rounds; r++) {
+    if (bandwagonRoundsLeft > 0) bandwagonRoundsLeft--
+    const entries = [...active.entries()]
+    if (entries.length <= 1) break
+    const leader = entries.reduce((a, b) => a[1].bid > b[1].bid ? a : b)
+    const challengers = entries.filter(([vid]) => vid !== leader[0]).sort((a, b) => b[1].will - a[1].will)
+    let raised = false
+    for (const [vid, { viewer, bid, will, fanLevel }] of challengers) {
+      const bandwagonBoost = bandwagonRoundsLeft > 0 ? 1.1 : 1
+      const effWill = will * bandwagonBoost
+      const h = viewer.habit || 'steady'
+      let raiseChance = h === 'aggressive' ? 0.85 : h === 'impulsive' ? 0.6 : h === 'steady' ? 0.45 : h === 'conservative' ? 0.3 : 0.2
+      if (blackFanIds.has(vid)) raiseChance *= 0.3
+      if (Math.random() < raiseChance) {
+        const step = h === 'aggressive' ? rnd(0.05, 0.15) : h === 'impulsive' ? rnd(0.04, 0.12) : rnd(0.03, 0.08)
+        const vs = viewerState[vid] || {}
+        const wm = active.get(vid)?.walletMult ?? ((vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1)
+        const newBid = Math.round((leader[1].bid + cutVal * step) / 100) * 100
+        const maxBid = blackFanIds.has(vid) ? Math.round(cutVal * 0.25 / 100) * 100 : Math.round(cutVal * effWill * levelBonus * wm * rnd(1.3, 1.8) / 100) * 100
+        if (newBid > leader[1].bid && newBid <= maxBid) {
+          active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult: wm })
+          bids.push({ round: r + 1, viewer, bid: newBid, phrase: pick(viewer.phrases || ['跟']) })
+          raised = true
+          if (fanLevel >= 2) bandwagonRoundsLeft = 2
+          break
+        }
+      }
+    }
+    if (!raised && challengers.length > 0 && Math.random() < 0.6) {
+      const [vid, { viewer, bid, will, fanLevel, walletMult: wm }] = pick(challengers)
+      const vs = viewerState[vid] || {}
+      const walletMult = wm ?? ((vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1)
+      const effWill = will * (bandwagonRoundsLeft > 0 ? 1.1 : 1)
+      const newBid = Math.round((leader[1].bid + cutVal * rnd(0.02, 0.08)) / 100) * 100
+      const maxBid = blackFanIds.has(vid) ? cutVal * 0.25 : cutVal * effWill * levelBonus * walletMult * 1.5
+      if (newBid <= maxBid) {
+        active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult })
+        bids.push({ round: r + 1, viewer, bid: newBid, phrase: pick(viewer.phrases || ['再加一点']) })
+        if (fanLevel >= 2) bandwagonRoundsLeft = 2
+      }
+    }
+  }
+  const final = [...active.values()]
+  const winner = final.reduce((a, b) => a.bid > b.bid ? a : b)
+  return { bids, winner: { viewer: winner.viewer, bid: winner.bid }, isRivalry: !!isRivalry, rivalNames: rivalPair.map(r => r.name) }
+}
 
 function generateSize() {
   const w = [0.22, 0.33, 0.27, 0.13, 0.05]
@@ -1390,7 +1905,7 @@ function MarketStoneCard({ stone, channel, onBuy, onBargain, onBid, onFlashlight
 // ═══════════════════════════════════════════════════════════
 //  子组件：工作台卡片（含三种处理按钮）
 // ═══════════════════════════════════════════════════════════
-function WorkbenchCard({ stone, onCut, onSell, onNpc, onCollect, onOpenWindow, onSellSemi, onCarving, onLiveSell, cutValueMult = 1, money, liveStreamLevel }) {
+function WorkbenchCard({ stone, onCut, onSell, onNpc, onCollect, onOpenWindow, onSellSemi, onCarving, onLiveSell, onLiveBlindAuction, cutValueMult = 1, money, liveStreamLevel }) {
   const isCut = !!stone.cutResult
   const r = stone.cutResult
   const w = stone.windowOpened
@@ -1478,7 +1993,14 @@ function WorkbenchCard({ stone, onCut, onSell, onNpc, onCollect, onOpenWindow, o
 
       {/* 操作按钮区 */}
       {stone.sold ? (
-        <div style={{ textAlign:'center', fontSize:11, color:'#334155', padding:'3px 0' }}>✓ 已处置</div>
+        <div style={{ textAlign:'center', fontSize:10, color:'#64748b', padding:'4px 0' }}>
+          {stone.soldVia === 'live' && <span>📺 直播售出 ¥{(stone.soldPrice||0).toLocaleString()}</span>}
+          {stone.soldVia === 'npc' && <span>🤝 {stone.soldToNpc||'NPC'} ¥{(stone.soldPrice||0).toLocaleString()}</span>}
+          {stone.soldVia === 'direct' && <span>💰 直接售出 ¥{(stone.soldPrice||0).toLocaleString()}</span>}
+          {stone.soldVia === 'semi' && <span>💰 半明料售出 ¥{(stone.soldPrice||0).toLocaleString()}</span>}
+          {stone.soldVia === 'collection' && <span>🏺 已入藏</span>}
+          {!stone.soldVia && <span>✓ 已处置</span>}
+        </div>
       ) : !isCut ? (
         <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
           {w ? (
@@ -1543,6 +2065,13 @@ function WorkbenchCard({ stone, onCut, onSell, onNpc, onCollect, onOpenWindow, o
               width:'100%', padding:'6px 0', borderRadius:8, border:'none', cursor:'pointer',
               background:'linear-gradient(135deg,#a21caf,#c026d3)', color:'#fae8ff', fontSize:10, fontWeight:700,
             }}>📺 直播售卖</button>
+          )}
+          {liveStreamLevel >= 1 && !isCut && onLiveBlindAuction && (
+            <button onClick={() => onLiveBlindAuction(stone.id)} style={{
+              width:'100%', padding:'6px 0', borderRadius:8, border:'none', cursor:'pointer',
+              background:'linear-gradient(135deg,#7c2d12,#c2410c)', color:'#ffedd5', fontSize:10, fontWeight:700,
+              boxShadow:'0 0 10px rgba(194,65,12,.4)',
+            }}>🎲 直播盲拍（代客主刀）</button>
           )}
           {canCollect && (
             <button onClick={() => onCollect(stone.id)} style={{
@@ -1870,6 +2399,89 @@ function NpcModal({ stone, npcRelations, onSellToNpc, onClose, npcOfferMult = 1,
   )
 }
 
+// NPC 交易饰品弹窗（成品无砖头料检测）
+function NpcAccessoryModal({ accessory, npcRelations, onSellToNpc, onClose, npcOfferMult = 1 }) {
+  if (!accessory) return null
+  const baseValue = accessory.value
+  const cutResultId = GRADE_TO_CUT[accessory.grade] || 'waxy'
+  const [selectedId, setSelectedId] = useState(null)
+  const [availableNpcs] = useState(() => {
+    const gradeIdx = GRADE_ORDER.indexOf(cutResultId)
+    const pool = NPC_LIST.filter(npc => gradeIdx >= GRADE_ORDER.indexOf(npc.minGrade))
+    const affinity = pool.filter(n => n.affinityGrades.includes(cutResultId))
+    const rest = pool.filter(n => !n.affinityGrades.includes(cutResultId))
+    const shuffled = [...rest].sort(() => Math.random() - 0.5)
+    const count = Math.min(Math.max(3, rndInt(3, 6)), pool.length)
+    const affinityPick = affinity.sort(() => Math.random() - 0.5).slice(0, 2)
+    const restPick = shuffled.slice(0, count - affinityPick.length)
+    return [...affinityPick, ...restPick].sort(() => Math.random() - 0.5)
+  })
+  const [offerMap] = useState(() => {
+    const m = {}
+    availableNpcs.forEach(npc => {
+      const deals = npcRelations[npc.id] || 0
+      m[npc.id] = {
+        offer: getNpcOffer(npc, baseValue, cutResultId, deals),
+        deals,
+        lv: getNpcLevel(deals),
+        isAffinity: npc.affinityGrades.includes(cutResultId),
+        dialog: (() => {
+          const lv = getNpcLevel(deals)
+          const g = npc.dialogs[Math.min(lv, npc.dialogs.length - 1)]
+          return Array.isArray(g) ? pick(g) : g
+        })(),
+      }
+    })
+    return m
+  })
+  const selected = selectedId ? availableNpcs.find(n => n.id === selectedId) : null
+  const selData = selected ? offerMap[selected.id] : null
+
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:410, background:'rgba(0,0,0,.82)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:12 }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#064e3b,#022c22)', border:'1px solid rgba(45,212,191,.5)', borderRadius:22, width:'100%', maxWidth:800, maxHeight:'88vh', display:'flex', flexDirection:'column', overflow:'hidden' }}>
+        <div style={{ padding:'12px 14px', borderBottom:'1px solid rgba(45,212,191,.3)', background:'rgba(5,46,22,.7)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div>
+            <p style={{ fontWeight:800, fontSize:15, color:'#5eead4', margin:0 }}>🤝 找 NPC 卖饰品</p>
+            <p style={{ fontSize:11, color:'#94a3b8', margin:0 }}>{accessory.emoji} 「{accessory.name}」· {accessory.typeName} · 估价 ¥{baseValue.toLocaleString()}</p>
+          </div>
+          <button onClick={onClose} style={{ background:'rgba(30,41,59,.7)', border:'1px solid rgba(51,65,85,.5)', borderRadius:8, padding:'5px 12px', color:'#64748b', fontSize:12, cursor:'pointer' }}>✕</button>
+        </div>
+        <div style={{ flex:1, overflowY:'auto', padding:12, display:'flex', gap:12 }}>
+          <div style={{ display:'grid', gridTemplateColumns: selected ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap:8, flex:1 }}>
+            {availableNpcs.map(npc => {
+              const d = offerMap[npc.id]
+              const effOffer = Math.round(d.offer * npcOfferMult)
+              const isSelected = selectedId === npc.id
+              return (
+                <div key={npc.id} onClick={()=>setSelectedId(isSelected ? null : npc.id)}
+                  style={{ background: isSelected ? `linear-gradient(135deg,${npc.color}22,${npc.color}11)` : 'rgba(10,18,32,.85)', border:`1.5px solid ${isSelected ? npc.color : `${npc.color}33`}`, borderRadius:14, padding:'10px 8px', cursor:'pointer', textAlign:'center' }}>
+                  <div style={{ width:44, height:44, borderRadius:12, margin:'0 auto 6px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, background:`linear-gradient(135deg,${npc.color}33,${npc.color}11)`, border:`2px solid ${npc.color}44` }}>{npc.icon}</div>
+                  <p style={{ fontWeight:800, fontSize:11, color: npc.color, margin:'0 0 2px' }}>{npc.name}</p>
+                  <p style={{ color:'#fbbf24', fontWeight:800, fontSize:13, margin:0 }}>¥{effOffer.toLocaleString()}</p>
+                </div>
+              )
+            })}
+          </div>
+          {selected && selData && (
+            <div style={{ minWidth:260, display:'flex', flexDirection:'column', gap:10 }}>
+              <div style={{ flex:1, background:'rgba(10,18,32,.7)', borderRadius:14, padding:14, border:`1px solid ${selected.color}44` }}>
+                <p style={{ fontWeight:800, fontSize:16, color: selected.color, margin:'0 0 6px' }}>{selected.icon} {selected.name}</p>
+                <p style={{ fontSize:11, color:'#94a3b8', margin:'0 0 8px' }}>{selected.desc}</p>
+                <p style={{ fontSize:10, color:'#64748b', fontStyle:'italic', margin:'0 0 12px' }}>{'\u300C'}{selData.dialog}{'\u300D'}</p>
+                <button onClick={()=>{ onSellToNpc(accessory.id, selected, Math.round(selData.offer * npcOfferMult)); onClose(); }}
+                  style={{ width:'100%', padding:'10px 0', background:`linear-gradient(135deg,${selected.color}cc,${selected.color})`, border:'none', borderRadius:10, color:'#000', fontSize:14, fontWeight:800, cursor:'pointer' }}>
+                  {'\u2713'} 成交 {'\u00A5'}{Math.round(selData.offer * npcOfferMult).toLocaleString()}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ═══════════════════════════════════════════════════════════
 //  子组件：专属雕刻大师盘货
 // ═══════════════════════════════════════════════════════════
@@ -1908,7 +2520,7 @@ function CarvingModal({ stone, money, cutValueMult, masters, relations, masterSt
             }             else if (m.id === 'kumu_chan_shi') {
               if (m.rejectGrades?.includes(cutId)) { canAccept = false; hint = '只雕纯色，不雕花青(见血)'; hintColor = '#f87171' }
               else if (m.acceptGrades && !m.acceptGrades.includes(cutId) && cutId !== 'brick') { canAccept = false; hint = '只接受指定种水' }
-              else { hint = '3天取货，开光词缀'; est = `¥${Math.round(baseVal * 2.5).toLocaleString()}，文化圈3x` }
+              else { hint = '3天取货，开光词缀，倍率随石料波动'; est = `约 ¥${Math.round(baseVal * 1.8).toLocaleString()}~${Math.round(baseVal * 2.5).toLocaleString()}` }
             } else if (m.dailyLimit && (usesToday?.[m.id] || 0) >= m.dailyLimit) {
               canAccept = false
               hint = '今日已接满'
@@ -1926,10 +2538,13 @@ function CarvingModal({ stone, money, cutValueMult, masters, relations, masterSt
             return (
               <button key={m.id} onClick={()=>canAccept && onSelect(m.id)} disabled={disabled}
                 style={{ display:'flex', flexDirection:'column', alignItems:'flex-start', gap:4, padding:'12px 14px', background: disabled ? 'rgba(30,41,59,.8)' : 'rgba(51,65,85,.6)', border: `1px solid ${disabled ? 'rgba(71,85,105,.4)' : 'rgba(251,191,36,.3)'}`, borderRadius:10, color: disabled ? '#64748b' : '#f1f5f9', cursor: disabled ? 'not-allowed' : 'pointer', fontSize:12, textAlign:'left' }}>
-                <div style={{ display:'flex', width:'100%', justifyContent:'space-between', alignItems:'center' }}>
+                <div style={{ display:'flex', width:'100%', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:4 }}>
                   <span>{m.icon} {m.name} · {m.title}</span>
                   <span style={{ fontSize:10, color: hintColor }}>{hint}</span>
                 </div>
+                {(m.productTypeIds?.length > 0) && (
+                  <span style={{ fontSize:10, color:'#64748b' }}>专精：{(m.productTypeIds || []).map(id => JADE_PRODUCT_TYPES[id]?.name || id).join('、')}</span>
+                )}
                 <p style={{ margin:0, fontSize:11, color:'#94a3b8' }}>{m.skillName}：{m.skillDesc}</p>
                 {est && <p style={{ margin:'4px 0 0', fontSize:11, color:'#86efac' }}>{est}</p>}
               </button>
@@ -1943,18 +2558,46 @@ function CarvingModal({ stone, money, cutValueMult, masters, relations, masterSt
 }
 
 // ═══════════════════════════════════════════════════════════
-//  子组件：直播售卖确认
+//  子组件：直播售卖确认（支持成品与原石盲拍）
 // ═══════════════════════════════════════════════════════════
 function LiveSellModal({ stone, cutValueMult, onConfirm, onClose }) {
-  if (!stone || !stone.cutResult) return null
-  const polishBoost = stone.polished?.qualityBoost ?? 1
-  const val = Math.round(stone.price * stone.cutResult.multiplier * cutValueMult * polishBoost)
+  if (!stone) return null
+  const isBlind = !stone.cutResult
+  const val = isBlind
+    ? Math.round(stone.price * BLIND_AUCTION_EXPECTED_MULT * cutValueMult)
+    : Math.round(stone.price * stone.cutResult.multiplier * cutValueMult * (stone.polished?.qualityBoost ?? 1))
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.8)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background: isBlind ? 'linear-gradient(160deg,#7c2d12,#0f172a)' : 'linear-gradient(160deg,#581c87,#0f172a)', border: `1px solid ${isBlind ? 'rgba(251,146,60,.5)' : 'rgba(192,132,252,.5)'}`, borderRadius:18, padding:24, maxWidth:380 }}>
+        <h3 style={{ margin:'0 0 8px', color: isBlind ? '#fed7aa' : '#e9d5ff' }}>{isBlind ? '🎲 直播盲拍（代客主刀）' : '📺 直播售卖'}</h3>
+        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:12 }}>
+          「{stone.name}」{isBlind ? '未切原石 · 拍卖成交后当场切开' : `${stone.cutResult.name}${stone.polished ? ' · 已盘货' : ''}`}
+        </p>
+        <p style={{ color: isBlind ? '#fdba74' : '#c4b5fd', fontSize:13 }}>
+          {isBlind ? '期望估值约 ¥' : '估值约 ¥'}{val.toLocaleString()}，观众竞拍{isBlind ? '，成交后由你代客主刀，切涨/切垮影响观众好感与直播间热度' : '，好感高的观众出价更高'}
+        </p>
+        <div style={{ display:'flex', gap:10, marginTop:20 }}>
+          <button onClick={onConfirm} style={{ flex:1, padding:12, background: isBlind ? 'linear-gradient(135deg,#c2410c,#ea580c)' : 'linear-gradient(135deg,#7c3aed,#8b5cf6)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer' }}>开播</button>
+          <button onClick={onClose} style={{ flex:1, padding:12, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer' }}>取消</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LiveSellAccessoryModal({ accessory, onConfirm, onClose }) {
+  if (!accessory) return null
   return (
     <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.8)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#581c87,#0f172a)', border:'1px solid rgba(192,132,252,.5)', borderRadius:18, padding:24, maxWidth:380 }}>
-        <h3 style={{ margin:'0 0 8px', color:'#e9d5ff' }}>📺 直播售卖</h3>
-        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:12 }}>「{stone.name}」{stone.cutResult.name}{stone.polished ? ' · 已盘货' : ''}</p>
-        <p style={{ color:'#c4b5fd', fontSize:13 }}>估值约 ¥{val.toLocaleString()}，观众将竞拍，好感高的观众出价更高</p>
+        <h3 style={{ margin:'0 0 8px', color:'#e9d5ff' }}>📺 直播售卖饰品</h3>
+        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:12 }}>
+          「{accessory.name}」· {accessory.typeName}
+          {accessory.desc && <span style={{ display:'block', marginTop:4, fontSize:11, color:'#64748b' }}>{accessory.desc}</span>}
+        </p>
+        <p style={{ color:'#c4b5fd', fontSize:13 }}>
+          估值约 ¥{accessory.value?.toLocaleString()}，观众竞拍，好感高的观众出价更高
+        </p>
         <div style={{ display:'flex', gap:10, marginTop:20 }}>
           <button onClick={onConfirm} style={{ flex:1, padding:12, background:'linear-gradient(135deg,#7c3aed,#8b5cf6)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer' }}>开播</button>
           <button onClick={onClose} style={{ flex:1, padding:12, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer' }}>取消</button>
@@ -1965,9 +2608,20 @@ function LiveSellModal({ stone, cutValueMult, onConfirm, onClose }) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  子组件：直播竞拍过程
+//  子组件：直播竞拍过程（含粉丝牌徽章）
 // ═══════════════════════════════════════════════════════════
-function LiveAuctionProcessModal({ data, onComplete }) {
+function FanBadge({ viewer, viewerState }) {
+  const vs = viewerState?.[viewer.id] || {}
+  const isBlack = vs.walletStatus === 'black'
+  const style = isBlack ? BLACK_FAN_BADGE : (FAN_BADGE_STYLES[vs.fanLevel ?? 0] || FAN_BADGE_STYLES[0])
+  return (
+    <span style={{
+      display:'inline-flex', alignItems:'center', padding:'1px 6px', borderRadius:10, fontSize:9, fontWeight:700,
+      background: style.bg, color: style.color, marginLeft:4, border: isBlack ? '1px solid #6b7280' : '1px solid transparent',
+    }}>{style.label}</span>
+  )
+}
+function LiveAuctionProcessModal({ data, viewerState = {}, onComplete }) {
   const [phase, setPhase] = useState('opening')
   const [visibleCount, setVisibleCount] = useState(0)
   useEffect(() => {
@@ -1975,46 +2629,231 @@ function LiveAuctionProcessModal({ data, onComplete }) {
     const t1 = setTimeout(() => setPhase('bidding'), 800)
     return () => clearTimeout(t1)
   }, [data])
+  const sortedBids = [...(data?.bids || [])].sort((a, b) => (a.round || 0) - (b.round || 0) || (a.bid || 0) - (b.bid || 0))
   useEffect(() => {
-    if (phase !== 'bidding' || !data?.bids?.length) return
-    if (visibleCount >= data.bids.length) {
+    if (phase !== 'bidding' || !sortedBids.length) return
+    if (visibleCount >= sortedBids.length) {
       const t = setTimeout(() => setPhase('done'), 600)
       return () => clearTimeout(t)
     }
-    const t = setTimeout(() => setVisibleCount(c => c + 1), 500)
+    const delay = 1500
+    const t = setTimeout(() => setVisibleCount(c => c + 1), delay)
     return () => clearTimeout(t)
-  }, [phase, visibleCount, data?.bids?.length])
-  if (!data?.stone || !data?.bids?.length) return null
-  const winner = data.bids[0]
+  }, [phase, visibleCount, sortedBids.length])
+  if ((!data?.stone && !data?.accessory) || !data?.bids?.length) return null
+  const win = data.winner || data.bids[0]
+  const item = data.accessory || data.stone
+  const stoneLabel = data.accessory ? data.accessory.typeName : (data.isBlind ? '未切原石 · 盲拍' : data.stone.cutResult?.name || data.stone.name)
   return (
     <div style={{ position:'fixed', inset:0, zIndex:410, background:'rgba(0,0,0,.88)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#581c87,#0f172a)', border:'1px solid rgba(192,132,252,.5)', borderRadius:18, padding:24, maxWidth:420, width:'100%' }}>
-        <h3 style={{ margin:'0 0 12px', color:'#e9d5ff' }}>📺 直播竞拍中</h3>
-        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:16 }}>「{data.stone.name}」{data.stone.cutResult.name}</p>
+      <div onClick={e=>e.stopPropagation()} style={{ background: data.isBlind ? 'linear-gradient(160deg,#7c2d12,#0f172a)' : 'linear-gradient(160deg,#581c87,#0f172a)', border: `1px solid ${data.isBlind ? 'rgba(251,146,60,.5)' : 'rgba(192,132,252,.5)'}`, borderRadius:18, padding:24, maxWidth:480, width:'100%', maxHeight:'85vh', overflowY:'auto' }}>
+        <h3 style={{ margin:'0 0 12px', color: data.isBlind ? '#fed7aa' : '#e9d5ff' }}>{data.isBlind ? '🎲 直播盲拍中' : '📺 直播竞拍中'}</h3>
+        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:16 }}>「{item.name}」{stoneLabel}</p>
         {phase === 'opening' && (
           <p style={{ color:'#c4b5fd', fontSize:14 }}>🎬 正在开播，观众陆续进场…</p>
         )}
         {phase === 'bidding' && (
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-            <p style={{ color:'#a78bfa', fontSize:12, marginBottom:4 }}>出价记录：</p>
-            {[...data.bids].reverse().slice(0, visibleCount).map((b, i) => (
-              <div key={i} style={{ display:'flex', justifyContent:'space-between', padding:'8px 12px', background:'rgba(30,41,59,.6)', borderRadius:10, border:'1px solid rgba(71,85,105,.5)' }}>
-                <span style={{ color:'#e9d5ff' }}>{b.viewer.icon} {b.viewer.name}</span>
-                <span style={{ color:'#fbbf24', fontWeight:700 }}>¥{b.bid.toLocaleString()}</span>
+            <p style={{ color:'#a78bfa', fontSize:12, marginBottom:4 }}>出价记录（从低到高）：</p>
+            {sortedBids.slice(0, visibleCount).map((b, i) => (
+              b.system && b.rivalry ? (
+                <div key={i} style={{ padding:'8px 12px', background:'rgba(127,29,29,.35)', borderRadius:10, border:'1px solid rgba(239,68,68,.6)', color:'#fca5a5', fontWeight:700, fontSize:13 }}>
+                  {b.text}
+                </div>
+              ) : (
+              <div key={i} style={{ display:'flex', flexDirection:'column', gap:2, padding:'8px 12px', background:'rgba(30,41,59,.6)', borderRadius:10, border:'1px solid rgba(71,85,105,.5)' }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap' }}>
+                  <span style={{ color:'#e9d5ff', display:'flex', alignItems:'center' }}>{b.viewer?.icon} {b.viewer?.name}<FanBadge viewer={b.viewer} viewerState={viewerState} /></span>
+                  <span style={{ color:'#fbbf24', fontWeight:700 }}>¥{(b.bid||0).toLocaleString()}</span>
+                </div>
+                {b.phrase && <span style={{ color:'#94a3b8', fontSize:10, fontStyle:'italic' }}>「{b.phrase}」</span>}
               </div>
+              )
             ))}
-            {visibleCount < data.bids.length && <p style={{ color:'#64748b', fontSize:11 }}>竞价中...</p>}
+            {visibleCount < sortedBids.length && <p style={{ color:'#64748b', fontSize:11 }}>竞价中...</p>}
           </div>
         )}
         {phase === 'done' && (
           <div style={{ marginTop:8 }}>
             <div style={{ padding:16, background:'linear-gradient(135deg,rgba(34,197,94,.2),rgba(16,185,129,.15))', borderRadius:14, border:'1px solid rgba(34,197,94,.4)', textAlign:'center', marginBottom:16 }}>
               <p style={{ color:'#4ade80', fontSize:16, fontWeight:800, margin:0 }}>🎉 成交！</p>
-              <p style={{ color:'#bbf7d0', fontSize:14, margin:'8px 0 0' }}>{winner.viewer.icon} {winner.viewer.name} 以 ¥{winner.bid.toLocaleString()} 拍下</p>
+              <p style={{ color:'#bbf7d0', fontSize:14, margin:'8px 0 0', display:'flex', alignItems:'center', justifyContent:'center', flexWrap:'wrap', gap:4 }}>{win?.viewer?.icon} {win?.viewer?.name}<FanBadge viewer={win?.viewer} viewerState={viewerState} /> 以 ¥{win?.bid?.toLocaleString()} 拍下</p>
             </div>
-            <button onClick={onComplete} style={{ width:'100%', padding:12, background:'linear-gradient(135deg,#7c3aed,#8b5cf6)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer' }}>完成</button>
+            {data.isBlind && <p style={{ color:'#fdba74', fontSize:11, marginBottom:12 }}>点击完成后将进入代客主刀切割动画，切涨/切垮影响观众与直播间</p>}
+            <button onClick={onComplete} style={{ width:'100%', padding:12, background: data.isBlind ? 'linear-gradient(135deg,#c2410c,#ea580c)' : 'linear-gradient(135deg,#7c3aed,#8b5cf6)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer' }}>完成</button>
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════
+//  子组件：代客主刀切割进度条（3秒动画 + 50%突发截胡）
+// ═══════════════════════════════════════════════════════════
+function BlindCutProgressModal({ stone, winner, salePrice, npcRelations, cutQualityBonus = 0, brickReduceBonus = 0, relicCutValueMult, onCutComplete, onBuyerRegret, onNpcHijack }) {
+  const DURATION_MS = 3000
+  const INTERRUPT_AT = 0.5
+  const INTERRUPT_CHANCE = 0.15
+  const [progress, setProgress] = useState(0)
+  const [interruptPopup, setInterruptPopup] = useState(null) // 'buyer_regret' | 'npc_hijack'
+  const [npcHijackTarget, setNpcHijackTarget] = useState(null)
+  const interruptedRef = useRef(false)
+  const checked50Ref = useRef(false)
+  const startRef = useRef(null)
+
+  const eligibleNpcs = (npcRelations && NPC_LIST) ? NPC_LIST.filter(n => getNpcLevel(npcRelations[n.id] || 0) >= 3) : []
+
+  useEffect(() => {
+    if (interruptPopup) return
+    const animate = (timestamp) => {
+      if (!startRef.current) startRef.current = timestamp
+      const elapsed = timestamp - startRef.current
+      const pct = Math.min(100, (elapsed / DURATION_MS) * 100)
+      setProgress(pct)
+
+      if (!checked50Ref.current && pct >= INTERRUPT_AT * 100) {
+        checked50Ref.current = true
+        if (Math.random() < INTERRUPT_CHANCE) {
+          interruptedRef.current = true
+          if (eligibleNpcs.length > 0 && Math.random() < 0.5) {
+            setNpcHijackTarget(eligibleNpcs[Math.floor(Math.random() * eligibleNpcs.length)])
+            setInterruptPopup('npc_hijack')
+          } else {
+            setInterruptPopup('buyer_regret')
+          }
+          return
+        }
+      }
+
+      if (pct < 100) requestAnimationFrame(animate)
+      else {
+        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus)
+        const actualValue = Math.round(stone.price * result.multiplier * relicCutValueMult)
+        onCutComplete(result, actualValue)
+      }
+    }
+    requestAnimationFrame(animate)
+  }, [interruptPopup, stone, rollCutResult, relicCutValueMult, onCutComplete, eligibleNpcs.length])
+
+  const handleAcceptRefund = () => {
+    const penalty = Math.round(salePrice * 0.5)
+    onBuyerRegret(penalty)
+  }
+  const handleRejectRefund = () => {
+    setInterruptPopup(null)
+    interruptedRef.current = false
+    const remaining = DURATION_MS * (1 - INTERRUPT_AT)
+    startRef.current = performance.now()
+    const animate = (timestamp) => {
+      const elapsed = timestamp - startRef.current
+      const pct = Math.min(100, 50 + (elapsed / remaining) * 50)
+      setProgress(pct)
+      if (pct < 100) requestAnimationFrame(animate)
+      else {
+        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus)
+        const actualValue = Math.round(stone.price * result.multiplier * relicCutValueMult)
+        onCutComplete(result, actualValue)
+      }
+    }
+    requestAnimationFrame(animate)
+  }
+  const handleAcceptNpcHijack = () => {
+    const price = salePrice * 2
+    onNpcHijack(npcHijackTarget.id, price)
+  }
+  const handleRejectNpcHijack = () => {
+    setInterruptPopup(null)
+    setNpcHijackTarget(null)
+    interruptedRef.current = false
+    const remaining = DURATION_MS * (1 - INTERRUPT_AT)
+    startRef.current = performance.now()
+    const animate = (timestamp) => {
+      const elapsed = timestamp - startRef.current
+      const pct = Math.min(100, 50 + (elapsed / remaining) * 50)
+      setProgress(pct)
+      if (pct < 100) requestAnimationFrame(animate)
+      else {
+        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus)
+        const actualValue = Math.round(stone.price * result.multiplier * relicCutValueMult)
+        onCutComplete(result, actualValue)
+      }
+    }
+    requestAnimationFrame(animate)
+  }
+
+  return (
+    <div style={{ position:'fixed', inset:0, zIndex:415, background:'rgba(0,0,0,.9)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#7c2d12,#0f172a)', border:'1px solid rgba(251,146,60,.5)', borderRadius:18, padding:24, maxWidth:440, width:'100%' }}>
+        <h3 style={{ margin:'0 0 12px', color:'#fed7aa' }}>⚒️ 代客主刀 · 切割中</h3>
+        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:16 }}>「{stone?.name}」</p>
+        <div style={{ height:12, background:'#1e293b', borderRadius:6, overflow:'hidden', marginBottom:8 }}>
+          <div style={{ height:'100%', background:'linear-gradient(90deg,#ea580c,#fbbf24)', width:`${progress}%`, borderRadius:6, transition:'width 0.08s linear' }} />
+        </div>
+        <p style={{ color:'#64748b', fontSize:11 }}>切割进度 {Math.round(progress)}%</p>
+
+        {interruptPopup === 'buyer_regret' && (
+          <div style={{ marginTop:20, padding:16, background:'rgba(127,29,29,.3)', borderRadius:12, border:'1px solid rgba(239,68,68,.5)' }}>
+            <p style={{ color:'#fca5a5', fontSize:13, marginBottom:12 }}>【突发叫停】买家怂了！{winner?.viewer?.name} 提出支付竞拍价 50% 的违约金并把石头退还给你。</p>
+            <div style={{ display:'flex', gap:10 }}>
+              <button onClick={handleAcceptRefund} style={{ flex:1, padding:10, background:'#166534', border:'none', borderRadius:8, color:'#fff', fontWeight:600, cursor:'pointer' }}>同意退款（得违约金+拿回原石）</button>
+              <button onClick={handleRejectRefund} style={{ flex:1, padding:10, background:'#7c2d12', border:'none', borderRadius:8, color:'#fed7aa', fontWeight:600, cursor:'pointer' }}>拒绝，强行切完</button>
+            </div>
+          </div>
+        )}
+
+        {interruptPopup === 'npc_hijack' && npcHijackTarget && (
+          <div style={{ marginTop:20, padding:16, background:'rgba(34,197,94,.15)', borderRadius:12, border:'1px solid rgba(34,197,94,.4)' }}>
+            <p style={{ color:'#86efac', fontSize:13, marginBottom:8 }}>【{npcHijackTarget.icon} {npcHijackTarget.name}】空降直播间！</p>
+            <p style={{ color:'#bbf7d0', fontSize:12, marginBottom:12 }}>要求以当前竞拍价的 2 倍（¥{(salePrice*2).toLocaleString()}）直接截胡买走这块石头，不揭晓切割结果。</p>
+            <div style={{ display:'flex', gap:10 }}>
+              <button onClick={handleAcceptNpcHijack} style={{ flex:1, padding:10, background:'#166534', border:'none', borderRadius:8, color:'#fff', fontWeight:600, cursor:'pointer' }}>同意截胡</button>
+              <button onClick={handleRejectNpcHijack} style={{ flex:1, padding:10, background:'#334155', border:'none', borderRadius:8, color:'#94a3b8', cursor:'pointer' }}>拒绝，继续切</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════
+//  子组件：房管后台（50人成分一览）
+// ═══════════════════════════════════════════════════════════
+function ViewerAdminModal({ viewerState, onClose }) {
+  const stats = { fanLevel: { 0: 0, 1: 0, 2: 0, 3: 0 }, wallet: { normal: 0, rich: 0, bankrupt: 0, black: 0 } }
+  LIVE_VIEWERS.forEach(v => {
+    const s = viewerState[v.id] || {}
+    stats.fanLevel[s.fanLevel ?? 0]++
+    stats.wallet[s.walletStatus || 'normal']++
+  })
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:400, background:'rgba(0,0,0,.85)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#1e1b4b,#0f172a)', border:'1px solid rgba(99,102,241,.5)', borderRadius:18, padding:24, maxWidth:420, width:'100%' }}>
+        <h3 style={{ margin:'0 0 16px', color:'#c7d2fe' }}>📋 房管后台 · 50人成分</h3>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginBottom:20 }}>
+          <div style={{ background:'rgba(30,41,59,.6)', borderRadius:12, padding:14, border:'1px solid rgba(71,85,105,.5)' }}>
+            <p style={{ color:'#64748b', fontSize:10, margin:'0 0 8px' }}>粉丝等级</p>
+            <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+              {[0,1,2,3].map(lv => (
+                <span key={lv} style={{ display:'inline-flex', alignItems:'center', gap:4, padding:'4px 10px', borderRadius:8, background:(FAN_BADGE_STYLES[lv]||{}).bg || '#334155', color:(FAN_BADGE_STYLES[lv]||{}).color || '#94a3b8', fontSize:11, fontWeight:700 }}>
+                  {FAN_LEVEL_NAMES[lv]} {stats.fanLevel[lv]}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div style={{ background:'rgba(30,41,59,.6)', borderRadius:12, padding:14, border:'1px solid rgba(71,85,105,.5)' }}>
+            <p style={{ color:'#64748b', fontSize:10, margin:'0 0 8px' }}>钱包状态</p>
+            <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+              <span style={{ padding:'4px 10px', borderRadius:8, background:'#334155', color:'#94a3b8', fontSize:11 }}>正常 {stats.wallet.normal}</span>
+              <span style={{ padding:'4px 10px', borderRadius:8, background:'#065f46', color:'#6ee7b7', fontSize:11 }}>暴富 {stats.wallet.rich}</span>
+              <span style={{ padding:'4px 10px', borderRadius:8, background:'#7f1d1d', color:'#fca5a5', fontSize:11 }}>破产 {stats.wallet.bankrupt}</span>
+              <span style={{ padding:'4px 10px', borderRadius:8, background:'#1f2937', color:'#9ca3af', fontSize:11 }}>黑粉 {stats.wallet.black}</span>
+            </div>
+          </div>
+        </div>
+        <p style={{ color:'#94a3b8', fontSize:11, marginBottom:12 }}>神豪 {stats.fanLevel[3]} · 舰长 {stats.fanLevel[2]} · 铁粉 {stats.fanLevel[1]} · 路人 {stats.fanLevel[0]}</p>
+        <button onClick={onClose} style={{ width:'100%', padding:10, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer', fontSize:12 }}>关闭</button>
       </div>
     </div>
   )
@@ -2131,30 +2970,64 @@ function BlackMarketModal({ offers, money, equippedRelics, onBuy, onClose }) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  子组件：已装备道具栏
+//  子组件：已装备道具栏（点击弹框显示详情，可出售）
 // ═══════════════════════════════════════════════════════════
-function EquippedRelicsBar({ equippedRelics }) {
+function EquippedRelicsBar({ equippedRelics, onSellRelic }) {
+  const [detailId, setDetailId] = useState(null)
   if (!equippedRelics?.length) return null
+  const r = detailId ? RELICS[detailId] : null
+  const count = equippedRelics.length
+  const isFull = count >= 6
   return (
-    <div style={{ background:'rgba(13,20,36,.55)', border:'1px solid rgba(251,191,36,.25)', borderRadius:14, padding:'12px 14px', marginTop:10 }}>
-      <p style={{ color:'#92400e', fontSize:10, fontWeight:700, letterSpacing:'0.08em', marginBottom:8 }}>RELIC · 已装备道具</p>
-      <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
-        {equippedRelics.map(id => {
-          const r = RELICS[id]
-          if (!r) return null
-          return (
-            <div key={id} title={r.desc} style={{
-              display:'flex', alignItems:'center', gap:6, padding:'6px 10px',
-              background:'rgba(251,191,36,.1)', border:'1px solid rgba(251,191,36,.35)',
-              borderRadius:10, fontSize:11, color:'#fcd34d', fontWeight:600,
-            }}>
-              <span>{r.icon}</span>
-              <span>{r.name}</span>
-            </div>
-          )
-        })}
+    <>
+      <div style={{ background:'rgba(13,20,36,.55)', border:'1px solid rgba(251,191,36,.25)', borderRadius:14, padding:'12px 14px', marginTop:10 }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+          <p style={{ color:'#92400e', fontSize:10, fontWeight:700, letterSpacing:'0.08em', margin:0 }}>RELIC · 已装备道具（点击查看详情）</p>
+          <span style={{ fontSize:10, color: isFull ? '#f97316' : '#64748b' }}>{count}/6</span>
+        </div>
+        <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+          {equippedRelics.map(id => {
+            const rel = RELICS[id]
+            if (!rel) return null
+            return (
+              <div key={id} onClick={()=>setDetailId(id)} role="button" tabIndex={0} onKeyDown={e=>e.key==='Enter'&&setDetailId(id)} style={{
+                display:'flex', alignItems:'center', gap:6, padding:'6px 10px',
+                background:'rgba(251,191,36,.1)', border:'1px solid rgba(251,191,36,.35)',
+                borderRadius:10, fontSize:11, color:'#fcd34d', fontWeight:600, cursor:'pointer',
+              }}>
+                <span>{rel.icon}</span>
+                <span>{rel.name}</span>
+              </div>
+            )
+          })}
+        </div>
       </div>
-    </div>
+      {r && (
+        <div onClick={()=>setDetailId(null)} style={{ position:'fixed', inset:0, zIndex:500, background:'rgba(0,0,0,.7)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#1c1917,#0f172a)', border:'1px solid rgba(251,191,36,.5)', borderRadius:18, padding:24, maxWidth:360, width:'100%' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:12 }}>
+              <span style={{ fontSize:40 }}>{r.icon}</span>
+              <div>
+                <h3 style={{ margin:0, color:'#fbbf24', fontSize:18 }}>{r.name}</h3>
+                <p style={{ margin:0, color:'#64748b', fontSize:11 }}>已装备 · 本局生效</p>
+              </div>
+            </div>
+            <p style={{ color:'#94a3b8', fontSize:14, lineHeight:1.6, margin:0 }}>{r.desc}</p>
+            <div style={{ display:'flex', gap:8, marginTop:16 }}>
+              <button onClick={()=>setDetailId(null)} style={{ flex:1, padding:10, background:'#334155', border:'none', borderRadius:8, color:'#94a3b8', cursor:'pointer', fontSize:12 }}>关闭</button>
+              {onSellRelic && (
+                <button
+                  onClick={() => { onSellRelic(r.id); setDetailId(null) }}
+                  style={{ flex:1, padding:10, background:'linear-gradient(135deg,#92400e,#b45309)', border:'none', borderRadius:8, color:'#fef3c7', cursor:'pointer', fontSize:12, fontWeight:700 }}
+                >
+                  出售（返还 ¥{Math.round((r.price || 0) * 0.5).toLocaleString()})
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -2516,26 +3389,35 @@ function CollectionPanel({ collection, currentDay, onSell, onClose, collectionAp
 
         {collection.length > 0 && (() => {
           const totalCost = collection.reduce((s, i) => s + i.stoneCost, 0)
-          const totalNow  = collection.reduce((s, i) => {
+          let totalNow = 0
+          let dailyGain = 0
+          collection.forEach(i => {
             const d = currentDay - i.acquiredDay
             const r = i.appreciatePerDay * (1 + collectionAppreciateBoost)
-            return s + Math.round(i.baseValue * Math.pow(1 + r, d))
-          }, 0)
+            const cv = Math.round(i.baseValue * Math.pow(1 + r, d))
+            totalNow += cv
+            dailyGain += Math.round(cv * r)
+          })
+          const totalProfit = totalNow - totalCost
           return (
-            <div style={{ borderTop:'1px solid rgba(30,41,59,.7)', padding:'12px 20px', background:'rgba(10,16,26,.7)', display:'flex', gap:16, flexShrink:0 }}>
-              <div style={{ textAlign:'center', flex:1 }}>
-                <p style={{ color:'#334155', fontSize:9, margin:0 }}>总成本</p>
-                <p style={{ color:'#f87171', fontWeight:800, fontSize:14, margin:0 }}>¥{totalCost.toLocaleString()}</p>
+            <div style={{ borderTop:'1px solid rgba(30,41,59,.7)', padding:'12px 20px', background:'rgba(10,16,26,.7)', display:'flex', gap:12, flexWrap:'wrap', flexShrink:0 }}>
+              <div style={{ textAlign:'center', flex:1, minWidth:80 }}>
+                <p style={{ color:'#334155', fontSize:9, margin:0 }}>每日收益</p>
+                <p style={{ color:'#4ade80', fontWeight:800, fontSize:14, margin:0 }}>+¥{dailyGain.toLocaleString()}</p>
               </div>
-              <div style={{ textAlign:'center', flex:1 }}>
-                <p style={{ color:'#334155', fontSize:9, margin:0 }}>当前估值</p>
-                <p style={{ color:'#fbbf24', fontWeight:800, fontSize:14, margin:0 }}>¥{totalNow.toLocaleString()}</p>
-              </div>
-              <div style={{ textAlign:'center', flex:1 }}>
-                <p style={{ color:'#334155', fontSize:9, margin:0 }}>浮盈</p>
-                <p style={{ color: totalNow-totalCost >= 0 ? '#4ade80' : '#f87171', fontWeight:800, fontSize:14, margin:0 }}>
-                  {totalNow-totalCost >= 0?'+':''}¥{(totalNow-totalCost).toLocaleString()}
+              <div style={{ textAlign:'center', flex:1, minWidth:80 }}>
+                <p style={{ color:'#334155', fontSize:9, margin:0 }}>总收益</p>
+                <p style={{ color: totalProfit >= 0 ? '#4ade80' : '#f87171', fontWeight:800, fontSize:14, margin:0 }}>
+                  {totalProfit >= 0 ? '+' : ''}¥{totalProfit.toLocaleString()}
                 </p>
+              </div>
+              <div style={{ textAlign:'center', flex:1, minWidth:80 }}>
+                <p style={{ color:'#334155', fontSize:9, margin:0 }}>总成本</p>
+                <p style={{ color:'#f87171', fontWeight:700, fontSize:12, margin:0 }}>¥{totalCost.toLocaleString()}</p>
+              </div>
+              <div style={{ textAlign:'center', flex:1, minWidth:80 }}>
+                <p style={{ color:'#334155', fontSize:9, margin:0 }}>当前估值</p>
+                <p style={{ color:'#fbbf24', fontWeight:700, fontSize:12, margin:0 }}>¥{totalNow.toLocaleString()}</p>
               </div>
             </div>
           )
@@ -2595,6 +3477,48 @@ function GameOverModal({ info, onRestartSame, onBackMenu }) {
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// 背包面板：翡翠饰品（直接售出/卖NPC/直播卖/送福利）
+function BackpackPanel({ accessories, onSell, onSellNpc, onLiveSell, onGift, onClose, liveStreamLevel, livestreamActive }) {
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:450, background:'rgba(0,0,0,.85)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#064e3b,#022c22)', border:'1px solid rgba(45,212,191,.5)', borderRadius:20, padding:24, maxWidth:560, width:'100%', maxHeight:'85vh', overflowY:'auto' }}>
+        <h3 style={{ margin:'0 0 12px', color:'#5eead4' }}>🎒 翡翠饰品背包</h3>
+        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:16 }}>雕刻师产出的翡翠饰品，可售出、找NPC、直播卖或送福利</p>
+        {!accessories?.length ? (
+          <p style={{ color:'#64748b', fontSize:13 }}>背包空空，送雕刻大师盘货即可产出饰品</p>
+        ) : (
+          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+            {accessories.map(a => (
+              <div key={a.id} style={{ padding:12, background:'rgba(15,23,42,.6)', borderRadius:12, border:`1px solid ${a.gradeColor}44` }}>
+                <div style={{ display:'flex', alignItems:'flex-start', gap:10, marginBottom:8 }}>
+                  <span style={{ fontSize:24 }}>{a.emoji}</span>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <p style={{ margin:0, fontWeight:700, color:a.gradeColor }}>{a.name}</p>
+                    <p style={{ margin:2, fontSize:11, color:'#64748b' }}>{a.typeName} · {a.gradeName}</p>
+                    {a.desc && <p style={{ margin:4, fontSize:10, color:'#64748b', lineHeight:1.5 }}>{a.desc}</p>}
+                  </div>
+                  <span style={{ color:'#fbbf24', fontWeight:700, flexShrink:0 }}>¥{a.value?.toLocaleString()}</span>
+                </div>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                  <button onClick={()=>onSell(a.id)} style={{ padding:'5px 10px', background:'#059669', border:'none', borderRadius:6, color:'#fff', fontSize:11, fontWeight:600, cursor:'pointer' }}>💰 直接售出</button>
+                  <button onClick={()=>onSellNpc?.(a.id)} style={{ padding:'5px 10px', background:'#1e40af', border:'none', borderRadius:6, color:'#fff', fontSize:11, fontWeight:600, cursor:'pointer' }}>🤝 找NPC</button>
+                  {liveStreamLevel >= 1 && (
+                    <button onClick={()=>onLiveSell?.(a.id)} style={{ padding:'5px 10px', background:'#7c3aed', border:'none', borderRadius:6, color:'#fff', fontSize:11, fontWeight:600, cursor:'pointer' }}>📺 直播卖</button>
+                  )}
+                  {livestreamActive && (
+                    <button onClick={()=>onGift?.(a.id)} style={{ padding:'5px 10px', background:'#d97706', border:'none', borderRadius:6, color:'#fff', fontSize:11, fontWeight:600, cursor:'pointer' }}>🎁 送福利</button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <button onClick={onClose} style={{ marginTop:16, width:'100%', padding:10, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer' }}>关闭</button>
       </div>
     </div>
   )
@@ -2977,7 +3901,7 @@ function LogModal({ logs, onClose }) {
 // ═══════════════════════════════════════════════════════════
 //  子组件：工作台全部记录（超过 2 排时，最老的移入此处）
 // ═══════════════════════════════════════════════════════════
-function WorkbenchLogModal({ stones, onClose, onCut, onSell, onNpc, onCollect, onOpenWindow, onSellSemi, onCarving, onLiveSell, cutValueMult, money, liveStreamLevel }) {
+function WorkbenchLogModal({ stones, onClose, onCut, onSell, onNpc, onCollect, onOpenWindow, onSellSemi, onCarving, onLiveSell, onLiveBlindAuction, cutValueMult, money, liveStreamLevel }) {
   return (
     <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:420, background:'rgba(0,0,0,.82)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
       <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#0a1628,#0f1f38)', border:'1px solid rgba(51,65,85,.7)', borderRadius:20, width:'100%', maxWidth:900, maxHeight:'85vh', display:'flex', flexDirection:'column', boxShadow:'0 24px 60px rgba(0,0,0,.7)', overflow:'hidden' }}>
@@ -2997,6 +3921,7 @@ function WorkbenchLogModal({ stones, onClose, onCut, onSell, onNpc, onCollect, o
               onSellSemi={onSellSemi}
               onCarving={onCarving}
               onLiveSell={onLiveSell}
+              onLiveBlindAuction={onLiveBlindAuction}
               cutValueMult={cutValueMult}
               money={money}
               liveStreamLevel={liveStreamLevel}
@@ -3083,13 +4008,15 @@ function PhonePanel({ messages, npcList, onReply, onClose }) {
 // ═══════════════════════════════════════════════════════════
 //  子组件：专属雕刻大师面板（艺术家脾气与灵感）
 // ═══════════════════════════════════════════════════════════
-function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClose }) {
+function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClose, remainingOpsToday = 0, daySpeed = 3 }) {
   const ms = masterState || {}
   return (
-    <div style={{ position:'fixed', inset:0, zIndex:450, background:'rgba(0,0,0,.85)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#0f172a,#1e1b4b)', border:'1px solid rgba(139,92,246,.4)', borderRadius:20, padding:24, maxWidth:520, width:'100%', maxHeight:'90vh', overflowY:'auto' }}>
-        <h3 style={{ margin:'0 0 8px', color:'#e9d5ff' }}>🔨 专属雕刻大师</h3>
-        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:16 }}>请在工作台选择已切原石，点击「送雕刻大师盘货」选择大师</p>
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:450, background:'rgba(0,0,0,.85)', display:'flex', alignItems:'center', justifyContent:'center', padding:24, cursor:'default' }}>
+      <div onClick={e=>e.stopPropagation()} style={{ position:'relative', background:'linear-gradient(160deg,#0f172a,#1e1b4b)', border:'1px solid rgba(139,92,246,.4)', borderRadius:20, padding:24, maxWidth:520, width:'100%', maxHeight:'90vh', overflowY:'auto' }}>
+        <button onClick={onClose} aria-label="关闭" style={{ position:'absolute', top:12, right:12, width:32, height:32, background:'rgba(71,85,105,.6)', border:'1px solid rgba(148,163,184,.4)', borderRadius:8, color:'#94a3b8', fontSize:16, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1 }}>×</button>
+        <h3 style={{ margin:'0 0 8px', paddingRight:36, color:'#e9d5ff' }}>🔨 专属雕刻大师</h3>
+        <p style={{ color:'#94a3b8', fontSize:12, marginBottom:8 }}>请在工作台选择已切原石，点击「送雕刻大师盘货」选择大师</p>
+        <p style={{ color:'#a78bfa', fontSize:11, marginBottom:16 }}>互动消耗每日操作次数（今日剩余 {remainingOpsToday}/{daySpeed}）· 点击界面外可关闭</p>
         {ARTIST_MASTERS.map(m => {
           const s = ms[m.id] || {}
           const insp = s.inspiration ?? 50
@@ -3099,14 +4026,20 @@ function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClos
             <div key={m.id} style={{ marginBottom:16, padding:14, background:'rgba(30,41,59,.5)', borderRadius:14, border:'1px solid rgba(71,85,105,.5)' }}>
               <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
                 <span style={{ fontSize:24 }}>{m.icon}</span>
-                <div>
-                  <span style={{ fontWeight:800, color:'#f1f5f9' }}>{m.name}</span>
-                  <span style={{ marginLeft:8, fontSize:11, color:'#94a3b8' }}>{m.title} · {m.personality}</span>
+                <div style={{ flex:1 }}>
+                  <div>
+                    <span style={{ fontWeight:800, color:'#f1f5f9' }}>{m.name}</span>
+                    <span style={{ marginLeft:8, fontSize:11, color:'#94a3b8' }}>{m.title} · {m.personality}</span>
+                    {(s.level ?? 1) > 1 && <span style={{ marginLeft:6, fontSize:10, color:'#fbbf24', background:'rgba(251,191,36,.2)', padding:'2px 6px', borderRadius:6 }}>Lv.{s.level ?? 1}</span>}
+                  </div>
+                  {(m.productTypeIds?.length > 0) && (
+                    <span style={{ fontSize:10, color:'#64748b', marginTop:2, display:'inline-block' }}>专精：{(m.productTypeIds || []).map(id => JADE_PRODUCT_TYPES[id]?.name || id).join('、')}</span>
+                  )}
                 </div>
                 {(strike || sick) && <span style={{ fontSize:10, color:'#f87171', background:'rgba(239,68,68,.2)', padding:'2px 8px', borderRadius:8 }}>{strike ? '罢工中' : '生病休养'}</span>}
               </div>
               <p style={{ color:'#64748b', fontSize:11, marginBottom:8 }}>{m.skillName}：{m.skillDesc}</p>
-              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
                 <div style={{ flex:1 }}>
                   <span style={{ fontSize:10, color:'#64748b' }}>灵感</span>
                   <div style={{ height:6, background:'#1e293b', borderRadius:4, overflow:'hidden' }}>
@@ -3115,72 +4048,105 @@ function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClos
                 </div>
                 <span style={{ fontSize:12, color:'#c4b5fd', fontWeight:700 }}>{insp}</span>
               </div>
+              {(s.level ?? 1) < 5 && (() => {
+                const lv = s.level ?? 1
+                const expForLevel = [0, 2, 4, 7, 11]
+                const expNeeded = expForLevel[lv] ?? 11
+                const expCur = s.exp ?? 0
+                const expPct = expNeeded > 0 ? Math.round((expCur / expNeeded) * 100) : 0
+                return (
+                  <div style={{ marginBottom:8 }}>
+                    <span style={{ fontSize:10, color:'#64748b' }}>升级进度 Lv{lv}→Lv{lv+1}</span>
+                    <div style={{ height:5, background:'#1e293b', borderRadius:3, overflow:'hidden' }}>
+                      <div style={{ height:'100%', background:'linear-gradient(90deg,#f59e0b,#fbbf24)', width:`${expPct}%`, borderRadius:3, transition:'width .3s' }} />
+                    </div>
+                    <span style={{ fontSize:10, color:'#94a3b8' }}>{expCur}/{expNeeded} 次互动</span>
+                  </div>
+                )
+              })()}
               <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
                 {m.id === 'chu_shi_weng' && (
                   <>
-                    <button onClick={()=>onInteract(m.id, 'dahongpao')} disabled={money < 25000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'dahongpao')} disabled={remainingOpsToday <= 0 || money < 25000 || insp >= 100}
                       style={{ padding:'6px 12px', background: money >= 25000 && insp < 100 ? 'rgba(127,29,29,.6)' : '#334155', border:'1px solid rgba(180,83,9,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 25000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🍵 送极品大红袍</button>
-                    <button onClick={()=>onInteract(m.id, 'weiqi')} disabled={insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'weiqi')} disabled={remainingOpsToday <= 0 || insp >= 100}
                       style={{ padding:'6px 12px', background: insp < 100 ? 'rgba(30,58,138,.5)' : '#334155', border:'1px solid rgba(59,130,246,.4)', borderRadius:8, color:'#93c5fd', fontSize:11, cursor: insp < 100 ? 'pointer' : 'not-allowed' }}>♟ 陪下围棋</button>
                   </>
                 )}
                 {m.id === 'gui_shou_a9' && (
                   <>
-                    <button onClick={()=>onInteract(m.id, 'qingba')} disabled={money < 12000 || sick}
+                    <button onClick={()=>onInteract(m.id, 'qingba')} disabled={remainingOpsToday <= 0 || money < 12000 || sick}
                       style={{ padding:'6px 12px', background: money >= 12000 && !sick ? 'rgba(88,28,135,.5)' : '#334155', border:'1px solid rgba(192,132,252,.4)', borderRadius:8, color:'#e9d5ff', fontSize:11, cursor: money >= 12000 && !sick ? 'pointer' : 'not-allowed' }}>🍸 带去清吧</button>
-                    <button onClick={()=>onInteract(m.id, 'baijiu')} disabled={sick}
+                    <button onClick={()=>onInteract(m.id, 'baijiu')} disabled={remainingOpsToday <= 0 || sick}
                       style={{ padding:'6px 12px', background: !sick ? 'rgba(127,29,29,.6)' : '#334155', border:'1px solid rgba(239,68,68,.4)', borderRadius:8, color:'#fecaca', fontSize:11, cursor: !sick ? 'pointer' : 'not-allowed' }}>🍶 灌白酒(100%灵感，次日病3天)</button>
                   </>
                 )}
                 {m.id === 'qiao_niang_jinyan' && (
-                  <button onClick={()=>onInteract(m.id, 'hongbao')} disabled={money < 50000}
-                    style={{ padding:'6px 12px', background: money >= 50000 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: money >= 50000 ? 'pointer' : 'not-allowed' }}>🧧 发大红包 ¥50,000</button>
+                  <>
+                    <button onClick={()=>onInteract(m.id, 'hongbao')} disabled={remainingOpsToday <= 0 || money < 50000}
+                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 50000 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: remainingOpsToday > 0 && money >= 50000 ? 'pointer' : 'not-allowed' }}>🧧 发大红包 ¥50,000</button>
+                    <button onClick={()=>onInteract(m.id, 'xiaohongbao')} disabled={remainingOpsToday <= 0 || money < 15000}
+                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 15000 ? 'rgba(34,197,94,.3)' : '#334155', border:'1px solid rgba(34,197,94,.4)', borderRadius:8, color:'#86efac', fontSize:11, cursor: remainingOpsToday > 0 && money >= 15000 ? 'pointer' : 'not-allowed' }}>🧧 小红包 ¥15,000</button>
+                  </>
                 )}
                 {m.id === 'kumu_chan_shi' && (
                   <>
-                    <button onClick={()=>onInteract(m.id, 'xianghuo')} disabled={money < 8000}
-                      style={{ padding:'6px 12px', background: money >= 8000 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 8000 ? 'pointer' : 'not-allowed' }}>🪔 捐赠香火</button>
-                    <button onClick={()=>onInteract(m.id, 'chanzhen')}
-                      style={{ padding:'6px 12px', background:'rgba(30,58,138,.5)', border:'1px solid rgba(59,130,246,.4)', borderRadius:8, color:'#93c5fd', fontSize:11, cursor:'pointer' }}>🧘 静坐论禅</button>
+                    <button onClick={()=>onInteract(m.id, 'xianghuo')} disabled={remainingOpsToday <= 0 || money < 8000}
+                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 8000 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: remainingOpsToday > 0 && money >= 8000 ? 'pointer' : 'not-allowed' }}>🪔 捐赠香火 ¥8,000</button>
+                    <button onClick={()=>onInteract(m.id, 'chanzhen')} disabled={remainingOpsToday <= 0}
+                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 ? 'rgba(30,58,138,.5)' : '#334155', border:'1px solid rgba(59,130,246,.4)', borderRadius:8, color:'#93c5fd', fontSize:11, cursor: remainingOpsToday > 0 ? 'pointer' : 'not-allowed' }}>🧘 静坐论禅(免费)</button>
+                    <button onClick={()=>onInteract(m.id, 'fashi')} disabled={remainingOpsToday <= 0 || money < 20000 || insp >= 100}
+                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 20000 && insp < 100 ? 'rgba(139,69,19,.6)' : '#334155', border:'1px solid rgba(251,191,36,.5)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: remainingOpsToday > 0 && money >= 20000 && insp < 100 ? 'pointer' : 'not-allowed' }}>📿 请法师做法事 ¥20,000</button>
                   </>
                 )}
+                {m.id === 'shouzhuo_huatuo' && (
+                    <button onClick={()=>onInteract(m.id, 'kafei')} disabled={remainingOpsToday <= 0 || money < 5000 || insp >= 100}
+                    style={{ padding:'6px 12px', background: money >= 5000 && insp < 100 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(180,83,9,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 5000 && insp < 100 ? 'pointer' : 'not-allowed' }}>☕ 请喝咖啡 ¥5,000</button>
+                )}
+                {m.id === 'pingankou_tianwang' && (
+                    <button onClick={()=>onInteract(m.id, 'chabei')} disabled={remainingOpsToday <= 0 || money < 6000 || insp >= 100}
+                    style={{ padding:'6px 12px', background: money >= 6000 && insp < 100 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: money >= 6000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🫖 送茶具 ¥6,000</button>
+                )}
+                {m.id === 'zhuchuan_dashen' && (
+                    <button onClick={()=>onInteract(m.id, 'xianghuo')} disabled={remainingOpsToday <= 0 || money < 5000 || insp >= 100}
+                    style={{ padding:'6px 12px', background: money >= 5000 && insp < 100 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 5000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🪔 捐赠香火 ¥5,000</button>
+                )}
                 {m.id === 'kuai_shou_laotie' && (
-                  <button onClick={()=>onInteract(m.id, 'kafei')} disabled={money < 3000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'kafei')} disabled={remainingOpsToday <= 0 || money < 3000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 3000 && insp < 100 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(180,83,9,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 3000 && insp < 100 ? 'pointer' : 'not-allowed' }}>☕ 请喝咖啡 ¥3,000</button>
                 )}
                 {m.id === 'men_sao_ajie' && (
-                  <button onClick={()=>onInteract(m.id, 'chabei')} disabled={money < 5000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'chabei')} disabled={remainingOpsToday <= 0 || money < 5000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 5000 && insp < 100 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: money >= 5000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🫖 送茶具 ¥5,000</button>
                 )}
                 {m.id === 'hua_lao_wang' && (
-                  <button onClick={()=>onInteract(m.id, 'laopi')} disabled={money < 8000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'laopi')} disabled={remainingOpsToday <= 0 || money < 8000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 8000 && insp < 100 ? 'rgba(180,83,9,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 8000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🍺 请喝老啤 ¥8,000</button>
                 )}
                 {m.id === 'du_tu_daobai' && (
-                  <button onClick={()=>onInteract(m.id, 'maotai')} disabled={money < 18000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'maotai')} disabled={remainingOpsToday <= 0 || money < 18000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 18000 && insp < 100 ? 'rgba(127,29,29,.6)' : '#334155', border:'1px solid rgba(239,68,68,.4)', borderRadius:8, color:'#fecaca', fontSize:11, cursor: money >= 18000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🥃 送茅台 ¥18,000</button>
                 )}
                 {m.id === 'yang_sheng_lishu' && (
-                  <button onClick={()=>onInteract(m.id, 'hongzao')} disabled={money < 4000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'hongzao')} disabled={remainingOpsToday <= 0 || money < 4000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 4000 && insp < 100 ? 'rgba(185,28,28,.5)' : '#334155', border:'1px solid rgba(248,113,113,.4)', borderRadius:8, color:'#fecaca', fontSize:11, cursor: money >= 4000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🍵 送红枣茶 ¥4,000</button>
                 )}
                 {m.id === 'wanmei_sujie' && (
-                  <button onClick={()=>onInteract(m.id, 'xiangnai')} disabled={money < 12000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'xiangnai')} disabled={remainingOpsToday <= 0 || money < 12000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 12000 && insp < 100 ? 'rgba(139,92,246,.5)' : '#334155', border:'1px solid rgba(167,139,250,.4)', borderRadius:8, color:'#e9d5ff', fontSize:11, cursor: money >= 12000 && insp < 100 ? 'pointer' : 'not-allowed' }}>💄 送香奈儿 ¥12,000</button>
                 )}
                 {m.id === 'xue_tu_xiaodou' && (
-                  <button onClick={()=>onInteract(m.id, 'keben')} disabled={money < 2000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'keben')} disabled={remainingOpsToday <= 0 || money < 2000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 2000 && insp < 100 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: money >= 2000 && insp < 100 ? 'pointer' : 'not-allowed' }}>📚 送刻刀课本 ¥2,000</button>
                 )}
                 {m.id === 'shenmi_ying' && (
-                  <button onClick={()=>onInteract(m.id, 'mima')} disabled={money < 15000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'mima')} disabled={remainingOpsToday <= 0 || money < 15000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 15000 && insp < 100 ? 'rgba(30,27,75,.8)' : '#334155', border:'1px solid rgba(139,92,246,.4)', borderRadius:8, color:'#c4b5fd', fontSize:11, cursor: money >= 15000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🔐 给神秘暗号 ¥15,000</button>
                 )}
               </div>
             </div>
           )
         })}
-        <button onClick={onClose} style={{ width:'100%', padding:10, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer', marginTop:8 }}>关闭</button>
       </div>
     </div>
   )
@@ -3191,21 +4157,45 @@ function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClos
 // ═══════════════════════════════════════════════════════════
 function LiveStreamBarrageLayer({ barrages }) {
   return (
-    <div style={{ position:'fixed', top:0, left:0, right:0, height:80, zIndex:200, pointerEvents:'none', overflow:'hidden' }}>
+    <div style={{ position:'fixed', top:0, left:0, right:0, height:120, zIndex:99999, pointerEvents:'none', overflow:'hidden' }}>
       {barrages.map((b, i) => (
         <div key={b.id} className="barrage-item" style={{
           position:'absolute',
           left:'100%',
-          top: `${(i % 4) * 22 + 8}px`,
+          top: `${(i % 4) * 28 + 14}px`,
+          lineHeight: 1.4,
           whiteSpace:'nowrap',
-          fontSize:13,
-          color: b.type === 'success' ? '#4ade80' : b.type === 'fail' ? '#f87171' : '#94a3b8',
+          fontSize: 13,
+          color: b.type === 'success' ? '#4ade80' : b.type === 'fail' || b.type === 'rivalry' ? '#f87171' : '#94a3b8',
           textShadow: '0 1px 2px rgba(0,0,0,.8)',
           animation: `barrageScroll ${8 + (i % 4)}s linear forwards`,
         }}>
           {b.text}
         </div>
       ))}
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════
+//  子组件：切石结果飘字（固定屏幕偏上）
+// ═══════════════════════════════════════════════════════════
+function CutResultFloat({ float, cutResult }) {
+  if (!float?.text) return null
+  const r = cutResult
+  const color = r?.textColor || '#e2e8f0'
+  return (
+    <div style={{
+      position: 'fixed', top: '12vh', left: '50%', transform: 'translateX(-50%)',
+      zIndex: 10000, pointerEvents: 'none', textAlign: 'center',
+      padding: '14px 24px', borderRadius: 14, minWidth: 200,
+      background: 'rgba(2,6,23,.92)', backdropFilter: 'blur(12px)',
+      border: `1px solid ${r?.borderColor || 'rgba(251,191,36,.5)'}`,
+      color, fontSize: 16, fontWeight: 700, maxWidth: '90vw',
+      boxShadow: '0 8px 32px rgba(0,0,0,.6)',
+      animation: 'cutFloatIn 0.4s ease-out, cutFloatStay 2.1s 0.4s both',
+    }}>
+      {float.text}
     </div>
   )
 }
@@ -3254,6 +4244,9 @@ export default function App() {
   const [showCollection, setShowCollection] = useState(false)
   const [showNpcRoster,  setShowNpcRoster]  = useState(false)
   const [npcTarget,   setNpcTarget]   = useState(null) // 正在找NPC的工作台stone.id
+  const [npcAccessoryTarget, setNpcAccessoryTarget] = useState(null) // 背包饰品卖NPC时的accessory.id
+  const [liveSellAccessory, setLiveSellAccessory] = useState(null)   // 背包饰品直播卖时的accessory
+  const [liveAuctionAccessoryData, setLiveAuctionAccessoryData] = useState(null) // 饰品直播竞拍结果
   // 每日随机事件（Roguelike）
   const [activeEffects, setActiveEffects] = useState([])   // [{ eventId, event, expiresAtDay }]
   const [pendingEvent,  setPendingEvent]  = useState(null) // 待确认的全屏事件
@@ -3265,25 +4258,31 @@ export default function App() {
   const [liveStreamLevel, setLiveStreamLevel] = useState(0)                    // 直播间等级 0=未开 1-3=已开
   const [viewerFavorability, setViewerFavorability] = useState(() =>
     Object.fromEntries(LIVE_VIEWERS.map(v => [v.id, 0]))
-  )                                             // 20名观众好感度 { viewerId: 0~N }
+  )                                             // 50名观众好感度 { viewerId: 0~N }
+  const [viewerState, setViewerState] = useState(() => createDefaultViewerState())  // 观众演化：fanLevel, walletStatus, transactionCount, brickCount
   const [carvingMasterUsesToday, setCarvingMasterUsesToday] = useState({})     // 今日各大师已消耗次数（盘货消耗1-3）
   const [carvingMasterRelations, setCarvingMasterRelations] = useState(() =>
     Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, 0]))
   )                                             // 与各大师合作成功次数
   const [artistMasterState, setArtistMasterState] = useState(() =>
-    Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50, energy: 100, strikeUntilDay: 0, sickUntilDay: 0 }]))
+    Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50, energy: 100, strikeUntilDay: 0, sickUntilDay: 0, level: 1, exp: 0 }]))
   )
   const [kuMuPendingOrders, setKuMuPendingOrders] = useState([])  // [{ stoneId, readyAtDay }]
   const [reputation, setReputation] = useState(10)                             // 人品值，被识破卖假时 -1
   const [carvingStone, setCarvingStone] = useState(null)                       // 待送雕刻的石头
+  const [jadeAccessories, setJadeAccessories] = useState([])                   // 背包：雕刻产出的翡翠饰品
+  const [showBackpack, setShowBackpack] = useState(false)                      // 背包面板
   const [liveSellStone, setLiveSellStone] = useState(null)                     // 待直播售卖的石头
-  const [liveAuctionData, setLiveAuctionData] = useState(null)                 // 直播竞拍过程 { stone, bids, winner }
+  const [liveAuctionData, setLiveAuctionData] = useState(null)                 // 直播竞拍过程 { stone, bids, winner, isBlind? }
+  const [liveCutProgressData, setLiveCutProgressData] = useState(null)         // 盲拍代客主刀切割进度 { stone, winner, salePrice }
   const [showLiveStreamUpgrade, setShowLiveStreamUpgrade] = useState(false)
+  const [showViewerAdmin, setShowViewerAdmin] = useState(false)               // 房管后台（50人成分）
   const [phoneMessages, setPhoneMessages] = useState([])                       // [{ npcId, msgId, msg, options, isPlayer, reply }]
   const [showPhone, setShowPhone] = useState(false)
   const [showLaoChen, setShowLaoChen] = useState(false)
   const [livestreamHype, setLivestreamHype] = useState(30)
   const [livestreamActive, setLivestreamActive] = useState(false)
+  const [cutResultFloat, setCutResultFloat] = useState(null)  // { id, text, result }
   const [livestreamBarrages, setLivestreamBarrages] = useState([])
   const [livestreamHypeFullDays, setLivestreamHypeFullDays] = useState(0)
   const [showGiftModal, setShowGiftModal] = useState(false)
@@ -3304,7 +4303,7 @@ export default function App() {
   inventoryRef.current = inventory
 
   // 弹窗打开时锁定 body 滚动，防止主界面在移动端被拖动
-  const hasModal = !!(stoneDetail || bargainStone || bargainQte || auctionBidStone || carvingStone || liveSellStone || liveAuctionData || showUpgrade || showLog || showWorkbenchLog || showCollection || showNpcRoster || npcTarget || showPhone || showLaoChen || showGiftModal || pendingEvent || showBlackMarket || gameOverInfo || lastDebtInfo || showLiveStreamUpgrade || bangYigeMessage)
+  const hasModal = !!(stoneDetail || bargainStone || bargainQte || auctionBidStone || carvingStone || liveSellStone || liveAuctionData || liveSellAccessory || liveAuctionAccessoryData || showUpgrade || showLog || showWorkbenchLog || showCollection || showNpcRoster || npcTarget || npcAccessoryTarget || showPhone || showLaoChen || showGiftModal || pendingEvent || showBlackMarket || gameOverInfo || lastDebtInfo || showLiveStreamUpgrade || showViewerAdmin || bangYigeMessage || showBackpack)
   useEffect(() => {
     if (hasModal) {
       const prev = document.body.style.overflow
@@ -3324,16 +4323,17 @@ export default function App() {
     setLogs(p => [...p, { id: ++logId.current, time: nowStr(), cashIn:0, cashOut:0, ...entry }])
   }, [])
 
-  // 当前天数（所有模式共用）
-  const currentDay = Math.floor(opCount / daySpeed) + 1
+  // 遗物效果（effectiveDaySpeed 需在 currentDay 之前定义）
+  const relicBrickReduce = equippedRelics.includes('purple_flashlight')
+  const relicDetectPenaltyHalf = equippedRelics.includes('silver_tongue')
+  const relicCutValueMult = equippedRelics.includes('gold_knife') ? 1.2 : 1
+  const effectiveDaySpeed = daySpeed + (equippedRelics.includes('midnight_oil') ? 1 : 0)
 
   // 聚合 modifiers（来自 activeEffects）
   const modifiers = computeModifiers(activeEffects.map(e => e.event))
 
-  // 遗物效果
-  const relicBrickReduce = equippedRelics.includes('purple_flashlight')
-  const relicDetectPenaltyHalf = equippedRelics.includes('silver_tongue')
-  const relicCutValueMult = equippedRelics.includes('gold_knife') ? 1.2 : 1
+  // 当前天数（所有模式共用，挑灯夜战油 +1 当日操作次数）
+  const currentDay = Math.floor(opCount / effectiveDaySpeed) + 1
 
   // 每日推进时：清理过期效果 + 15% 概率触发随机事件 + 每2日自动刷新市场
   useEffect(() => {
@@ -3386,18 +4386,23 @@ export default function App() {
     setPendingEvent({ ...raw, duration, expiresAtDay: currentDay + duration })
   }, [currentDay, gameMode, isGameOver, marketLevel, addToast, livestreamHype, livestreamHypeFullDays])
 
-  // 枯木禅师：到期订单自动交付
+  // 枯木禅师：到期订单自动交付（产出饰品入背包）
   useEffect(() => {
     if (gameMode === 'menu' || isGameOver) return
     const toDeliver = kuMuPendingOrders.filter(o => o.readyAtDay <= currentDay)
     if (toDeliver.length === 0) return
+    const master = ARTIST_MASTERS.find(m => m.id === 'kumu_chan_shi')
     toDeliver.forEach(o => {
-      const s = { ...o.stone, id: Date.now() + Math.random(), polished: { masterId: 'kumu_chan_shi', qualityBoost: 2.5, kaiguang: true } }
-      setInventory(inv => [...inv, s])
-      addToast(`🧘 枯木禅师：开光成品「${o.stone.name}」已送达`)
+      const qb = o.qualityBoost ?? rnd(1.6, 2.4)
+      const baseVal = Math.round(o.stone.price * (o.stone.cutResult?.multiplier ?? 1) * (typeof relicCutValueMult === 'number' ? relicCutValueMult : 1))
+      const finalVal = Math.round(baseVal * qb)
+      const grade = rollProductGrade(o.stone.cutResult?.id || 'waxy', qb)
+      const product = generateJadeProduct(pickProductTypeForMaster(master), grade, 'kumu_chan_shi', baseVal)
+      setJadeAccessories(a => [...a, { ...product, value: finalVal }])
+      addToast(`🧘 枯木禅师：开光成品「${product.name}」已送达 ¥${finalVal.toLocaleString()}`)
     })
     setKuMuPendingOrders(prev => prev.filter(o => o.readyAtDay > currentDay))
-  }, [currentDay, gameMode, isGameOver, kuMuPendingOrders, addToast])
+  }, [currentDay, gameMode, isGameOver, kuMuPendingOrders, addToast, relicCutValueMult])
 
   // 每次操作推进天数（菜单 / GameOver 时不再前进）
   const tickOp = useCallback(() => {
@@ -3477,6 +4482,7 @@ export default function App() {
     setMarketData({ kgStones: g.kgStones, premiumStones: g.premiumStones, auctionStone: g.auctionStone })
     setInventory([])
     setCollection([])
+    setJadeAccessories([])
     setToasts([])
     setLogs([])
     setTotalProfit(0)
@@ -3496,10 +4502,14 @@ export default function App() {
     setBlackMarketPurchasedDays([])
     setLiveStreamLevel(0)
     setViewerFavorability(Object.fromEntries(LIVE_VIEWERS.map(v => [v.id, 0])))
+    setViewerState(createDefaultViewerState())
     setCarvingMasterUsesToday({})
     setCarvingStone(null)
     setLiveSellStone(null)
     setLiveAuctionData(null)
+    setNpcAccessoryTarget(null)
+    setLiveSellAccessory(null)
+    setLiveAuctionAccessoryData(null)
     setShowLiveStreamUpgrade(false)
     setCarvingMasterRelations(Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, 0])))
     setArtistMasterState(Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50, energy: 100, strikeUntilDay: 0, sickUntilDay: 0 }])))
@@ -3543,6 +4553,7 @@ export default function App() {
         marketTab,
         inventory,
         collection,
+        jadeAccessories,
         totalProfit,
         totalDeals,
         opCount,
@@ -3552,6 +4563,7 @@ export default function App() {
         blackMarketPurchasedDays,
         liveStreamLevel,
         viewerFavorability,
+        viewerState,
         carvingMasterUsesToday,
         carvingMasterRelations,
         artistMasterState,
@@ -3569,7 +4581,7 @@ export default function App() {
     } catch (e) {
       addToast('存档失败：' + (e?.message || '未知错误'))
     }
-  }, [gameMode, debtIndex, money, marketLevel, marketData, marketTab, inventory, collection, totalProfit, totalDeals, opCount, daySpeed, activeEffects, equippedRelics, blackMarketPurchasedDays, liveStreamLevel, viewerFavorability, carvingMasterUsesToday, carvingMasterRelations, artistMasterState, kuMuPendingOrders, reputation, phoneMessages, livestreamHype, livestreamHypeFullDays, npcRelations, isGameOver, addToast])
+  }, [gameMode, debtIndex, money, marketLevel, marketData, marketTab, inventory, collection, jadeAccessories, totalProfit, totalDeals, opCount, daySpeed, activeEffects, equippedRelics, blackMarketPurchasedDays, liveStreamLevel, viewerFavorability, viewerState, carvingMasterUsesToday, carvingMasterRelations, artistMasterState, kuMuPendingOrders, reputation, phoneMessages, livestreamHype, livestreamHypeFullDays, npcRelations, isGameOver, addToast])
 
   // ── 读档（从 localStorage 恢复）
   const handleLoad = useCallback(() => {
@@ -3586,6 +4598,7 @@ export default function App() {
       setMarketTab(data.marketTab ?? 'kg')
       setInventory(data.inventory ?? [])
       setCollection(data.collection ?? [])
+      setJadeAccessories(data.jadeAccessories ?? [])
       setTotalProfit(data.totalProfit ?? 0)
       setTotalDeals(data.totalDeals ?? 0)
       setOpCount(data.opCount ?? 0)
@@ -3595,9 +4608,16 @@ export default function App() {
       setBlackMarketPurchasedDays(data.blackMarketPurchasedDays ?? [])
       setLiveStreamLevel(data.liveStreamLevel ?? 0)
       setViewerFavorability(data.viewerFavorability ?? Object.fromEntries(LIVE_VIEWERS.map(v => [v.id, 0])))
+      setViewerState(migrateViewerState({ viewerState: data.viewerState, viewerFavorability: data.viewerFavorability }))
       setCarvingMasterUsesToday(data.carvingMasterUsesToday ?? {})
       setCarvingMasterRelations(data.carvingMasterRelations ?? Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, 0])))
-      setArtistMasterState(data.artistMasterState ?? Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50, energy: 100, strikeUntilDay: 0, sickUntilDay: 0 }])))
+      setArtistMasterState(() => {
+        const raw = data.artistMasterState ?? {}
+        return Object.fromEntries(ARTIST_MASTERS.map(m => {
+          const cur = raw[m.id] || {}
+          return [m.id, { inspiration: cur.inspiration ?? 50, energy: cur.energy ?? 100, strikeUntilDay: cur.strikeUntilDay ?? 0, sickUntilDay: cur.sickUntilDay ?? 0, level: Math.min(5, cur.level ?? 1), exp: cur.exp ?? 0 }]
+        }))
+      })
       setKuMuPendingOrders(data.kuMuPendingOrders ?? [])
       setReputation(data.reputation ?? 10)
       setPhoneMessages(data.phoneMessages ?? [])
@@ -3607,7 +4627,8 @@ export default function App() {
       setIsGameOver(data.isGameOver ?? false)
       setGameOverInfo(null)
       setLastDebtInfo(null)
-      prevDayRef.current = data.opCount != null && data.daySpeed != null ? Math.floor(data.opCount / data.daySpeed) + 1 : 1
+      const loadEffSpd = (data.daySpeed ?? 3) + (data.equippedRelics?.includes('midnight_oil') ? 1 : 0)
+      prevDayRef.current = data.opCount != null ? Math.floor(data.opCount / loadEffSpd) + 1 : 1
       setStoneDetail(null)
       setBargainStone(null)
       setBargainQte(null)
@@ -3615,6 +4636,9 @@ export default function App() {
       setCarvingStone(null)
       setLiveSellStone(null)
       setLiveAuctionData(null)
+      setNpcAccessoryTarget(null)
+      setLiveSellAccessory(null)
+      setLiveAuctionAccessoryData(null)
       addToast('读档成功')
     } catch (e) {
       addToast('读档失败：' + (e?.message || '未知错误'))
@@ -3735,28 +4759,30 @@ export default function App() {
 
     setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, cutResult: result, collectible: collectible || null } : s))
 
-    // 直播切石：更新热度、弹幕、打赏
+    // 直播切石：更新热度、弹幕、打赏（弹幕数量随直播间等级：Lv1约3-4条，每升1级+2条）
     if (livestreamActive) {
       const isSuccess = profit >= 0
       const hypeDelta = isSuccess ? LIVESTREAM_CUT.hypeCutSuccessAdd : -LIVESTREAM_CUT.hypeCutFailSub
       setLivestreamHype(h => Math.max(0, Math.min(LIVESTREAM_CUT.hypeMax, h + hypeDelta)))
-      const barrages = (isSuccess ? BARRAGE_CUT_SUCCESS : BARRAGE_CUT_FAIL).map(t => ({ id: Date.now() + Math.random(), text: t, type: isSuccess ? 'success' : 'fail' }))
+      const count = 3 + Math.max(0, (liveStreamLevel || 1) - 1) * 2
+      const barrages = generateViewerBarrages(isSuccess ? 'cutSuccess' : 'cutFail', count, isSuccess ? 'success' : 'fail')
       setLivestreamBarrages(b => [...b.slice(-8), ...barrages])
       const tips = isSuccess ? LIVESTREAM_CUT.tipPerHypeCutSuccess : LIVESTREAM_CUT.tipPerHypeCutFail
       setMoney(m => m + tips)
       addToast(isSuccess ? `📺 切涨！热度+${LIVESTREAM_CUT.hypeCutSuccessAdd}，粉丝打赏 ¥${tips.toLocaleString()}` : `📺 切垮，热度-${LIVESTREAM_CUT.hypeCutFailSub}`)
     }
 
-    addToast(collectible
-      ? `${result.message} 🏺 出现精品：${collectible.name}！`
-      : result.message)
+    const phrase = getRandomCutPhrase(result.id, NPC_LIST)
+    const displayText = collectible ? `${phrase} 🏺 出现精品：${collectible.name}！` : phrase
+    setCutResultFloat({ id: Date.now(), text: displayText, result })
+    setTimeout(() => setCutResultFloat(null), 2600)
     addLog({
       type: 'cut',
       text: `切割「${stone.name}」→ ${result.name}（${result.grade}）${collectible ? ' 🏺 ' + collectible.name : ''}${livestreamActive ? ' [直播]' : ''}`,
       detail: `成本 ¥${stone.price.toLocaleString()}  基础估值 ¥${saleValue.toLocaleString()}  参考盈亏 ${profit>=0?'+':''}¥${profit.toLocaleString()}`,
       cashIn:0, cashOut:0, amount:0,
     })
-  }, [currentDay, gameMode, isGameOver, livestreamActive, modifiers.cutQuality, relicBrickReduce, relicCutValueMult, addToast, addLog])
+  }, [currentDay, gameMode, isGameOver, livestreamActive, liveStreamLevel, modifiers.cutQuality, relicBrickReduce, relicCutValueMult, addToast, addLog])
 
   // ── 手机私信回复 ──
   const handlePhoneReply = useCallback((msg, opt) => {
@@ -3785,28 +4811,47 @@ export default function App() {
     })
   }, [npcRelations, money, addToast])
 
-  // ── 专属雕刻大师：羁绊互动 ──
+  // ── 专属雕刻大师：羁绊互动（消耗每日操作次数，大师可升级至Lv5）──
   const handleArtistInteract = useCallback((masterId, action) => {
     const master = ARTIST_MASTERS.find(m => m.id === masterId)
     if (!master) return
+    const remainingOps = effectiveDaySpeed - (opCount % effectiveDaySpeed)
+    if (remainingOps <= 0) { addToast('今日操作次数已用完'); return }
     const costs = master.interactCosts || {}
     const gains = master.interactGains || {}
     const cost = costs[action] ?? 0
     if (cost > 0 && money < cost) { addToast('资金不足'); return }
     if (cost > 0) setMoney(m => m - cost)
-    const gain = gains[action] ?? 0
+    tickOp()
+    const baseGain = gains[action] ?? 0
+    let leveledUp = false
+    let newLevel = 1
     setArtistMasterState(prev => {
       const cur = prev[masterId] || {}
-      let next = { ...cur, inspiration: Math.min(100, (cur.inspiration ?? 50) + gain) }
+      const lv = Math.min(5, cur.level ?? 1)
+      const lvBonus = lv - 1
+      const gain = baseGain + lvBonus
+      let next = { ...cur, inspiration: Math.min(100, (cur.inspiration ?? 50) + gain), exp: (cur.exp ?? 0) + 1 }
       if (action === 'baijiu' && masterId === 'gui_shou_a9') {
         next.inspiration = 100
         next.sickUntilDay = currentDay + (master.sickDays ?? 3)
       }
+      const expForLevel = [0, 2, 4, 7, 11]
+      const expNeeded = expForLevel[Math.min(5, lv)] ?? 11
+      if (next.exp >= expNeeded && lv < 5) {
+        next.level = lv + 1
+        next.exp = 0
+        leveledUp = true
+        newLevel = next.level
+      }
       return { ...prev, [masterId]: next }
     })
-    const msgs = { dahongpao: '送极品大红袍', weiqi: '陪下围棋', qingba: '带去清吧', baijiu: '灌白酒(3日后生病)', hongbao: '发大红包', xianghuo: '捐赠香火', chanzhen: '静坐论禅', kafei: '请喝咖啡', chabei: '送茶具', laopi: '请喝老啤', maotai: '送茅台', hongzao: '送红枣茶', xiangnai: '送香奈儿', keben: '送刻刀课本', mima: '给神秘暗号' }
-    addToast(`${master.icon} ${master.name}：${msgs[action] || action}，灵感 +${gain}`)
-  }, [money, currentDay, addToast])
+    const msgs = { dahongpao: '送极品大红袍', weiqi: '陪下围棋', qingba: '带去清吧', baijiu: '灌白酒(3日后生病)', hongbao: '发大红包', xiaohongbao: '发小红包', xianghuo: '捐赠香火', chanzhen: '静坐论禅', fashi: '请法师做法事', kafei: '请喝咖啡', chabei: '送茶具', laopi: '请喝老啤', maotai: '送茅台', hongzao: '送红枣茶', xiangnai: '送香奈儿', keben: '送刻刀课本', mima: '给神秘暗号' }
+    const lv = Math.min(5, (artistMasterState[masterId]?.level ?? 1))
+    const totalGain = baseGain + (lv - 1)
+    addToast(`${master.icon} ${master.name}：${msgs[action] || action}，灵感 +${totalGain}`)
+    if (leveledUp) setTimeout(() => addToast(`⭐ ${master.name} 升级至 Lv.${newLevel}！雕刻+2%、灵感+1`), 400)
+  }, [money, currentDay, effectiveDaySpeed, opCount, artistMasterState, tickOp, addToast])
 
   // ── 直播发福利（送低级料拉满热度）──
   const handleLivestreamGift = useCallback((stoneId) => {
@@ -3824,16 +4869,17 @@ export default function App() {
     const stone = inventoryRef.current.find(s => s.id === stoneId)
     if (!stone || !stone.cutResult || stone.sold) return
     const polishBoost = stone.polished?.qualityBoost ?? 1
-    const saleValue = Math.round(stone.price * stone.cutResult.multiplier * relicCutValueMult * polishBoost)
+    let saleValue = Math.round(stone.price * stone.cutResult.multiplier * relicCutValueMult * polishBoost)
+    if (equippedRelics.includes('coin_purse')) saleValue = Math.round(saleValue * 1.03)
     const profit    = saleValue - stone.price
     setMoney(m => m + saleValue)
     setTotalProfit(p => p + profit)
     setTotalDeals(d => d + 1)
-    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold:true } : s))
+    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold:true, soldVia:'direct', soldPrice:saleValue } : s))
     // 直接卖不消耗天数（不调用 tickOp）
     addToast(`💰 售出 ¥${saleValue.toLocaleString()}，${profit>=0?'盈利':'亏损'} ¥${Math.abs(profit).toLocaleString()}`)
     addLog({ type: profit>=0?'profit':'loss', text:`直接售出「${stone.name}」→ ${stone.cutResult.name}`, detail:`成本 ¥${stone.price.toLocaleString()}  售出 ¥${saleValue.toLocaleString()}  盈亏 ${profit>=0?'+':''}¥${profit.toLocaleString()}`, cashIn: saleValue, cashOut:0, amount: profit })
-  }, [gameMode, isGameOver, relicCutValueMult, addToast, addLog])
+  }, [gameMode, isGameOver, relicCutValueMult, equippedRelics, addToast, addLog])
 
   // ── NPC 成交（含砖头料察觉检测）──
   const handleSellToNpc = useCallback((stoneId, npc, offer) => {
@@ -3886,7 +4932,7 @@ export default function App() {
     setMoney(m => m + offer)
     setTotalProfit(p => p + profit)
     setTotalDeals(d => d + 1)
-    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold:true } : s))
+    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold:true, soldVia:'npc', soldPrice:offer, soldToNpc:npc.name } : s))
     setNpcTarget(null)
     tickOp()
 
@@ -3914,12 +4960,28 @@ export default function App() {
     addLog({ type:'npc', text:`[${npc.name}（${npc.fullName}）] 购入「${stone.name}」→ ${resultLabel}${isBrick?' 🎭混入成功':''}`, detail:`成本 ¥${stone.price.toLocaleString()}  NPC出价 ¥${offer.toLocaleString()}  盈亏 ${profit>=0?'+':''}¥${profit.toLocaleString()}`, cashIn: offer, cashOut:0, amount: profit })
   }, [gameMode, isGameOver, tickOp, modifiers.brickDetect, relicDetectPenaltyHalf, npcRelations, addToast, addLog])
 
+  // ── 出售已装备遗物（返还 50% 购入价）──
+  const handleSellRelic = useCallback((relicId) => {
+    const r = RELICS[relicId]
+    if (!r) return
+    if (!equippedRelics.includes(relicId)) return
+    const refund = Math.round(r.price * 0.5)
+    setEquippedRelics(prev => prev.filter(id => id !== relicId))
+    setMoney(m => m + refund)
+    addToast(`💸 出售遗物「${r.name}」，返还 ¥${refund.toLocaleString()}`)
+    addLog({ type:'sell', text:`出售遗物「${r.name}」`, detail:`回收 ¥${refund.toLocaleString()}`, cashIn: refund, cashOut:0, amount: refund })
+  }, [equippedRelics, addToast, addLog])
+
   // ── 遗物购买（来自黑市时 onAfterBuy 会在成功后调用，用于关闭黑市并记录本次已购）
   const handleBuyRelic = useCallback((relicId, onAfterBuy) => {
     const r = RELICS[relicId]
     if (!r) return
     if (equippedRelics.includes(relicId)) {
       addToast(`你已经拥有遗物「${r.name}」`)
+      return
+    }
+    if (equippedRelics.length >= 6) {
+      addToast('已装备道具已满（6/6），请先在右侧「已装备道具」中出售一个再购买')
       return
     }
     if (money < r.price) {
@@ -3947,7 +5009,7 @@ export default function App() {
     if (!stone || !stone.collectible || stone.sold) return
     const item = { ...stone.collectible, acquiredDay: currentDay, stoneCost: stone.price }
     setCollection(c => [...c, item])
-    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold:true } : s))
+    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold:true, soldVia:'collection' } : s))
     addToast(`🏺 「${item.name}」已入藏，等待升值！`)
     addLog({ type:'collect', text:`收藏「${item.name}」（来自 ${stone.name}）`, detail:`入藏估值 ¥${item.baseValue.toLocaleString()}  年化+${(item.appreciatePerDay*100).toFixed(1)}%/天`, cashIn:0, cashOut:0, amount:0 })
   }, [currentDay, gameMode, isGameOver, addToast, addLog])
@@ -3992,7 +5054,7 @@ export default function App() {
     setMoney(m => m + semiValue)
     setTotalProfit(p => p + profit)
     setTotalDeals(d => d + 1)
-    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold: true } : s))
+    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold: true, soldVia:'semi', soldPrice:semiValue } : s))
     addToast(`💰 出售半明料 ¥${semiValue.toLocaleString()}，${profit >= 0 ? '盈利' : '亏损'} ¥${Math.abs(profit).toLocaleString()}`)
     addLog({ type: profit >= 0 ? 'profit' : 'loss', text: `出售半明料「${stone.name}」`, detail: `成本 ¥${stone.price.toLocaleString()}  半明估值 ¥${semiValue.toLocaleString()}  盈亏 ${profit >= 0 ? '+' : ''}¥${profit.toLocaleString()}`, cashIn: semiValue, cashOut: 0, amount: profit })
   }, [gameMode, isGameOver, addToast, addLog])
@@ -4044,13 +5106,14 @@ export default function App() {
     if (typeof refreshDiscount === 'number' && refreshDiscount > 0) {
       cost = Math.round(cost * (1 - refreshDiscount))
     }
+    if (equippedRelics.includes('old_newspaper')) cost = Math.round(cost * 0.92)
     if (money < cost) { addToast(`⚠️ 刷新需要 ¥${cost}，资金不足！`); return }
     setMoney(m => m - cost)
     const g = generateMarketStones(marketLevel)
     setMarketData({ kgStones: g.kgStones, premiumStones: g.premiumStones, auctionStone: g.auctionStone })
     addToast('🔄 市场已刷新，新料到货！')
     addLog({ type:'refresh', text:`刷新市场（${MARKET_LEVELS[marketLevel-1].name}）`, detail:`花费 ¥${cost}`, cashIn:0, cashOut: cost, amount: -cost })
-  }, [money, marketLevel, gameMode, isGameOver, npcRelations, addToast, addLog])
+  }, [money, marketLevel, gameMode, isGameOver, npcRelations, equippedRelics, addToast, addLog])
 
   // ── 市场升级 ──（每次升级 +1 每日行动次数）
   const handleUpgrade = useCallback((nextLv) => {
@@ -4078,7 +5141,7 @@ export default function App() {
     addLog({ type:'upgrade', text:`直播间升级 → ${nextCfg.name}`, detail: nextCfg.desc, cashOut: nextCfg.cost, amount: -nextCfg.cost })
   }, [money, liveStreamLevel, gameMode, isGameOver, addToast, addLog])
 
-  // ── 专属雕刻大师盘货 ──（艺术家脾气与灵感博弈）
+  // ── 专属雕刻大师盘货 ──（艺术家脾气与灵感博弈，等级加成与随机波动）
   const handleCarving = useCallback((stoneId, masterId) => {
     if (gameMode === 'menu' || isGameOver) return
     const stone = inventoryRef.current.find(s => s.id === stoneId)
@@ -4090,6 +5153,10 @@ export default function App() {
     if (strike || sick) return
     const baseVal = Math.round(stone.price * stone.cutResult.multiplier * relicCutValueMult)
     const cutId = stone.cutResult.id
+    const lv = Math.min(5, ms.level ?? 1)
+    const levelBonus = 1 + (lv - 1) * 0.02  // 每级+2%雕刻效果，最高Lv5
+    const carveVariance = () => rnd(0.9, 1.1)   // 每次加工 ±10% 随机波动
+    const stoneMasterFit = () => rnd(0.85, 1.15)  // 每块石头与每位雕刻师的契合度 ±15%
 
     if (masterId === 'chu_shi_weng') {
       if (CHU_HATE.includes(cutId)) {
@@ -4099,9 +5166,13 @@ export default function App() {
         return
       }
       const isMasterpiece = CHU_LOVE.includes(cutId) && Math.random() < (master.skillChance || 0.15)
-      const mult = isMasterpiece ? (master.skillMult || 10) : rnd(1.2, 1.8)
+      let mult = isMasterpiece ? (master.skillMult || 10) : rnd(1.2, 1.8)
+      mult = mult * levelBonus * carveVariance() * stoneMasterFit()
       const finalVal = Math.round(baseVal * mult)
-      setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, polished: { masterId, qualityBoost: mult } } : s))
+      const grade = rollProductGrade(cutId, mult)
+      const product = generateJadeProduct(pickProductTypeForMaster(master), grade, masterId, baseVal)
+      setJadeAccessories(a => [...a, { ...product, value: finalVal }])
+      setInventory(inv => inv.filter(s => s.id !== stoneId))
       setCarvingMasterRelations(prev => ({ ...prev, [masterId]: (prev[masterId] || 0) + 1 }))
       setCarvingStone(null)
       tickOp()
@@ -4109,7 +5180,7 @@ export default function App() {
         setNpcRelations(prev => Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, (v || 0) + 2])))
         addToast(`✨ 点石成金！传世之作 x10！全市 NPC 好感 +2`)
       }
-      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 褚石翁`, detail: isMasterpiece ? `传世之作 ¥${finalVal.toLocaleString()}` : `成品约 ¥${finalVal.toLocaleString()}`, cashOut:0, amount:0 })
+      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 褚石翁`, detail: isMasterpiece ? `传世之作 ${product.name} ¥${finalVal.toLocaleString()}` : `${product.name} ¥${finalVal.toLocaleString()}`, cashOut:0, amount:0 })
     } else if (masterId === 'gui_shou_a9') {
       const flawed = hasStoneFlaw(stone) || cutId === 'brick'
       let result
@@ -4124,37 +5195,48 @@ export default function App() {
           return
         }
         if (r < (master.crushChance || 0.4) + (master.jackpotChance || 0.1)) {
-          result = { mult: master.jackpotMult || 30, msg: '绝世妖孽' }
-        } else result = { mult: rnd(1, 1.5), msg: '正常成品' }
-      } else result = { mult: rnd(0.9, 1.3), msg: '完美料雕得无聊' }
+          result = { mult: (master.jackpotMult || 30) * levelBonus * carveVariance() * stoneMasterFit(), msg: '绝世妖孽' }
+        } else result = { mult: rnd(1, 1.5) * levelBonus * carveVariance() * stoneMasterFit(), msg: '正常成品' }
+      } else result = { mult: rnd(0.9, 1.3) * levelBonus * carveVariance() * stoneMasterFit(), msg: '完美料雕得无聊' }
       const finalVal = Math.round(baseVal * result.mult)
-      setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, polished: { masterId, qualityBoost: result.mult } } : s))
+      const grade = rollProductGrade(cutId, result.mult)
+      const product = generateJadeProduct(pickProductTypeForMaster(master), grade, masterId, baseVal)
+      setJadeAccessories(a => [...a, { ...product, value: finalVal }])
+      setInventory(inv => inv.filter(s => s.id !== stoneId))
       setCarvingMasterRelations(prev => ({ ...prev, [masterId]: (prev[masterId] || 0) + 1 }))
       setCarvingStone(null)
       tickOp()
       addToast(result.mult >= 30 ? `🔮 灵光乍现！绝世妖孽 x30！` : `🔨 鬼手完成`)
-      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 鬼手·阿九`, detail:`${result.msg} · ¥${finalVal.toLocaleString()}`, cashOut:0, amount:0 })
+      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 鬼手·阿九`, detail:`${product.name} · ${result.msg} ¥${finalVal.toLocaleString()}`, cashOut:0, amount:0 })
     } else if (masterId === 'qiao_niang_jinyan') {
       const minMoney = master.interactCosts?.hongbao ?? 50000
       if (money < minMoney) { addToast(`巧娘：钱不到位我不动刀`); return }
-      const boost = Math.min(master.maxMult || 2, 2)
+      let boost = Math.min(master.maxMult || 2, 2) * levelBonus * carveVariance() * stoneMasterFit()
       const extraRings = master.extraRings || 2
-      const finalVal = Math.round(baseVal * boost) + Math.round(baseVal * 0.15) * extraRings
-      setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, polished: { masterId, qualityBoost: boost, extraRings } } : s))
+      const ringBonus = 0.15 * carveVariance() * stoneMasterFit() * extraRings
+      const effectiveBoost = boost + ringBonus
+      const finalVal = Math.round(baseVal * effectiveBoost)
+      const grade = rollProductGrade(cutId, effectiveBoost)
+      const product = generateJadeProduct(pickProductTypeForMaster(master), grade, masterId, baseVal)
+      setJadeAccessories(a => [...a, { ...product, value: finalVal }])
+      setInventory(inv => inv.filter(s => s.id !== stoneId))
       setCarvingMasterRelations(prev => ({ ...prev, [masterId]: (prev[masterId] || 0) + 1 }))
       setCarvingStone(null)
       tickOp()
       addToast(`💰 巧娘极限压榨！2x + ${extraRings} 戒面，稳！`)
-      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 巧娘·金燕`, detail:`倍率 ${boost}x + ${extraRings} 戒面`, cashOut:0, amount:0 })
+      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 巧娘·金燕`, detail:`${product.name} · ¥${finalVal.toLocaleString()}`, cashOut:0, amount:0 })
     } else if (masterId === 'kumu_chan_shi') {
       if (master.rejectGrades?.includes(cutId)) return
+      const arr = master.baseMult || [1.6, 2.4]
+      const qualityBoost = rnd(arr[0], arr[1]) * levelBonus * carveVariance() * stoneMasterFit()
       setInventory(inv => inv.filter(s => s.id !== stoneId))
-      setKuMuPendingOrders(prev => [...prev, { stone: { ...stone, id: Date.now() + '_km' }, readyAtDay: currentDay + (master.deliveryDays || 3) }])
+      const deliveryDays = Math.max(1, (master.deliveryDays || 3) - (equippedRelics.includes('incense_stick') ? 1 : 0))
+      setKuMuPendingOrders(prev => [...prev, { stone: { ...stone, id: Date.now() + '_km' }, readyAtDay: currentDay + deliveryDays, qualityBoost }])
       setCarvingMasterRelations(prev => ({ ...prev, [masterId]: (prev[masterId] || 0) + 1 }))
       setCarvingStone(null)
       tickOp()
-      addToast(`🧘 枯木禅师接单，${master.deliveryDays} 天后取货，带开光词缀`)
-      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 枯木禅师`, detail:`${master.deliveryDays} 天后取货，开光`, cashOut:0, amount:0 })
+      addToast(`🧘 枯木禅师接单，${deliveryDays} 天后取货，带开光词缀`)
+      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ 枯木禅师`, detail:`${deliveryDays} 天后取货，开光`, cashOut:0, amount:0 })
     } else {
       // 其余 8 位大师：通用逻辑
       if (master.acceptGrades && !master.noPreference && (master.rejectGrades?.includes(cutId) || !master.acceptGrades.includes(cutId))) return
@@ -4166,64 +5248,164 @@ export default function App() {
       }
       if (masterId === 'du_tu_daobai') {
         const r = Math.random()
-        if (r < (master.gambleChance || 0.3)) mult = master.gambleMult || 0.5
-        else if (r < (master.gambleChance || 0.3) + (master.jackpotChance || 0.2)) mult = master.jackpotMult || 3
-        else mult = 1
+        if (r < (master.gambleChance || 0.3)) mult = (master.gambleMult || 0.5) * carveVariance() * stoneMasterFit()
+        else if (r < (master.gambleChance || 0.3) + (master.jackpotChance || 0.2)) mult = (master.jackpotMult || 3) * levelBonus * carveVariance() * stoneMasterFit()
+        else mult = 1 * levelBonus * carveVariance() * stoneMasterFit()
       } else {
         const arr = master.baseMult
-        mult = Array.isArray(arr) ? rnd(arr[0], arr[1]) : (master.baseMult || 1.2)
+        mult = (Array.isArray(arr) ? rnd(arr[0], arr[1]) : (master.baseMult || 1.2)) * levelBonus * carveVariance() * stoneMasterFit()
       }
       const finalVal = Math.round(baseVal * mult)
       if (fee > 0) setMoney(m => m - fee)
       if (master.dailyLimit) setCarvingMasterUsesToday(prev => ({ ...prev, [masterId]: (prev[masterId] || 0) + 1 }))
-      setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, polished: { masterId, qualityBoost: mult } } : s))
+      const grade = rollProductGrade(cutId, mult)
+      const product = generateJadeProduct(pickProductTypeForMaster(master), grade, masterId, baseVal)
+      setJadeAccessories(a => [...a, { ...product, value: finalVal }])
+      setInventory(inv => inv.filter(s => s.id !== stoneId))
       setCarvingMasterRelations(prev => ({ ...prev, [masterId]: (prev[masterId] || 0) + 1 }))
       setCarvingStone(null)
       tickOp()
-      addToast(`🔨 ${master.name} 完成，倍率 ${mult.toFixed(2)}x`)
-      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ ${master.name}`, detail: `倍率 ${mult.toFixed(2)}x · ¥${finalVal.toLocaleString()}${fee ? ` 工费 -¥${fee.toLocaleString()}` : ''}`, cashOut: fee, amount: -fee })
+      addToast(`🔨 ${master.name} 完成 · ${product.name} ¥${finalVal.toLocaleString()}`)
+      addLog({ type:'cut', text:`送雕刻「${stone.name}」→ ${master.name}`, detail: `${product.name} · ¥${finalVal.toLocaleString()}${fee ? ` 工费 -¥${fee.toLocaleString()}` : ''}`, cashOut: fee, amount: -fee })
     }
-  }, [gameMode, isGameOver, currentDay, money, relicCutValueMult, artistMasterState, carvingMasterRelations, carvingMasterUsesToday, addToast, addLog, tickOp])
+  }, [gameMode, isGameOver, currentDay, money, relicCutValueMult, equippedRelics, artistMasterState, carvingMasterRelations, carvingMasterUsesToday, addToast, addLog, tickOp])
 
-  // ── 计算直播竞拍出价（供弹窗与流程复用）
-  const computeLiveBids = useCallback((stone) => {
-    const cutVal = Math.round(stone.price * stone.cutResult.multiplier * (stone.polished?.qualityBoost || 1) * relicCutValueMult)
-    const viewers = [...LIVE_VIEWERS].sort(() => Math.random() - 0.5).slice(0, LIVE_STREAM_LEVELS[liveStreamLevel].slotCount || 5)
-    return viewers.map(v => {
-      const fav = viewerFavorability[v.id] || 0
-      const willMult = v.baseWillingness + Math.min(0.3, fav * 0.02)
-      const levelBonus = liveStreamLevel >= 2 ? 1.1 : liveStreamLevel >= 3 ? 1.25 : 1
-      const bid = Math.round(cutVal * rnd(0.7, 1.1) * willMult * levelBonus / 100) * 100
-      return { viewer: v, bid: Math.max(bid, cutVal * 0.3) }
-    }).sort((a, b) => b.bid - a.bid)
-  }, [liveStreamLevel, viewerFavorability, relicCutValueMult])
-
-  // ── 直播间售卖（auctionResult 为竞拍流程传入的预结算结果）
-  const handleLiveSell = useCallback((stoneId, auctionResult) => {
+  // ── 直播间售卖（含成品拍卖与原石盲拍代客主刀）
+  const handleLiveSell = useCallback((stoneId, auctionResult, opts) => {
     if (gameMode === 'menu' || isGameOver || liveStreamLevel < 1) return
     const stone = inventoryRef.current.find(s => s.id === stoneId)
-    if (!stone || stone.sold || !stone.cutResult) return
-    let top, salePrice
-    if (auctionResult) {
-      top = auctionResult.winner
-      salePrice = auctionResult.salePrice
-    } else {
-      const bids = computeLiveBids(stone)
-      top = bids[0]
-      salePrice = top.bid
+    if (!stone || stone.sold) return
+    const isBlind = opts?.isBlind
+    if (!isBlind && !stone.cutResult) return
+    const top = auctionResult?.winner
+    const salePrice = auctionResult?.salePrice ?? top?.bid
+    if (!top || salePrice == null) return
+
+    const cutResult = opts?.cutResult || stone.cutResult
+    const actualValue = opts?.actualValue ?? Math.round(stone.price * cutResult.multiplier * (stone.polished?.qualityBoost ?? 1) * relicCutValueMult)
+    const isBrick = cutResult?.id === 'brick'
+    const cutUp = actualValue > salePrice
+    const cutDown = actualValue < salePrice
+
+    let favDelta = 1
+    if (isBlind) {
+      favDelta = cutUp ? 5 : cutDown ? -10 : 0
+      setLivestreamHype(h => Math.max(0, Math.min(LIVESTREAM_CUT.hypeMax, h + (cutUp ? 80 : cutDown ? -50 : 0))))
+      const count = 3 + Math.max(0, (liveStreamLevel || 1) - 1) * 2
+      const blindBarrages = generateViewerBarrages(cutUp ? 'blindUp' : 'blindDown', count, cutUp ? 'success' : 'fail')
+      setLivestreamBarrages(b => [...b.slice(-8), ...blindBarrages])
+      const phrase = getRandomCutPhrase(cutResult.id, NPC_LIST)
+      setCutResultFloat({ id: Date.now(), text: phrase, result: cutResult })
+      setTimeout(() => setCutResultFloat(null), 2600)
     }
-    const profit = salePrice - stone.price
+
     setMoney(m => m + salePrice)
+    const profit = salePrice - stone.price
     setTotalProfit(p => p + profit)
     setTotalDeals(d => d + 1)
-    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold: true } : s))
-    setViewerFavorability(prev => ({ ...prev, [top.viewer.id]: (prev[top.viewer.id] || 0) + 1 }))
+    setInventory(inv => inv.map(s => s.id === stoneId ? { ...s, sold: true, cutResult: isBlind ? cutResult : s.cutResult, soldVia:'live', soldPrice:salePrice } : s))
+    setViewerFavorability(prev => ({ ...prev, [top.viewer.id]: Math.max(-20, (prev[top.viewer.id] || 0) + favDelta) }))
+    setViewerState(prev => {
+      const next = { ...prev }
+      const ev = evolveViewerAfterPurchase(prev, top.viewer.id, actualValue, salePrice, isBrick, { blindCutDown: isBlind && cutDown })
+      next[top.viewer.id] = { ...ev, favorability: Math.max(-20, (prev[top.viewer.id]?.favorability ?? 0) + favDelta) }
+      return next
+    })
     setLiveSellStone(null)
     setLiveAuctionData(null)
     tickOp()
-    addToast(`📺 ${top.viewer.name} 拍下！¥${salePrice.toLocaleString()}`)
-    addLog({ type:'profit', text:`直播售卖「${stone.name}」`, detail:`${top.viewer.name} 出价 ¥${salePrice.toLocaleString()} | 好感+1`, cashIn: salePrice, amount: profit })
-  }, [gameMode, isGameOver, liveStreamLevel, computeLiveBids, addToast, addLog, tickOp])
+    const msg = isBlind ? (cutUp ? `🎲 代客主刀切涨！${top.viewer.name} 赚了，好感+5` : cutDown ? `🎲 代客主刀切垮…${top.viewer.name} 血亏，好感-10` : `📺 ${top.viewer.name} 拍下 ¥${salePrice.toLocaleString()}`) : `📺 ${top.viewer.name} 拍下！¥${salePrice.toLocaleString()}`
+    addToast(msg)
+    addLog({ type:'profit', text: isBlind ? `直播盲拍「${stone.name}」` : `直播售卖「${stone.name}」`, detail: `${top.viewer.name} 出价 ¥${salePrice.toLocaleString()}${isBlind && cutResult ? ` · 切开${cutUp ? '涨' : cutDown ? '垮' : '平'} ${cutResult.name}` : ' | 好感+1'}`, cashIn: salePrice, amount: profit })
+  }, [gameMode, isGameOver, liveStreamLevel, relicCutValueMult, addToast, addLog, tickOp])
+
+  const handleBuyerRegret = useCallback((penalty) => {
+    if (!liveCutProgressData) return
+    setMoney(m => m + penalty)
+    tickOp()
+    addToast(`💰 买家反悔，支付违约金 ¥${penalty.toLocaleString()}，原石退还`)
+    addLog({ type:'profit', text:'直播盲拍·买家反悔', detail: `违约金 ¥${penalty.toLocaleString()}，原石保留`, cashIn: penalty, amount: penalty })
+    setLiveCutProgressData(null)
+  }, [liveCutProgressData, tickOp, addToast, addLog])
+
+  const handleNpcHijack = useCallback((npcId, price) => {
+    if (!liveCutProgressData) return
+    const stone = liveCutProgressData.stone
+    const profit = price - stone.price
+    setMoney(m => m + price)
+    setTotalProfit(p => p + profit)
+    setTotalDeals(d => d + 1)
+    setInventory(inv => inv.map(s => s.id === stone.id ? { ...s, sold: true, soldVia: 'live', soldPrice: price } : s))
+    setNpcRelations(prev => ({ ...prev, [npcId]: (prev[npcId] || 0) + 1 }))
+    const npc = NPC_LIST.find(n => n.id === npcId)
+    tickOp()
+    addToast(`🎩 ${npc?.icon} ${npc?.name} 空降截胡！¥${price.toLocaleString()}`)
+    addLog({ type:'profit', text:`${npc?.name} 截胡「${stone.name}」`, detail: `¥${price.toLocaleString()} 不揭晓直接售出`, cashIn: price, amount: price - stone.price })
+    setLiveCutProgressData(null)
+  }, [liveCutProgressData, tickOp, addToast, addLog])
+
+  const handleSellAccessory = useCallback((accessoryId) => {
+    const acc = jadeAccessories.find(a => a.id === accessoryId)
+    if (!acc) return
+    let saleValue = acc.value
+    if (equippedRelics.includes('coin_purse')) saleValue = Math.round(saleValue * 1.03)
+    setMoney(m => m + saleValue)
+    setTotalProfit(p => p + (saleValue - (acc.costPrice || 0)))
+    setTotalDeals(d => d + 1)
+    setJadeAccessories(a => a.filter(x => x.id !== accessoryId))
+    addToast(`💰 售出「${acc.name}」¥${saleValue.toLocaleString()}`)
+    addLog({ type:'profit', text:`售出饰品「${acc.name}」`, detail:`¥${saleValue.toLocaleString()}`, cashIn: saleValue, amount: saleValue })
+  }, [jadeAccessories, equippedRelics, addToast, addLog])
+
+  const handleSellAccessoryToNpc = useCallback((accessoryId, npc, offer) => {
+    const acc = jadeAccessories.find(a => a.id === accessoryId)
+    if (!acc) return
+    setMoney(m => m + offer)
+    setTotalProfit(p => p + (offer - (acc.costPrice || 0)))
+    setTotalDeals(d => d + 1)
+    setJadeAccessories(a => a.filter(x => x.id !== accessoryId))
+    setNpcAccessoryTarget(null)
+    tickOp()
+    addToast(`${npc.icon} ${npc.name} 成交 ¥${offer.toLocaleString()}，关系 +1`)
+    setNpcRelations(prev => {
+      const oldDeals = prev[npc.id] || 0
+      const newDeals = oldDeals + 1
+      const oldLv = getNpcLevel(oldDeals)
+      const newLv = getNpcLevel(newDeals)
+      if (newLv > oldLv) {
+        setTimeout(() => {
+          addToast(`🎉 与「${npc.name}」关系升级！→ ${NPC_LEVEL_ICONS[newLv]} ${NPC_LEVEL_NAMES[newLv]}`)
+        }, 200)
+      }
+      return { ...prev, [npc.id]: newDeals }
+    })
+    addLog({ type:'npc', text:`[${npc.name}] 购入饰品「${acc.name}」`, detail:`NPC出价 ¥${offer.toLocaleString()}`, cashIn: offer, amount: offer })
+  }, [jadeAccessories, tickOp, addToast, addLog])
+
+  const handleLiveSellAccessory = useCallback((accessoryId, auctionResult) => {
+    const acc = jadeAccessories.find(a => a.id === accessoryId)
+    if (!acc || !auctionResult?.winner) return
+    const salePrice = auctionResult.salePrice ?? auctionResult.winner?.bid
+    setMoney(m => m + salePrice)
+    setTotalProfit(p => p + (salePrice - (acc.costPrice || 0)))
+    setTotalDeals(d => d + 1)
+    setJadeAccessories(a => a.filter(x => x.id !== accessoryId))
+    setLiveSellAccessory(null)
+    setLiveAuctionAccessoryData(null)
+    const top = auctionResult.winner
+    setViewerFavorability(prev => ({ ...prev, [top.viewer.id]: Math.max(-20, (prev[top.viewer.id] || 0) + 1) }))
+    tickOp()
+    addToast(`📺 ${top.viewer.name} 拍下「${acc.name}」¥${salePrice.toLocaleString()}`)
+    addLog({ type:'profit', text:`直播售卖饰品「${acc.name}」`, detail:`${top.viewer.name} 出价 ¥${salePrice.toLocaleString()} | 好感+1`, cashIn: salePrice, amount: salePrice })
+  }, [jadeAccessories, tickOp, addToast, addLog])
+
+  const handleLivestreamGiftAccessory = useCallback((accessoryId) => {
+    const acc = jadeAccessories.find(a => a.id === accessoryId)
+    if (!acc || !livestreamActive) return
+    setJadeAccessories(a => a.filter(x => x.id !== accessoryId))
+    setLivestreamHype(h => Math.min(LIVESTREAM_CUT.hypeMax, h + LIVESTREAM_CUT.hypeGiftAdd))
+    addToast(`🎁 发福利送「${acc.name}」，热度 +${LIVESTREAM_CUT.hypeGiftAdd}`)
+  }, [jadeAccessories, livestreamActive, addToast])
 
   const handleClearCut = useCallback(() => {
     setInventory(inv => inv.filter(s => !s.sold))
@@ -4244,6 +5426,7 @@ export default function App() {
     const influencerLv = getNpcLevel(npcRelations['influencer'] || 0)
     const refreshDiscount = getNpcSkillValue(influencer, 'refreshDiscount', influencerLv)
     if (typeof refreshDiscount === 'number' && refreshDiscount > 0) c = Math.round(c * (1 - refreshDiscount))
+    if (equippedRelics.includes('old_newspaper')) c = Math.round(c * 0.92)
     return c
   })()
   const hasSold     = inventory.some(s => s.sold)
@@ -4371,9 +5554,10 @@ export default function App() {
               { label:'累计盈亏',  value:`${totalProfit>=0?'+':''}¥${totalProfit.toLocaleString()}`,              color: totalProfit>=0?'#4ade80':'#f87171',                      big:false },
               { label:'人品值',    value:`${reputation}`,                                                          color: reputation>=5?'#86efac':reputation>=1?'#fbbf24':'#f87171', big:false },
               { label:'交易次数',  value:`${totalDeals} 次`,                                                        color:'#94a3b8',                                                big:false },
+              { label:'饰品背包',  value:`${jadeAccessories.length} 件`,                                            color:'#5eead4',                                                big:false },
               { label:'私人藏馆',  value:`${collection.length} 件`,                                                color:'#fde68a',                                                big:false },
             ].map(stat => (
-              <div key={stat.label} className="stat-cell" onClick={stat.label==='私人藏馆' ? ()=>setShowCollection(true):undefined} style={{ background:'rgba(15,23,42,.8)', border:'1px solid rgba(30,41,59,.8)', borderRadius:10, padding:'5px 12px', textAlign:'center', minWidth:stat.big?115:85, cursor:stat.label==='私人藏馆'?'pointer':'default' }}>
+              <div key={stat.label} className="stat-cell" onClick={stat.label==='私人藏馆' ? ()=>setShowCollection(true) : stat.label==='饰品背包' ? ()=>setShowBackpack(true) : undefined} style={{ background:'rgba(15,23,42,.8)', border:'1px solid rgba(30,41,59,.8)', borderRadius:10, padding:'5px 12px', textAlign:'center', minWidth:stat.big?115:85, cursor:(stat.label==='私人藏馆'||stat.label==='饰品背包')?'pointer':'default' }}>
                 <p style={{ fontSize:9, color:'#334155', margin:0, marginBottom:2 }}>{stat.label}</p>
                 <p style={{ fontSize:stat.big?17:14, fontWeight:800, color:stat.color, margin:0, fontVariantNumeric:'tabular-nums' }}>{stat.value}</p>
               </div>
@@ -4396,6 +5580,12 @@ export default function App() {
             <span style={{ fontSize:18 }}>{liveStreamLevel>=1 ? '📺' : '📴'}</span>
             <span style={{ fontSize:12, fontWeight:700, color:'#e2e8f0' }}>直播间</span>
           </button>
+          {liveStreamLevel >= 1 && (
+            <button onClick={()=>setShowViewerAdmin(true)} style={{ background:'rgba(30,41,59,.8)', border:'1px solid rgba(99,102,241,.5)', borderRadius:10, padding:'8px 12px', cursor:'pointer', textAlign:'center', display:'flex', alignItems:'center', gap:4 }}>
+              <span style={{ fontSize:14 }}>📋</span>
+              <span style={{ fontSize:11, fontWeight:700, color:'#c7d2fe' }}>房管后台</span>
+            </button>
+          )}
           <button onClick={()=>setShowNpcRoster(true)} style={{ background:'rgba(15,23,42,.8)', border:'1px solid rgba(51,65,85,.7)', borderRadius:10, padding:'8px 16px', cursor:'pointer', textAlign:'center', minWidth:72, display:'flex', alignItems:'center', gap:6, position:'relative' }}>
             {(() => {
               const maxLv = Math.max(...NPC_LIST.map(n => getNpcLevel(npcRelations[n.id] || 0)))
@@ -4428,7 +5618,7 @@ export default function App() {
             <span>{livestreamActive ? '直播中' : '直播切石'}</span>
           </button>
           {livestreamActive && (
-            <button onClick={()=>setShowGiftModal(true)} disabled={inventory.filter(s=>s.cutResult && !s.sold && (s.cutResult?.multiplier||1)<1.2).length===0}
+            <button onClick={()=>setShowGiftModal(true)} disabled={inventory.filter(s=>s.cutResult && !s.sold && (s.cutResult?.multiplier||1)<1.2).length===0 && jadeAccessories.length===0}
               style={{ padding:'8px 16px', borderRadius:10, border:'1px solid rgba(251,191,36,.5)', background:'linear-gradient(135deg,rgba(180,83,9,.5),rgba(251,191,36,.25))', color:'#fde68a', fontSize:12, fontWeight:700, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
               <span>🎁</span>
               <span>发福利</span>
@@ -4510,13 +5700,13 @@ export default function App() {
           <div style={{ background:'rgba(13,20,36,.55)', border:'1px solid rgba(30,41,59,.55)', borderRadius:14, padding:'12px 14px', marginTop:10 }}>
             <p style={{ color:'#334155', fontSize:10, fontWeight:700, letterSpacing:'0.08em', marginBottom:8 }}>TIME SYSTEM · 游戏时间</p>
             <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
-              <span style={{ color:'#64748b', fontSize:11 }}>每 {daySpeed} 次操作 = 1 天</span>
+              <span style={{ color:'#64748b', fontSize:11 }}>每 {effectiveDaySpeed} 次操作 = 1 天{equippedRelics.includes('midnight_oil') && <span style={{ color:'#fbbf24', marginLeft:4 }}>🕯+1</span>}</span>
               <span style={{ color:'#a78bfa', fontSize:11, fontWeight:700 }}>当前第 {currentDay} 天</span>
             </div>
             <div style={{ height:4, background:'rgba(30,41,59,.8)', borderRadius:2, overflow:'hidden' }}>
-              <div style={{ height:'100%', background:'linear-gradient(90deg,#7c3aed,#a78bfa)', borderRadius:2, width:`${(opCount % daySpeed) / daySpeed * 100}%`, transition:'width .3s' }} />
+              <div style={{ height:'100%', background:'linear-gradient(90deg,#7c3aed,#a78bfa)', borderRadius:2, width:`${(opCount % effectiveDaySpeed) / effectiveDaySpeed * 100}%`, transition:'width .3s' }} />
             </div>
-            <p style={{ color:'#1e293b', fontSize:10, marginTop:6 }}>已操作 {opCount} 次，今日进度 {opCount % daySpeed}/{daySpeed}</p>
+            <p style={{ color:'#1e293b', fontSize:10, marginTop:6 }}>已操作 {opCount} 次，今日进度 {opCount % effectiveDaySpeed}/{effectiveDaySpeed}</p>
             <p style={{ color:'#334155', fontSize:10, marginTop:4 }}>✦ 收藏品每天自动升值</p>
           </div>
 
@@ -4535,7 +5725,7 @@ export default function App() {
           </div>
 
           {/* 已装备道具 */}
-          <EquippedRelicsBar equippedRelics={equippedRelics} />
+          <EquippedRelicsBar equippedRelics={equippedRelics} onSellRelic={handleSellRelic} />
         </aside>
 
         {/* ── 右栏：工作台 ── */}
@@ -4575,6 +5765,7 @@ export default function App() {
                     onSellSemi={handleSellSemi}
                     onCarving={id => setCarvingStone(inventory.find(s=>s.id===id))}
                     onLiveSell={id => setLiveSellStone(inventory.find(s=>s.id===id))}
+                    onLiveBlindAuction={id => setLiveSellStone(inventory.find(s=>s.id===id))}
                     cutValueMult={relicCutValueMult}
                     money={money}
                     liveStreamLevel={liveStreamLevel}
@@ -4608,29 +5799,81 @@ export default function App() {
       {/* ── 弹窗 ── */}
       {stoneDetail && <StoneDetailModal stone={stoneDetail.stone} originConfig={stoneDetail.originConfig} onClose={()=>setStoneDetail(null)} />}
       {carvingStone && <CarvingModal stone={carvingStone} money={money} cutValueMult={relicCutValueMult} masters={ARTIST_MASTERS} relations={carvingMasterRelations} masterState={artistMasterState} currentDay={currentDay} usesToday={carvingMasterUsesToday} onSelect={(mid)=>{handleCarving(carvingStone.id, mid); setCarvingStone(null);}} onClose={()=>setCarvingStone(null)} />}
-      {liveSellStone && <LiveSellModal stone={liveSellStone} cutValueMult={relicCutValueMult} onConfirm={()=>{ const bids = computeLiveBids(liveSellStone); setLiveAuctionData({ stone: liveSellStone, bids }); setLiveSellStone(null); }} onClose={()=>setLiveSellStone(null)} />}
-      {liveAuctionData && <LiveAuctionProcessModal data={liveAuctionData} onComplete={()=>{ const w = liveAuctionData.bids[0]; handleLiveSell(liveAuctionData.stone.id, { winner: w, salePrice: w.bid }); }} />}
+      {liveSellStone && <LiveSellModal stone={liveSellStone} cutValueMult={relicCutValueMult} onConfirm={()=>{ const result = runLiveAuction(liveSellStone, viewerFavorability, liveStreamLevel, relicCutValueMult, currentDay, viewerState, equippedRelics.includes('tiger_eye') ? 1 : 0); if (result.isRivalry && result.rivalNames?.length >= 2) setLivestreamBarrages(b => [...b.slice(-8), { id: Date.now() + Math.random(), text: `【系统】${result.rivalNames[0]}和${result.rivalNames[1]}杠上了！开始斗气竞价！`, type: 'rivalry' }]); setLiveAuctionData({ stone: liveSellStone, bids: result.bids, winner: result.winner, isBlind: !liveSellStone.cutResult }); setLiveSellStone(null); }} onClose={()=>setLiveSellStone(null)} />}
+      {liveAuctionData && <LiveAuctionProcessModal data={liveAuctionData} viewerState={viewerState} onComplete={()=>{ const w = liveAuctionData.winner; const stone = liveAuctionData.stone; if (liveAuctionData.isBlind) { setLivestreamBarrages(b => [...b.slice(-8), ...generatePredictionBarrages(stone)]); setLiveCutProgressData({ stone, winner: w, salePrice: w.bid }); setLiveAuctionData(null); } else { handleLiveSell(stone.id, { winner: w, salePrice: w.bid }); setLiveAuctionData(null); } }} />}
+      {liveCutProgressData && <BlindCutProgressModal stone={liveCutProgressData.stone} winner={liveCutProgressData.winner} salePrice={liveCutProgressData.salePrice} npcRelations={npcRelations} cutQualityBonus={modifiers.cutQuality} brickReduceBonus={relicBrickReduce ? 0.1 : 0} relicCutValueMult={relicCutValueMult} onCutComplete={(result, actualValue)=>{ handleLiveSell(liveCutProgressData.stone.id, { winner: liveCutProgressData.winner, salePrice: liveCutProgressData.salePrice }, { isBlind: true, cutResult: result, actualValue }); setLiveCutProgressData(null); }} onBuyerRegret={(penalty)=>handleBuyerRegret(penalty)} onNpcHijack={(npcId, price)=>handleNpcHijack(npcId, price)} />}
       {showLiveStreamUpgrade && <LiveStreamUpgradeModal level={liveStreamLevel} money={money} levels={LIVE_STREAM_LEVELS} onUpgrade={handleLiveStreamUpgrade} onClose={()=>setShowLiveStreamUpgrade(false)} viewerFavorability={viewerFavorability} />}
+      {showViewerAdmin && <ViewerAdminModal viewerState={viewerState} onClose={()=>setShowViewerAdmin(false)} />}
       {bargainStone && <BargainModal stone={bargainStone} onChooseType={(s,t)=>setBargainQte({stone:s,type:t})} onClose={()=>setBargainStone(null)} />}
       {bargainQte && <BargainQteModal stone={bargainQte.stone} type={bargainQte.type} onComplete={(qtePerfect)=>{handleBargain(bargainQte.stone,bargainQte.type,qtePerfect);setBargainQte(null)}} onClose={()=>setBargainQte(null)} />}
       {auctionBidStone && <BlindAuctionModal stone={auctionBidStone} money={money} onSubmitBid={handleAuctionBid} onClose={()=>setAuctionBidStone(null)} />}
       {showUpgrade   && <UpgradeModal marketLevel={marketLevel} money={money} onUpgrade={handleUpgrade} onClose={()=>setShowUpgrade(false)} />}
       {showLog       && <LogModal logs={logs} onClose={()=>setShowLog(false)} />}
-      {showWorkbenchLog && <WorkbenchLogModal stones={inventory} onClose={()=>setShowWorkbenchLog(false)} onCut={handleCut} onSell={handleSell} onNpc={id=>{ tickOp(); setNpcTarget(id); }} onCollect={handleCollect} onOpenWindow={handleOpenWindow} onSellSemi={handleSellSemi} onCarving={id=>setCarvingStone(inventory.find(s=>s.id===id))} onLiveSell={id=>setLiveSellStone(inventory.find(s=>s.id===id))} cutValueMult={relicCutValueMult} money={money} liveStreamLevel={liveStreamLevel} />}
+      {showWorkbenchLog && <WorkbenchLogModal stones={inventory} onClose={()=>setShowWorkbenchLog(false)} onCut={handleCut} onSell={handleSell} onNpc={id=>{ tickOp(); setNpcTarget(id); }} onCollect={handleCollect} onOpenWindow={handleOpenWindow} onSellSemi={handleSellSemi} onCarving={id=>setCarvingStone(inventory.find(s=>s.id===id))} onLiveSell={id=>setLiveSellStone(inventory.find(s=>s.id===id))} onLiveBlindAuction={id=>setLiveSellStone(inventory.find(s=>s.id===id))} cutValueMult={relicCutValueMult} money={money} liveStreamLevel={liveStreamLevel} />}
       {showCollection && <CollectionPanel collection={collection} currentDay={currentDay} onSell={handleSellCollection} onClose={()=>setShowCollection(false)} collectionAppreciateBoost={(() => { const p = NPC_LIST.find(n => n.id === 'professor_li'); const lv = getNpcLevel(npcRelations['professor_li'] || 0); return p?.globalPerk && lv >= (p.globalPerk.unlockAtLv ?? 2) ? (p.globalPerk.value ?? 0.2) : 0 })()} />}
+      {showBackpack && (
+        <BackpackPanel
+          accessories={jadeAccessories}
+          onSell={handleSellAccessory}
+          onSellNpc={(id)=>{ setShowBackpack(false); setNpcAccessoryTarget(id); }}
+          onLiveSell={(id)=>{ const a = jadeAccessories.find(x=>x.id===id); if(a){ setShowBackpack(false); setLiveSellAccessory(a); } }}
+          onGift={handleLivestreamGiftAccessory}
+          onClose={()=>setShowBackpack(false)}
+          liveStreamLevel={liveStreamLevel}
+          livestreamActive={livestreamActive}
+        />
+      )}
+      {npcAccessoryTarget && (
+        <NpcAccessoryModal
+          accessory={jadeAccessories.find(a=>a.id===npcAccessoryTarget)}
+          npcRelations={npcRelations}
+          onSellToNpc={handleSellAccessoryToNpc}
+          onClose={()=>setNpcAccessoryTarget(null)}
+          npcOfferMult={modifiers.npcOffer}
+        />
+      )}
+      {liveSellAccessory && (
+        <LiveSellAccessoryModal
+          accessory={liveSellAccessory}
+          onConfirm={()=>{
+            const result = runLiveAuctionAccessory(liveSellAccessory, viewerFavorability, liveStreamLevel, currentDay, viewerState, equippedRelics.includes('tiger_eye') ? 1 : 0)
+            if (result.isRivalry && result.rivalNames?.length >= 2) {
+              setLivestreamBarrages(b => [...b.slice(-8), { id: Date.now() + Math.random(), text: `【系统】${result.rivalNames[0]}和${result.rivalNames[1]}杠上了！开始斗气竞价！`, type: 'rivalry' }])
+            }
+            setLiveAuctionAccessoryData({ accessory: liveSellAccessory, bids: result.bids, winner: result.winner })
+            setLiveSellAccessory(null)
+          }}
+          onClose={()=>setLiveSellAccessory(null)}
+        />
+      )}
+      {liveAuctionAccessoryData && (
+        <LiveAuctionProcessModal
+          data={liveAuctionAccessoryData}
+          viewerState={viewerState}
+          onComplete={()=>{
+            handleLiveSellAccessory(liveAuctionAccessoryData.accessory.id, { winner: liveAuctionAccessoryData.winner, salePrice: liveAuctionAccessoryData.winner?.bid })
+            setLiveAuctionAccessoryData(null)
+          }}
+        />
+      )}
       {showNpcRoster && <NpcRosterPanel npcRelations={npcRelations} onClose={()=>setShowNpcRoster(false)} />}
       {npcStone      && <NpcModal stone={npcStone} npcRelations={npcRelations} onSellToNpc={handleSellToNpc} onClose={()=>setNpcTarget(null)} npcOfferMult={modifiers.npcOffer} cutValueMult={relicCutValueMult} />}
 
       {showPhone && <PhonePanel messages={phoneMessages} npcList={[...NPC_LIST, { id:'bang_yige', name:'榜一大哥', icon:'👑' }]} onReply={handlePhoneReply} onClose={()=>setShowPhone(false)} />}
-      {showLaoChen && <ArtistMastersPanel masterState={artistMasterState} money={money} currentDay={currentDay} onInteract={handleArtistInteract} onClose={()=>setShowLaoChen(false)} />}
+      {showLaoChen && <ArtistMastersPanel masterState={artistMasterState} money={money} currentDay={currentDay} onInteract={handleArtistInteract} onClose={()=>setShowLaoChen(false)} remainingOpsToday={effectiveDaySpeed - (opCount % effectiveDaySpeed)} daySpeed={effectiveDaySpeed} />}
       {livestreamActive && <LiveStreamBarrageLayer barrages={livestreamBarrages} />}
+      {cutResultFloat && <CutResultFloat float={cutResultFloat} cutResult={cutResultFloat.result} />}
       {showGiftModal && (
         <div style={{ position:'fixed', inset:0, zIndex:480, background:'rgba(0,0,0,.85)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }} onClick={()=>setShowGiftModal(false)}>
-          <div onClick={e=>e.stopPropagation()} style={{ background:'#1e293b', border:'1px solid rgba(251,191,36,.4)', borderRadius:16, padding:20, maxWidth:360 }}>
-            <p style={{ color:'#fde68a', marginBottom:12, fontSize:14 }}>选择一块低级料送给弹幕（拉满热度）：</p>
+          <div onClick={e=>e.stopPropagation()} style={{ background:'#1e293b', border:'1px solid rgba(251,191,36,.4)', borderRadius:16, padding:20, maxWidth:420 }}>
+            <p style={{ color:'#fde68a', marginBottom:12, fontSize:14 }}>选择送给弹幕（拉满热度）：</p>
+            <p style={{ color:'#94a3b8', fontSize:11, margin:'-8px 0 8px' }}>低级料或饰品均可</p>
             <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
               {inventory.filter(s=>s.cutResult && !s.sold && (s.cutResult?.multiplier||1)<1.2).slice(0,6).map(s=>(
                 <button key={s.id} onClick={()=>handleLivestreamGift(s.id)} style={{ padding:'8px 12px', background:'rgba(251,191,36,.15)', border:'1px solid rgba(251,191,36,.4)', borderRadius:10, color:'#fde68a', fontSize:11, cursor:'pointer' }}>{s.cutResult?.name || s.name} · ¥{Math.round(s.price*(s.cutResult?.multiplier||1)).toLocaleString()}</button>
+              ))}
+              {jadeAccessories.slice(0,6).map(a=>(
+                <button key={a.id} onClick={()=>{ handleLivestreamGiftAccessory(a.id); setShowGiftModal(false); }} style={{ padding:'8px 12px', background:'rgba(251,191,36,.15)', border:'1px solid rgba(251,191,36,.4)', borderRadius:10, color:'#fde68a', fontSize:11, cursor:'pointer' }}>{a.emoji} {a.name} · ¥{a.value?.toLocaleString()}</button>
               ))}
             </div>
             <button onClick={()=>setShowGiftModal(false)} style={{ marginTop:12, width:'100%', padding:8, background:'#334155', border:'none', borderRadius:8, color:'#94a3b8', cursor:'pointer' }}>取消</button>

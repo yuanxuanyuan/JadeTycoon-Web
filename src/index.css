@@ -34,6 +34,16 @@ body {
   100% { transform: scale(1)    rotate(0deg); filter: brightness(1); }
 }
 
+/* ── 切石结果飘字（屏幕偏上） ── */
+@keyframes cutFloatIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px) scale(0.9); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+@keyframes cutFloatStay {
+  0%, 80% { opacity: 1; }
+  100%    { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
+
 /* ── Toast 飞入 ── */
 @keyframes toastIn {
   from { opacity: 0; transform: translateX(50px) scale(0.88); }
