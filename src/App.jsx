@@ -2756,7 +2756,9 @@ function BlindAuctionModal({ stone, money, onSubmitBid, onClose }) {
   if (!stone) return null
   const base = stone.auctionBasePrice ?? stone.price
   const minBid = Math.max(100, Math.round(base * 0.3))
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e?.preventDefault?.()
+    e?.stopPropagation?.()
     const n = parseInt(bid, 10)
     if (!isNaN(n) && n >= minBid && n <= money) {
       onSubmitBid(stone, n)
@@ -2764,16 +2766,17 @@ function BlindAuctionModal({ stone, money, onSubmitBid, onClose }) {
     }
   }
   return (
-    <div onClick={onClose} className="modal-overlay modal-scroll-lock" style={{ position:'fixed', inset:0, zIndex:500, background:'rgba(0,0,0,.82)', display:'flex', alignItems:'center', justifyContent:'center', padding:16, overflow:'auto', WebkitOverflowScrolling:'touch' }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#1a0a0a,#2d1810)', border:'1px solid rgba(217,119,6,.5)', borderRadius:16, padding:24, maxWidth:400, width:'100%', margin:'auto' }}>
+    <div className="modal-overlay" style={{ position:'fixed', inset:0, zIndex:500, display:'flex', alignItems:'center', justifyContent:'center', padding:16, pointerEvents:'none' }}>
+      <div onClick={onClose} style={{ position:'absolute', inset:0, background:'rgba(0,0,0,.82)', pointerEvents:'auto' }} aria-hidden="true" />
+      <div className="auction-modal-content" style={{ position:'relative', zIndex:1, background:'linear-gradient(160deg,#1a0a0a,#2d1810)', border:'1px solid rgba(217,119,6,.5)', borderRadius:16, padding:24, maxWidth:400, width:'100%', pointerEvents:'auto' }} onClick={e=>e.stopPropagation()}>
         <h3 style={{ margin:'0 0 8px', color:'#fef3c7' }}>🏷️ 暗标公盘</h3>
         <p style={{ color:'#94a3b8', fontSize:12, marginBottom:8 }}>「{stone.name}」参考底价 ¥{base.toLocaleString()}</p>
         <p style={{ color:'#64748b', fontSize:11, marginBottom:16 }}>系统将模拟2位NPC出价，你的出价需高于二者才能夺得</p>
         <input type="number" value={bid} onChange={e=>setBid(e.target.value)} placeholder={`最低 ¥${minBid.toLocaleString()}`} min={minBid} max={money}
           style={{ width:'100%', padding:12, background:'#1e293b', border:'1px solid #475569', borderRadius:8, color:'#f1f5f9', fontSize:16, marginBottom:12 }} />
         <div style={{ display:'flex', gap:10 }}>
-          <button type="button" onClick={handleSubmit} style={{ flex:1, padding:14, minHeight:48, background:'linear-gradient(135deg,#b45309,#d97706)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer', touchAction:'manipulation' }}>提交竞标</button>
-          <button type="button" onClick={onClose} style={{ padding:14, minHeight:48, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer', touchAction:'manipulation' }}>放弃</button>
+          <button type="button" onClick={handleSubmit} style={{ flex:1, padding:14, minHeight:48, background:'linear-gradient(135deg,#b45309,#d97706)', border:'none', borderRadius:10, color:'#fff', fontWeight:700, cursor:'pointer', touchAction:'manipulation', WebkitTapHighlightColor:'transparent' }}>提交竞标</button>
+          <button type="button" onClick={onClose} style={{ padding:14, minHeight:48, background:'#334155', border:'none', borderRadius:10, color:'#94a3b8', cursor:'pointer', touchAction:'manipulation', WebkitTapHighlightColor:'transparent' }}>放弃</button>
         </div>
       </div>
     </div>
