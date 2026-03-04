@@ -3648,7 +3648,10 @@ export default function App() {
   const handleBuy = useCallback((stone, channel, finalPrice = null) => {
     if (gameMode === 'menu' || isGameOver) return
     const effectivePrice = finalPrice ?? Math.round(stone.price * modifiers.marketPrice)
-    if (money < effectivePrice) return
+    if (money < effectivePrice) {
+      addToast(`资金不足，无法购买「${stone.name}」`)
+      return
+    }
     const nm = money - effectivePrice
     setMoney(nm)
     const buyStone = { ...stone, id: Date.now() + Math.random(), price: effectivePrice }
@@ -3685,7 +3688,14 @@ export default function App() {
   // ── 暗标公盘竞标
   const handleAuctionBid = useCallback((stone, bidAmount) => {
     if (gameMode === 'menu' || isGameOver || !stone || stone.channel !== 'auction') return
-    if (money < bidAmount || bidAmount < 100) return
+    if (bidAmount < 100) {
+      addToast('出价不能低于 ¥100')
+      return
+    }
+    if (money < bidAmount) {
+      addToast('余额不足，无法提交竞标')
+      return
+    }
     const base = stone.auctionBasePrice ?? stone.price
     const npc1 = Math.round(base * (0.6 + Math.random() * 0.5))
     const npc2 = Math.round(base * (0.7 + Math.random() * 0.6))
@@ -3907,7 +3917,15 @@ export default function App() {
   // ── 遗物购买（来自黑市时 onAfterBuy 会在成功后调用，用于关闭黑市并记录本次已购）
   const handleBuyRelic = useCallback((relicId, onAfterBuy) => {
     const r = RELICS[relicId]
-    if (!r || equippedRelics.includes(relicId) || money < r.price) return
+    if (!r) return
+    if (equippedRelics.includes(relicId)) {
+      addToast(`你已经拥有遗物「${r.name}」`)
+      return
+    }
+    if (money < r.price) {
+      addToast(`资金不足，无法购买遗物「${r.name}」`)
+      return
+    }
     setMoney(m => m - r.price)
     setEquippedRelics(prev => [...prev, relicId])
     addToast(`🔮 获得遗物「${r.name}」`)
@@ -3949,7 +3967,11 @@ export default function App() {
 
   // ── 开皮擦窗（半明料，WINDOW_OUTCOMES 影响显示，切割仍用真实 hiddenTag）──
   const handleOpenWindow = useCallback((stoneId) => {
-    if (gameMode === 'menu' || isGameOver || money < WINDOW_OPEN_COST) return
+    if (gameMode === 'menu' || isGameOver) return
+    if (money < WINDOW_OPEN_COST) {
+      addToast(`资金不足，开窗需要 ¥${WINDOW_OPEN_COST.toLocaleString()}`)
+      return
+    }
     const stone = inventoryRef.current.find(s => s.id === stoneId)
     if (!stone || stone.cutResult || stone.windowOpened) return
     const outcome = pick(WINDOW_OUTCOMES)
@@ -3977,7 +3999,12 @@ export default function App() {
 
   // ── 打灯观察（揭示词缀，可能准确/模糊/看走眼）──
   const handleFlashlight = useCallback((stone) => {
-    if (gameMode === 'menu' || isGameOver || money < FLASHLIGHT_COST || stone.flashlightRevealed) return
+    if (gameMode === 'menu' || isGameOver) return
+    if (stone.flashlightRevealed) return
+    if (money < FLASHLIGHT_COST) {
+      addToast(`资金不足，打灯需要 ¥${FLASHLIGHT_COST.toLocaleString()}`)
+      return
+    }
     setMoney(m => m - FLASHLIGHT_COST)
     const realAffix = stone.hiddenTag ? AFFIX_MAP[stone.hiddenTag] : null
     const r = Math.random()
