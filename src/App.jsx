@@ -1,4 +1,9 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { buildPhoneMsgExpanded } from './phoneMsgData'
+import ShopPanel from './ShopPanel'
+import { SHOP_LEVELS } from './shopNpcPool'
+import ExpeditionPanel from './ExpeditionPanel'
+import { EXPEDITION_DAYS, EXPEDITION_CAPITAL_MIN, EXPEDITION_CAPITAL_MAX } from './expeditionData'
 import './App.css'
 
 // ═══════════════════════════════════════════════════════════
@@ -18,6 +23,71 @@ const MARKET_LEVELS = [
 // 每个模式定义：名称、最大天数（null=无尽）、债务时间表
 // 债务表：每到指定 day，需要支付 amount，否则 Game Over
 const SAVE_KEY = 'jadetycoon_save'
+const LEGACY_KEY = 'jadetycoon_legacy'
+
+// 局外成长：传承点与天赋树（20+ 项）
+const LEGACY_TALENTS = [
+  { id: 'initial_money', name: '初始资金', icon: '💰', cost: 5, desc: '开局额外获得 ¥500,000' },
+  { id: 'vip_pass', name: 'VIP 入场券', icon: '🎫', cost: 8, desc: '开局直接解锁三级市场（翡翠批发市场）' },
+  { id: 'ancestral_flashlight', name: '祖传手电', icon: '🔦', cost: 6, desc: '打灯准确率永久 +10%' },
+  { id: 'npc_heritage', name: '人脉传承', icon: '🤝', cost: 10, desc: '开局随机一位 NPC 直接达到「老朋友」关系' },
+  { id: 'day_speed', name: '勤勉家风', icon: '⏱️', cost: 8, desc: '每局每日操作次数 +1（3→4）' },
+  { id: 'cut_quality', name: '祖传刀工', icon: '🔪', cost: 6, desc: '切割高品质概率永久 +3%' },
+  { id: 'brick_resist', name: '避坑心得', icon: '🛡️', cost: 6, desc: '砖头料概率永久 -5%' },
+  { id: 'reputation_start', name: '口碑相传', icon: '⭐', cost: 5, desc: '开局人品值 +3（10→13）' },
+  { id: 'market_discount', name: '老主顾价', icon: '🏷️', cost: 8, desc: '市场刷新费用 -15%' },
+  { id: 'npc_start_bonus', name: '人缘开局', icon: '😊', cost: 7, desc: '随机 2 位 NPC 初始好感 +1 级' },
+  { id: 'first_flashlight', name: '开光手电', icon: '💡', cost: 5, desc: '首块原石打灯必出准确' },
+  { id: 'debt_grace', name: '债主宽容', icon: '📜', cost: 12, desc: '债务日可延期 1 天（每局限 1 次）' },
+  { id: 'black_market_early', name: '黑市门路', icon: '🏪', cost: 6, desc: '黑市提前到第 3 天可进' },
+  { id: 'collection_appreciate', name: '藏家眼光', icon: '📈', cost: 7, desc: '收藏品每日升值率 +1%' },
+  { id: 'refund_protect', name: '退货保险', icon: '🛡️', cost: 9, desc: '精品柜砍价失败不触发愤怒' },
+  { id: 'smuggler_trust', name: '走私信任', icon: '📦', cost: 10, desc: '走私客骗局成功率 +20%（60%→80%）' },
+  { id: 'live_stream_boost', name: '直播基因', icon: '📺', cost: 8, desc: '直播间初始热度 +20' },
+  { id: 'carving_inspiration', name: '雕刻灵感', icon: '🖌️', cost: 7, desc: '雕刻师初始灵感 +10' },
+  { id: 'shop_capital', name: '商铺本金', icon: '🏬', cost: 10, desc: '商铺解锁资金需求降至 ¥200 万' },
+  { id: 'event_luck', name: '吉星高照', icon: '🍀', cost: 9, desc: '随机事件正面概率 +10%' },
+  { id: 'auction_hint', name: '暗标直觉', icon: '👁️', cost: 11, desc: '暗标竞拍时显示对手出价范围' },
+  { id: 'jade_blessing', name: '翡翠庇佑', icon: '🙏', cost: 15, desc: '开局随机获得 1 件遗物' },
+]
+const DEFAULT_LEGACY_STATE = { totalLegacyPoints: 0, spentLegacyPoints: 0, unlockedTalents: [] }
+function loadLegacyState() {
+  try {
+    const raw = localStorage.getItem(LEGACY_KEY)
+    if (!raw) return { ...DEFAULT_LEGACY_STATE }
+    const data = JSON.parse(raw)
+    return {
+      totalLegacyPoints: data.totalLegacyPoints ?? 0,
+      spentLegacyPoints: data.spentLegacyPoints ?? 0,
+      unlockedTalents: Array.isArray(data.unlockedTalents) ? data.unlockedTalents : [],
+    }
+  } catch { return { ...DEFAULT_LEGACY_STATE } }
+}
+function saveLegacyState(state) {
+  try { localStorage.setItem(LEGACY_KEY, JSON.stringify(state)) } catch (_) {}
+}
+function computeLegacyPoints({ money, collection, currentDay, npcRelations, jadeAccessories, inventory, isVictory }) {
+  let collectionValue = 0
+  collection.forEach(i => {
+    const d = currentDay - (i.acquiredDay || 0)
+    const r = i.appreciatePerDay || 0.05
+    collectionValue += Math.round((i.baseValue || 0) * Math.pow(1 + r, Math.max(0, d)))
+  })
+  const accessoryValue = (jadeAccessories || []).reduce((s, a) => s + (a.value || 0), 0)
+  let invValue = 0
+  ;(inventory || []).forEach(s => {
+    if (s.cutResult) invValue += Math.round((s.price || 0) * (s.cutResult.multiplier || 1))
+  })
+  const netWorth = money + collectionValue + accessoryValue + invValue
+  const netPoints = Math.floor(Math.log10(Math.max(1, netWorth / 50000)) * 3)
+  const npcBonds = Object.values(npcRelations || {}).filter(d => getNpcLevel(d) >= 2).length
+  const bondPoints = npcBonds * 2
+  const premiumCollectibles = (collection || []).filter(i => ['ice','glass','imperial'].includes(i.grade)).length
+  const collectPoints = premiumCollectibles * 3
+  let total = Math.max(0, netPoints + bondPoints + collectPoints)
+  if (isVictory) total = Math.round(total * 1.5)
+  return total
+}
 
 const SCRIPT_MODES = {
   sprint100: {
@@ -63,6 +133,14 @@ const SCRIPT_MODES = {
     maxDay: null,
     debts: [],
   },
+}
+
+// 难度等级（普通=基准，更高难度增加挑战与传承点收益）
+const DIFFICULTY_LEVELS = {
+  normal:   { key: 'normal',   name: '普通',   icon: '🟢', color: '#4ade80', debtMult: 1.0,  marketPrice: 1.0,  npcOffer: 1.0,  brickDetect: 1.0,  eventNegativeBias: 0,   legacyMult: 1.0,  desc: '标准挑战，适合熟悉玩法' },
+  hard:     { key: 'hard',     name: '困难',   icon: '🟠', color: '#fb923c', debtMult: 1.35, marketPrice: 1.12, npcOffer: 0.88, brickDetect: 1.2,  eventNegativeBias: 0.2,  legacyMult: 1.35, desc: '债务+35%，原石涨价，NPC压价' },
+  hell:     { key: 'hell',     name: '地狱',   icon: '🔴', color: '#f87171', debtMult: 1.75, marketPrice: 1.28, npcOffer: 0.75, brickDetect: 1.5,  eventNegativeBias: 0.4,  legacyMult: 1.75, desc: '债务+75%，负面事件概率大增' },
+  inferno:  { key: 'inferno',  name: '炼狱',   icon: '💀', color: '#a78bfa', debtMult: 2.2,  marketPrice: 1.45, npcOffer: 0.65, brickDetect: 1.8,  eventNegativeBias: 0.6,  legacyMult: 2.2,  desc: '极限挑战，传承点翻倍以上' },
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -114,38 +192,67 @@ const EVENT_POOL_NEGATIVE = [
 //  局内遗物/道具（Relics）- 神秘黑市购买，当局生效
 //  每逢以 5 结尾的天数（5,15,25...）右下角弹出黑市按钮
 // ═══════════════════════════════════════════════════════════
+// 遗物套装：凑齐 3 件同标签解锁终极被动
+const RELIC_SETS = {
+  crook: { id:'crook', name:'奸商流', icon:'😈', tag:'crook', relicIds:['silver_tongue','mirror_shard','snake_oil'],
+    bonusDesc:'卖砖头料给 NPC 永远不掉好感；商铺小白游客溢价容忍 ×2（可卖到 6 倍估值）' },
+  stream: { id:'stream', name:'直播流', icon:'📺', tag:'stream', relicIds:['tiger_eye','beauty_light','water_army'],
+    bonusDesc:'直播切垮不扣热度；神豪观众（榜一大哥）触发概率 ×3' },
+  mystic: { id:'mystic', name:'玄学流', icon:'🔮', tag:'mystic', relicIds:['luck_charm','incense_stick','crystal_ball'],
+    bonusDesc:'打灯给出「模糊」提示时，本次切割必定切涨（至少糯种以上）' },
+  shop: { id:'shop', name:'实体店流', icon:'🏪', tag:'shop', relicIds:['welcome_cat','red_carpet','security_baton'],
+    bonusDesc:'商铺每日客流量 ×2；行家 NPC 有 20% 概率冲动购买溢价商品' },
+}
+function getRelicSetBonus(equippedRelics, setKey) {
+  const set = RELIC_SETS[setKey]
+  if (!set) return false
+  const count = set.relicIds.filter(id => equippedRelics.includes(id)).length
+  return count >= 3
+}
+function getRelicSetProgress(equippedRelics) {
+  return Object.values(RELIC_SETS).map(set => {
+    const count = set.relicIds.filter(id => equippedRelics.includes(id)).length
+    return { ...set, count, active: count >= 3 }
+  }).filter(s => s.count > 0)
+}
+
 const RELICS = {
-  purple_flashlight: { id:'purple_flashlight', name:'紫光手电', icon:'🔮', desc:'切出砖头料的概率硬性降低 10%', price:125000, effect:'brickReduce' },
-  silver_tongue: { id:'silver_tongue', name:'巧舌如簧', icon:'💬', desc:'卖砖头料被识破时，好感度下降减半', price:100000, effect:'detectPenaltyHalf' },
-  gold_knife: { id:'gold_knife', name:'镶金切刀', icon:'🔪', desc:'所有切出结果的基础估值 ×1.2', price:150000, effect:'cutValueBoost' },
-  jade_buddha: { id:'jade_buddha', name:'翡翠佛像', icon:'🙏', desc:'每日第一次切石成功率微升', price:80000, effect:'passive' },
-  luck_charm: { id:'luck_charm', name:'转运符', icon:'🍀', desc:'收藏品升值速率 +2%', price:95000, effect:'passive' },
-  magnifier: { id:'magnifier', name:'高倍放大镜', icon:'🔍', desc:'打灯准确率小幅提升', price:72000, effect:'passive' },
-  snake_oil: { id:'snake_oil', name:'祖传蛇油', icon:'🫗', desc:'NPC 砍价时多 5% 让步空间', price:55000, effect:'passive' },
-  red_envelope: { id:'red_envelope', name:'开门红信封', icon:'🧧', desc:'每局开局资金 +5000', price:60000, effect:'passive' },
-  old_newspaper: { id:'old_newspaper', name:'矿脉旧报纸', icon:'📰', desc:'市场刷新费用 -8%', price:68000, effect:'passive' },
-  crystal_ball: { id:'crystal_ball', name:'水晶球', icon:'🔮', desc:'随机事件触发率 +3%', price:110000, effect:'passive' },
-  tea_set: { id:'tea_set', name:'大师茶具', icon:'🫖', desc:'雕刻师灵感衰减减缓', price:88000, effect:'passive' },
-  tiger_eye: { id:'tiger_eye', name:'虎眼石', icon:'🐅', desc:'直播观众好感加成 +1', price:75000, effect:'passive' },
-  dragon_scale: { id:'dragon_scale', name:'龙鳞片', icon:'🐉', desc:'帝王绿切割概率微升', price:180000, effect:'passive' },
-  phoenix_feather: { id:'phoenix_feather', name:'凤凰羽', icon:'🪶', desc:'冰种以上概率 +2%', price:140000, effect:'passive' },
-  tortoise_shell: { id:'tortoise_shell', name:'龟甲', icon:'🐢', desc:'债务日可延迟 1 天（每局限 1 次）', price:200000, effect:'passive' },
-  owl_totem: { id:'owl_totem', name:'猫头鹰图腾', icon:'🦉', desc:'擦窗看走眼概率降低', price:92000, effect:'passive' },
-  coin_purse: { id:'coin_purse', name:'聚财钱袋', icon:'👛', desc:'直接售出时估值 +3%', price:65000, effect:'passive' },
-  incense_stick: { id:'incense_stick', name:'开光香', icon:'🪔', desc:'枯木禅师取货时间 -1 天', price:78000, effect:'passive' },
-  silk_glove: { id:'silk_glove', name:'蚕丝手套', icon:'🧤', desc:'切石时手感更稳', price:45000, effect:'passive' },
-  midnight_oil: { id:'midnight_oil', name:'挑灯夜战油', icon:'🕯', desc:'每日操作次数 +1（当日）', price:120000, effect:'passive' },
-  mirror_shard: { id:'mirror_shard', name:'照妖镜碎片', icon:'🪞', desc:'砖头料被识破时人品不减', price:160000, effect:'passive' },
-  crane_pendant: { id:'crane_pendant', name:'仙鹤吊坠', icon:'🦩', desc:'养生·李叔每日可多接 1 单', price:95000, effect:'passive' },
-  pearl_string: { id:'pearl_string', name:'珍珠串', icon:'📿', desc:'与女性 NPC 交易好感 +1', price:58000, effect:'passive' },
-  iron_abacus: { id:'iron_abacus', name:'铁算盘', icon:'🧮', desc:'公斤料成本 -5%', price:42000, effect:'passive' },
-  ghost_mask: { id:'ghost_mask', name:'傩面', icon:'😈', desc:'鬼手·阿九碎料概率 -5%', price:130000, effect:'passive' },
-  lotus_seed: { id:'lotus_seed', name:'莲籽', icon:'🌸', desc:'褚石翁点石成金概率 +2%', price:165000, effect:'passive' },
-  wine_gourd: { id:'wine_gourd', name:'酒葫芦', icon:'🍶', desc:'赌徒·刀疤暴击率 +5%', price:98000, effect:'passive' },
-  ink_stone: { id:'ink_stone', name:'端砚', icon:'🖌', desc:'神秘·影最高倍率 +0.2', price:115000, effect:'passive' },
-  fox_tail: { id:'fox_tail', name:'狐尾', icon:'🦊', desc:'暗标竞拍出价洞察', price:135000, effect:'passive' },
-  moon_token: { id:'moon_token', name:'月令牌', icon:'🌙', desc:'每月 5 日黑市多刷 1 件', price:88000, effect:'passive' },
-  sun_dial: { id:'sun_dial', name:'日晷', icon:'☀️', desc:'时间流逝更从容', price:50000, effect:'passive' },
+  purple_flashlight: { id:'purple_flashlight', name:'紫光手电', icon:'🔮', desc:'切出砖头料的概率硬性降低 10%', price:125000, effect:'brickReduce', tag:null },
+  silver_tongue: { id:'silver_tongue', name:'巧舌如簧', icon:'💬', desc:'卖砖头料被识破时，好感度下降减半', price:100000, effect:'detectPenaltyHalf', tag:'crook' },
+  gold_knife: { id:'gold_knife', name:'镶金切刀', icon:'🔪', desc:'所有切出结果的基础估值 ×1.2', price:150000, effect:'cutValueBoost', tag:null },
+  jade_buddha: { id:'jade_buddha', name:'翡翠佛像', icon:'🙏', desc:'每日第一次切石成功率微升', price:80000, effect:'passive', tag:null },
+  luck_charm: { id:'luck_charm', name:'转运符', icon:'🍀', desc:'收藏品升值速率 +2%', price:95000, effect:'passive', tag:'mystic' },
+  magnifier: { id:'magnifier', name:'高倍放大镜', icon:'🔍', desc:'打灯准确率小幅提升', price:72000, effect:'passive', tag:null },
+  snake_oil: { id:'snake_oil', name:'祖传蛇油', icon:'🫗', desc:'NPC 砍价时多 5% 让步空间', price:55000, effect:'passive', tag:'crook' },
+  red_envelope: { id:'red_envelope', name:'开门红信封', icon:'🧧', desc:'每局开局资金 +5000', price:60000, effect:'passive', tag:null },
+  old_newspaper: { id:'old_newspaper', name:'矿脉旧报纸', icon:'📰', desc:'市场刷新费用 -8%', price:68000, effect:'passive', tag:null },
+  crystal_ball: { id:'crystal_ball', name:'水晶球', icon:'🔮', desc:'随机事件触发率 +3%', price:110000, effect:'passive', tag:'mystic' },
+  tea_set: { id:'tea_set', name:'大师茶具', icon:'🫖', desc:'雕刻师灵感衰减减缓', price:88000, effect:'passive', tag:null },
+  tiger_eye: { id:'tiger_eye', name:'虎眼石', icon:'🐅', desc:'直播观众好感加成 +1', price:75000, effect:'passive', tag:'stream' },
+  beauty_light: { id:'beauty_light', name:'美颜灯', icon:'💡', desc:'直播时观众出价意愿 +5%', price:85000, effect:'passive', tag:'stream' },
+  water_army: { id:'water_army', name:'水军合同', icon:'📋', desc:'直播竞拍参与人数 +1', price:95000, effect:'passive', tag:'stream' },
+  dragon_scale: { id:'dragon_scale', name:'龙鳞片', icon:'🐉', desc:'帝王绿切割概率微升', price:180000, effect:'passive', tag:null },
+  phoenix_feather: { id:'phoenix_feather', name:'凤凰羽', icon:'🪶', desc:'冰种以上概率 +2%', price:140000, effect:'passive', tag:null },
+  tortoise_shell: { id:'tortoise_shell', name:'龟甲', icon:'🐢', desc:'债务日可延迟 1 天（每局限 1 次）', price:200000, effect:'passive', tag:null },
+  owl_totem: { id:'owl_totem', name:'猫头鹰图腾', icon:'🦉', desc:'擦窗看走眼概率降低', price:92000, effect:'passive', tag:null },
+  coin_purse: { id:'coin_purse', name:'聚财钱袋', icon:'👛', desc:'直接售出时估值 +3%', price:65000, effect:'passive', tag:null },
+  incense_stick: { id:'incense_stick', name:'开光香', icon:'🪔', desc:'枯木禅师取货时间 -1 天', price:78000, effect:'passive', tag:'mystic' },
+  silk_glove: { id:'silk_glove', name:'蚕丝手套', icon:'🧤', desc:'切石时手感更稳', price:45000, effect:'passive', tag:null },
+  midnight_oil: { id:'midnight_oil', name:'挑灯夜战油', icon:'🕯', desc:'每日操作次数 +1（当日）', price:120000, effect:'passive', tag:null },
+  mirror_shard: { id:'mirror_shard', name:'照妖镜碎片', icon:'🪞', desc:'砖头料被识破时人品不减', price:160000, effect:'passive', tag:'crook' },
+  crane_pendant: { id:'crane_pendant', name:'仙鹤吊坠', icon:'🦩', desc:'养生·李叔每日可多接 1 单', price:95000, effect:'passive', tag:null },
+  pearl_string: { id:'pearl_string', name:'珍珠串', icon:'📿', desc:'与女性 NPC 交易好感 +1', price:58000, effect:'passive', tag:null },
+  iron_abacus: { id:'iron_abacus', name:'铁算盘', icon:'🧮', desc:'公斤料成本 -5%', price:42000, effect:'passive', tag:null },
+  welcome_cat: { id:'welcome_cat', name:'迎宾招财猫', icon:'🐱', desc:'商铺客流 +15%', price:72000, effect:'passive', tag:'shop' },
+  red_carpet: { id:'red_carpet', name:'红地毯', icon:'🟥', desc:'商铺访客预算略微提升', price:88000, effect:'passive', tag:'shop' },
+  security_baton: { id:'security_baton', name:'安保警棍', icon:'🛡️', desc:'商铺安全感提升，高消费客户更敢出手', price:95000, effect:'passive', tag:'shop' },
+  ghost_mask: { id:'ghost_mask', name:'傩面', icon:'😈', desc:'鬼手·阿九碎料概率 -5%', price:130000, effect:'passive', tag:null },
+  lotus_seed: { id:'lotus_seed', name:'莲籽', icon:'🌸', desc:'褚石翁点石成金概率 +2%', price:165000, effect:'passive', tag:null },
+  wine_gourd: { id:'wine_gourd', name:'酒葫芦', icon:'🍶', desc:'赌徒·刀疤暴击率 +5%', price:98000, effect:'passive', tag:null },
+  ink_stone: { id:'ink_stone', name:'端砚', icon:'🖌', desc:'神秘·影最高倍率 +0.2', price:115000, effect:'passive', tag:null },
+  fox_tail: { id:'fox_tail', name:'狐尾', icon:'🦊', desc:'暗标竞拍出价洞察', price:135000, effect:'passive', tag:null },
+  moon_token: { id:'moon_token', name:'月令牌', icon:'🌙', desc:'每月 5 日黑市多刷 1 件', price:88000, effect:'passive', tag:null },
+  sun_dial: { id:'sun_dial', name:'日晷', icon:'☀️', desc:'时间流逝更从容', price:50000, effect:'passive', tag:null },
 }
 const RELIC_IDS = Object.keys(RELICS)
 
@@ -517,9 +624,8 @@ function evolveViewerAfterPurchase(viewerStateMap, vid, actualValue, paidPrice, 
 //  options.actionType: 'TEXT' | 'PAY_MONEY' | 'SEND_ITEM' | 'OPEN_REDPACKET'
 //  msg.bubbleType: 'text' | 'redpacket' | 'transfer' | 'item' | 'system'
 // ═══════════════════════════════════════════════════════════
-const PHONE_MSG_CHANCE = 0.25
-const PHONE_MSG_STARTERS = ['borrow_1', 'gossip_1', 'order_1', 'gossip_2', 'redpacket_1', 'quest_ice_1']
-const PHONE_MSG_POOL = [
+const PHONE_MSG_CHANCE = 0.35
+const PHONE_MSG_BASE = [
   { id: 'borrow_1', npcId: 'lao_wang', type: 'borrow', msg: '兄弟，手头紧，能借我5000周转一下吗？三天后还你。', options: [
     { text: '没问题，拿去用', actionType: 'PAY_MONEY', amount: 5000, affinityDelta: 2, nextId: 'borrow_1_ok', reply: '小事一桩！' },
     { text: '不好意思，最近也紧张', actionType: 'TEXT', affinityDelta: -1, nextId: null, reply: '理解理解...' },
@@ -529,12 +635,12 @@ const PHONE_MSG_POOL = [
     { text: '早囤了，谢啦', actionType: 'TEXT', affinityDelta: 1, nextId: null, reply: '哈哈行家！' },
     { text: '没呢，马上去看看', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '快去快去~' },
   ]},
-  { id: 'order_1', npcId: 'master_chen', type: 'order', msg: '有一单冰种观音，客户指定要，你那边有货吗？有的话我溢价15%收。', options: [
-    { text: '有，明天带来', actionType: 'TEXT', affinityDelta: 3, nextId: null, reply: '好，等你' },
+  { id: 'order_1', npcId: 'master_chen', type: 'order', msg: '有一单冰种观音，客户指定要，你那边有货吗？有的话我溢价15%收。', orderTypeVal: '冰种观音', options: [
+    { text: '有，明天带来', actionType: 'TEXT', affinityDelta: 3, nextId: null, reply: '好，等你', requiresOrderItem: true },
     { text: '暂时没有', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '有了联系我' },
   ]},
   { id: 'gossip_2', npcId: 'influencer', type: 'gossip', msg: '最近直播数据下滑，想搞个切石专场，你这边能赞助几块公斤料不？', options: [
-    { text: '可以，送你两块', actionType: 'TEXT', affinityDelta: 2, nextId: null, reply: '够意思！' },
+    { text: '可以，送你两块', actionType: 'TEXT', affinityDelta: 2, nextId: null, reply: '够意思！', requiresKgStones: 2 },
     { text: '下次吧', actionType: 'TEXT', affinityDelta: -1, nextId: null, reply: '行吧...' },
   ]},
   { id: 'redpacket_1', npcId: 'xiao_mei', type: 'redpacket', msg: '春节快乐！给你发个红包~', bubbleType: 'redpacket', redpacketAmount: [800, 2500], options: [
@@ -544,11 +650,14 @@ const PHONE_MSG_POOL = [
     { text: '选择饰品发送', actionType: 'SEND_ITEM', affinityDelta: 0, nextId: null, reply: '' },
     { text: '暂时没有', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '有了联系我' },
   ]},
-  { id: 'smuggler_1', npcId: 'smuggler', type: 'scam', msg: '兄弟，我手里有一批缅甸过来的极品蒙头料，绝对好货！5万一口价，要的话转账，明天货到。', options: [
+  { id: 'smuggler_1', npcId: 'smuggler', type: 'scam', msg: '兄弟，我手里有一批缅甸过来的极品蒙头料，绝对好货！5万一口价，要的话转账，货立刻到。', options: [
     { text: '转账 50,000', actionType: 'PAY_MONEY', amount: 50000, affinityDelta: 0, nextId: null, reply: '已转，等货。', isSmuggler: true },
     { text: '算了', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '下次再说' },
   ]},
 ]
+const PHONE_MSG_EXPANDED = buildPhoneMsgExpanded()
+const PHONE_MSG_POOL = [...PHONE_MSG_BASE, ...PHONE_MSG_EXPANDED]
+const PHONE_MSG_STARTERS = PHONE_MSG_POOL.filter(t => t.id !== 'borrow_1_ok' && t.id !== 'borrow_ok').map(t => t.id)
 const BANG_YIGE_MSG = {
   npcId: 'bang_yige',
   msg: '老板，我是你直播间的榜一大哥，最近看中你手里一块好料，开个价，我全收。',
@@ -636,8 +745,9 @@ function generatePredictionBarrages(stone) {
 }
 const WORKBENCH_MAX_VISIBLE = 8  // 工作台最多显示 2 排（每排约 4 块），超出移入 LOG
 
-function computeModifiers(activeEffects) {
-  const m = { marketPrice:1, npcOffer:0.5, cutQuality:0, brickDetect:1 }  // NPC 出价基础减半，事件倍率仍生效
+function computeModifiers(activeEffects, difficulty = 'normal') {
+  const diff = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.normal
+  const m = { marketPrice: diff.marketPrice, npcOffer: 0.5 * diff.npcOffer, cutQuality: 0, brickDetect: diff.brickDetect }
   ;(activeEffects || []).forEach(e => {
     if (e.modifiers?.marketPrice) m.marketPrice *= e.modifiers.marketPrice
     if (e.modifiers?.npcOffer) m.npcOffer *= e.modifiers.npcOffer
@@ -1558,7 +1668,7 @@ function rndNormal(mean, std, minV, maxV) {
 const BLIND_AUCTION_EXPECTED_MULT = CUT_RESULTS.reduce((s, r) => s + r.multiplier * r.baseProbability, 0) / CUT_RESULTS.reduce((s, r) => s + r.baseProbability, 0)
 
 // 直播拍卖：支持成品与未切原石（盲拍），含跟风出价、粉丝等级、钱包状态
-function runLiveAuction(stone, viewerFavorability, liveStreamLevel, relicCutValueMult, currentDay, viewerState = {}, viewerFavorabilityBonus = 0) {
+function runLiveAuction(stone, viewerFavorability, liveStreamLevel, relicCutValueMult, currentDay, viewerState = {}, viewerFavorabilityBonus = 0, relicStreamSet = false) {
   const isRaw = !stone.cutResult
   const cutVal = isRaw
     ? Math.round(stone.price * BLIND_AUCTION_EXPECTED_MULT * relicCutValueMult)
@@ -1568,8 +1678,20 @@ function runLiveAuction(stone, viewerFavorability, liveStreamLevel, relicCutValu
   const roundRange = liveStreamLevel >= 5 ? [10, 30] : liveStreamLevel >= 4 ? [8, 26] : liveStreamLevel >= 3 ? [7, 22] : liveStreamLevel >= 2 ? [6, 18] : [5, 15]
   const rounds = rndNormal((roundRange[0] + roundRange[1]) / 2, 3, roundRange[0], roundRange[1])
   const shuffled = [...LIVE_VIEWERS].sort(() => Math.random() - 0.5)
-  const pool = shuffled.filter(v => (viewerState[v.id]?.walletStatus || 'normal') !== 'bankrupt')
-  const participants = pool.slice(0, Math.min(slotCount + 2, 12))
+  let pool = shuffled.filter(v => (viewerState[v.id]?.walletStatus || 'normal') !== 'bankrupt')
+  if (relicStreamSet) {
+    const tycoons = pool.filter(v => (viewerState[v.id]?.fanLevel ?? 0) === 3)
+    pool = [...pool, ...tycoons, ...tycoons]
+  }
+  const shuf = pool.sort(() => Math.random() - 0.5)
+  const seen = new Set()
+  const participants = []
+  for (const v of shuf) {
+    if (seen.has(v.id)) continue
+    seen.add(v.id)
+    participants.push(v)
+    if (participants.length >= Math.min(slotCount + 2, 12)) break
+  }
   const tycoons = participants.filter(v => (viewerState[v.id]?.fanLevel ?? 0) === 3)
   const isRivalry = tycoons.length >= 2 && Math.random() < 0.2
   const rivalPair = isRivalry && tycoons.length >= 2 ? [tycoons[0], tycoons[1]] : []
@@ -1651,15 +1773,27 @@ function runLiveAuction(stone, viewerFavorability, liveStreamLevel, relicCutValu
 }
 
 // 直播拍卖饰品（成品，无切割）
-function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel, currentDay, viewerState = {}, viewerFavorabilityBonus = 0) {
+function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel, currentDay, viewerState = {}, viewerFavorabilityBonus = 0, relicStreamSet = false) {
   const cutVal = accessory.value
   const levelBonus = [1, 1, 1.1, 1.18, 1.25, 1.35][liveStreamLevel] ?? 1
   const slotCount = LIVE_STREAM_LEVELS[liveStreamLevel]?.slotCount || 5
   const roundRange = liveStreamLevel >= 5 ? [10, 30] : liveStreamLevel >= 4 ? [8, 26] : liveStreamLevel >= 3 ? [7, 22] : liveStreamLevel >= 2 ? [6, 18] : [5, 15]
   const rounds = rndNormal((roundRange[0] + roundRange[1]) / 2, 3, roundRange[0], roundRange[1])
   const shuffled = [...LIVE_VIEWERS].sort(() => Math.random() - 0.5)
-  const pool = shuffled.filter(v => (viewerState[v.id]?.walletStatus || 'normal') !== 'bankrupt')
-  const participants = pool.slice(0, Math.min(slotCount + 2, 12))
+  let pool = shuffled.filter(v => (viewerState[v.id]?.walletStatus || 'normal') !== 'bankrupt')
+  if (relicStreamSet) {
+    const tycoons = pool.filter(v => (viewerState[v.id]?.fanLevel ?? 0) === 3)
+    pool = [...pool, ...tycoons, ...tycoons]
+  }
+  const shuf = pool.sort(() => Math.random() - 0.5)
+  const seen = new Set()
+  const participants = []
+  for (const v of shuf) {
+    if (seen.has(v.id)) continue
+    seen.add(v.id)
+    participants.push(v)
+    if (participants.length >= Math.min(slotCount + 2, 12)) break
+  }
   const tycoons = participants.filter(v => (viewerState[v.id]?.fanLevel ?? 0) === 3)
   const isRivalry = tycoons.length >= 2 && Math.random() < 0.2
   const rivalPair = isRivalry && tycoons.length >= 2 ? [tycoons[0], tycoons[1]] : []
@@ -1797,7 +1931,7 @@ function generateMarketStones(level) {
   return { kgStones: kg, premiumStones: prem, auctionStone: auc }
 }
 
-function rollCutResult(stone, cutQualityBonus = 0, brickReduceBonus = 0) {
+function rollCutResult(stone, cutQualityBonus = 0, brickReduceBonus = 0, mysticFuzzyGuarantee = false) {
   const { luckBonus } = stone
   const tagId = stone.hiddenTag || stone.affix  // hiddenTag (Phase2), legacy affix
   const affixData = tagId ? AFFIX_MAP[tagId] : null
@@ -1831,10 +1965,14 @@ function rollCutResult(stone, cutQualityBonus = 0, brickReduceBonus = 0) {
     }
     return { ...r, p: Math.max(p, 0.001) }
   })
-  const total = adj.reduce((s, r) => s + r.p, 0)
+  // 玄学流3件套：打灯模糊时必定切涨（排除砖头料）
+  const rollFrom = (mysticFuzzyGuarantee && isFuzzy)
+    ? adj.filter(r => r.id !== 'brick')
+    : adj
+  const total = rollFrom.reduce((s, r) => s + r.p, 0)
   const rand = Math.random() * total; let cum = 0
-  for (const r of adj) { cum += r.p; if (rand < cum) return r }
-  return adj[0]
+  for (const r of rollFrom) { cum += r.p; if (rand < cum) return r }
+  return rollFrom[0]
 }
 
 // 切割后尝试生成精品成品
@@ -2772,7 +2910,7 @@ function LiveAuctionProcessModal({ data, viewerState = {}, onComplete }) {
 // ═══════════════════════════════════════════════════════════
 //  子组件：代客主刀切割进度条（3秒动画 + 50%突发截胡）
 // ═══════════════════════════════════════════════════════════
-function BlindCutProgressModal({ stone, winner, salePrice, npcRelations, cutQualityBonus = 0, brickReduceBonus = 0, relicCutValueMult, onCutComplete, onBuyerRegret, onNpcHijack }) {
+function BlindCutProgressModal({ stone, winner, salePrice, npcRelations, cutQualityBonus = 0, brickReduceBonus = 0, mysticFuzzyGuarantee = false, relicCutValueMult, onCutComplete, onBuyerRegret, onNpcHijack }) {
   const DURATION_MS = 3000
   const INTERRUPT_AT = 0.5
   const INTERRUPT_CHANCE = 0.15
@@ -2809,13 +2947,13 @@ function BlindCutProgressModal({ stone, winner, salePrice, npcRelations, cutQual
 
       if (pct < 100) requestAnimationFrame(animate)
       else {
-        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus)
+        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus, mysticFuzzyGuarantee)
         const actualValue = Math.round(stone.price * result.multiplier * relicCutValueMult)
         onCutComplete(result, actualValue)
       }
     }
     requestAnimationFrame(animate)
-  }, [interruptPopup, stone, rollCutResult, relicCutValueMult, onCutComplete, eligibleNpcs.length])
+  }, [interruptPopup, stone, mysticFuzzyGuarantee, relicCutValueMult, onCutComplete, eligibleNpcs.length])
 
   const handleAcceptRefund = () => {
     const penalty = Math.round(salePrice * 0.5)
@@ -2832,7 +2970,7 @@ function BlindCutProgressModal({ stone, winner, salePrice, npcRelations, cutQual
       setProgress(pct)
       if (pct < 100) requestAnimationFrame(animate)
       else {
-        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus)
+        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus, mysticFuzzyGuarantee)
         const actualValue = Math.round(stone.price * result.multiplier * relicCutValueMult)
         onCutComplete(result, actualValue)
       }
@@ -2855,7 +2993,7 @@ function BlindCutProgressModal({ stone, winner, salePrice, npcRelations, cutQual
       setProgress(pct)
       if (pct < 100) requestAnimationFrame(animate)
       else {
-        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus)
+        const result = rollCutResult(stone, cutQualityBonus, brickReduceBonus, mysticFuzzyGuarantee)
         const actualValue = Math.round(stone.price * result.multiplier * relicCutValueMult)
         onCutComplete(result, actualValue)
       }
@@ -3010,6 +3148,15 @@ function BlackMarketModal({ offers, money, equippedRelics, onBuy, onClose }) {
           </div>
           <button onClick={onClose} style={{ background:'rgba(30,41,59,.7)', border:'1px solid rgba(51,65,85,.5)', borderRadius:8, padding:'6px 14px', color:'#64748b', fontSize:12, cursor:'pointer' }}>✕</button>
         </div>
+        {(() => { const prog = getRelicSetProgress(equippedRelics); return prog.length > 0 ? (
+          <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:14 }}>
+            {prog.map(s => (
+              <span key={s.id} style={{ fontSize:10, padding:'4px 8px', borderRadius:6, background: s.active ? 'rgba(34,197,94,.2)' : 'rgba(251,191,36,.12)', color: s.active ? '#4ade80' : '#fbbf24', border: `1px solid ${s.active ? 'rgba(34,197,94,.4)' : 'rgba(251,191,36,.3)'}` }}>
+                {s.icon} {s.name} {s.count}/3{s.active ? ' ✓' : ''}
+              </span>
+            ))}
+          </div>
+        ) : null })()}
         <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
           {available.slice(0, 3).map(id => {
             const r = RELICS[id]
@@ -3059,6 +3206,7 @@ function EquippedRelicsBar({ equippedRelics, onSellRelic }) {
   const r = detailId ? RELICS[detailId] : null
   const count = equippedRelics.length
   const isFull = count >= 6
+  const setProgress = getRelicSetProgress(equippedRelics)
   return (
     <>
       <div style={{ background:'rgba(13,20,36,.55)', border:'1px solid rgba(251,191,36,.25)', borderRadius:14, padding:'12px 14px', marginTop:10 }}>
@@ -3066,6 +3214,15 @@ function EquippedRelicsBar({ equippedRelics, onSellRelic }) {
           <p style={{ color:'#92400e', fontSize:10, fontWeight:700, letterSpacing:'0.08em', margin:0 }}>RELIC · 已装备道具（点击查看详情）</p>
           <span style={{ fontSize:10, color: isFull ? '#f97316' : '#64748b' }}>{count}/6</span>
         </div>
+        {setProgress.length > 0 && (
+          <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:10 }}>
+            {setProgress.map(s => (
+              <span key={s.id} style={{ fontSize:10, padding:'4px 8px', borderRadius:6, background: s.active ? 'rgba(34,197,94,.2)' : 'rgba(251,191,36,.12)', color: s.active ? '#4ade80' : '#fbbf24', border: `1px solid ${s.active ? 'rgba(34,197,94,.4)' : 'rgba(251,191,36,.3)'}` }}>
+                {s.icon} {s.name} {s.count}/3{s.active ? ' ✓' : ''}
+              </span>
+            ))}
+          </div>
+        )}
         <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
           {equippedRelics.map(id => {
             const rel = RELICS[id]
@@ -3094,6 +3251,9 @@ function EquippedRelicsBar({ equippedRelics, onSellRelic }) {
               </div>
             </div>
             <p style={{ color:'#94a3b8', fontSize:14, lineHeight:1.6, margin:0 }}>{r.desc}</p>
+            {r.tag && (()=>{ const s = RELIC_SETS[Object.keys(RELIC_SETS).find(k=>RELIC_SETS[k].tag===r.tag)]; if(!s) return null; const c = s.relicIds.filter(id=>equippedRelics.includes(id)).length; return (
+              <p style={{ margin:'12px 0 0', fontSize:11, color:'#94a3b8' }}>【{s.name}】{c}/3{s.relicIds.length >= 3 && c >= 3 ? ' ✓ 套装已激活' : ''}{c >= 3 ? '' : ` · 凑齐后：${s.bonusDesc}`}</p>
+            )})()}
             <div style={{ display:'flex', gap:8, marginTop:16 }}>
               <button onClick={()=>setDetailId(null)} style={{ flex:1, padding:10, background:'#334155', border:'none', borderRadius:8, color:'#94a3b8', cursor:'pointer', fontSize:12 }}>关闭</button>
               {onSellRelic && (
@@ -3511,26 +3671,107 @@ function CollectionPanel({ collection, currentDay, onSell, onClose, collectionAp
 // ═══════════════════════════════════════════════════════════
 //  子组件：破产清算 / 逃过一劫 弹窗
 // ═══════════════════════════════════════════════════════════
+// 家族祠堂：局外天赋树
+function LegacyShrineModal({ legacyState, onUnlock, onClose }) {
+  if (!legacyState) return null
+  const available = (legacyState.totalLegacyPoints || 0) - (legacyState.spentLegacyPoints || 0)
+  const unlocked = new Set(legacyState.unlockedTalents || [])
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:600, background:'rgba(0,0,0,.88)', backdropFilter:'blur(12px)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+      <div onClick={e=>e.stopPropagation()} style={{
+        background:'linear-gradient(160deg,#1e1b4b,#312e81)',
+        border:'1px solid rgba(129,140,248,.5)',
+        borderRadius:24, width:'100%', maxWidth:480, maxHeight:'85vh', overflow:'hidden', display:'flex', flexDirection:'column',
+      }}>
+        <div style={{ padding:'16px 20px', borderBottom:'1px solid rgba(99,102,241,.4)', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <span style={{ fontSize:24 }}>🏛️</span>
+            <div>
+              <p style={{ margin:0, fontSize:16, fontWeight:800, color:'#e0e7ff' }}>家族祠堂 · 祖传基业</p>
+              <p style={{ margin:2, fontSize:11, color:'#a5b4fc' }}>消耗传承点解锁永久 Buff，每局开局生效</p>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background:'rgba(30,41,59,.8)', border:'1px solid rgba(71,85,105,.8)', borderRadius:8, padding:'6px 12px', color:'#94a3b8', fontSize:12, cursor:'pointer' }}>✕</button>
+        </div>
+        <div style={{ padding:'14px 18px', display:'flex', alignItems:'center', gap:12, background:'rgba(15,23,42,.4)', borderBottom:'1px solid rgba(51,65,85,.6)' }}>
+          <span style={{ fontSize:20 }}>✨</span>
+          <div>
+            <p style={{ margin:0, fontSize:14, fontWeight:800, color:'#fde68a' }}>传承点：{available}</p>
+            <p style={{ margin:2, fontSize:10, color:'#64748b' }}>累计获得 {legacyState.totalLegacyPoints || 0}，已消耗 {legacyState.spentLegacyPoints || 0}</p>
+          </div>
+        </div>
+        <div style={{ overflowY:'auto', flex:1, padding:16, display:'flex', flexDirection:'column', gap:10 }}>
+          {LEGACY_TALENTS.map(t => {
+            const isUnlocked = unlocked.has(t.id)
+            const canAfford = available >= t.cost
+            return (
+              <div key={t.id} style={{
+                background: isUnlocked ? 'rgba(34,197,94,.15)' : 'rgba(30,41,59,.6)',
+                border: `1px solid ${isUnlocked ? 'rgba(34,197,94,.4)' : 'rgba(71,85,105,.6)'}`,
+                borderRadius:14, padding:14, display:'flex', alignItems:'center', gap:14,
+              }}>
+                <span style={{ fontSize:28 }}>{t.icon}</span>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <p style={{ margin:0, fontSize:14, fontWeight:700, color: isUnlocked ? '#86efac' : '#e2e8f0' }}>{t.name}</p>
+                  <p style={{ margin:4, fontSize:11, color:'#94a3b8', lineHeight:1.5 }}>{t.desc}</p>
+                </div>
+                <div style={{ flexShrink:0 }}>
+                  {isUnlocked ? (
+                    <span style={{ fontSize:11, padding:'4px 10px', borderRadius:20, background:'rgba(34,197,94,.3)', color:'#86efac', fontWeight:700 }}>✓ 已解锁</span>
+                  ) : (
+                    <button onClick={() => canAfford && onUnlock(t.id)} disabled={!canAfford}
+                      style={{
+                        padding:'6px 14px', borderRadius:10, border:'none', fontSize:12, fontWeight:700, cursor: canAfford ? 'pointer' : 'not-allowed',
+                        background: canAfford ? 'linear-gradient(135deg,#7c3aed,#8b5cf6)' : '#334155',
+                        color: canAfford ? '#e9d5ff' : '#64748b',
+                      }}>
+                      {t.cost} 传承点
+                    </button>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function GameOverModal({ info, onRestartSame, onBackMenu }) {
   if (!info) return null
+  const isVictory = info.isVictory === true
   return (
     <div onClick={onBackMenu} style={{ position:'fixed', inset:0, zIndex:500, background:'rgba(0,0,0,.86)', backdropFilter:'blur(16px)', display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
       <div onClick={e=>e.stopPropagation()} style={{
-        background:'radial-gradient(circle at top,rgba(239,68,68,.35),transparent 55%), linear-gradient(160deg,#020617,#020617 45%,#020617)',
-        border:'1px solid rgba(239,68,68,.45)',
+        background: isVictory ? 'radial-gradient(circle at top,rgba(34,197,94,.35),transparent 55%), linear-gradient(160deg,#020617,#020617)' : 'radial-gradient(circle at top,rgba(239,68,68,.35),transparent 55%), linear-gradient(160deg,#020617,#020617)',
+        border: isVictory ? '1px solid rgba(34,197,94,.5)' : '1px solid rgba(239,68,68,.45)',
         borderRadius:26, width:'100%', maxWidth:520,
         boxShadow:'0 32px 90px rgba(0,0,0,.9)', overflow:'hidden',
       }}>
         <div style={{ padding:'18px 22px', borderBottom:'1px solid rgba(30,41,59,.8)', display:'flex', alignItems:'center', justifyContent:'space-between', background:'rgba(15,23,42,.95)' }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <span style={{ fontSize:22 }}>💔</span>
+            <span style={{ fontSize:22 }}>{isVictory ? '🎉' : '💔'}</span>
             <div>
-              <p style={{ margin:0, fontSize:16, fontWeight:900, color:'#fecaca' }}>破产清算 · Game Over</p>
-              <p style={{ margin:0, fontSize:11, color:'#4b5563' }}>未能偿还剧本债务，资金链断裂。</p>
+              <p style={{ margin:0, fontSize:16, fontWeight:900, color: isVictory ? '#86efac' : '#fecaca' }}>
+                {isVictory ? '通关！大亨崛起' : '破产清算 · Game Over'}
+              </p>
+              <p style={{ margin:0, fontSize:11, color:'#4b5563' }}>
+                {isVictory ? '成功完成剧本目标，家族基业得以传承。' : '未能偿还剧本债务，资金链断裂。'}
+              </p>
             </div>
           </div>
         </div>
         <div style={{ padding:'18px 22px', display:'flex', flexDirection:'column', gap:14 }}>
+          {info.legacyEarned != null && (
+            <div style={{ background:'linear-gradient(135deg,rgba(168,85,247,.2),rgba(139,92,246,.15))', borderRadius:14, padding:'12px 16px', border:'1px solid rgba(168,85,247,.4)', display:'flex', alignItems:'center', gap:12 }}>
+              <span style={{ fontSize:24 }}>✨</span>
+              <div>
+                <p style={{ fontSize:13, fontWeight:800, color:'#e9d5ff', margin:0 }}>获得传承点 +{info.legacyEarned}</p>
+                <p style={{ fontSize:10, color:'#a78bfa', margin:2 }}>可于主菜单【家族祠堂】消耗，永久解锁天赋</p>
+              </div>
+            </div>
+          )}
           <div style={{ background:'rgba(15,23,42,.8)', borderRadius:14, padding:'12px 14px', border:'1px solid rgba(30,41,59,.8)' }}>
             <p style={{ fontSize:11, color:'#64748b', margin:'0 0 6px' }}>剧本模式</p>
             <p style={{ fontSize:14, color:'#e5e7eb', margin:0, fontWeight:700 }}>{info.modeName}</p>
@@ -3545,15 +3786,22 @@ function GameOverModal({ info, onRestartSame, onBackMenu }) {
               <p style={{ fontSize:18, fontWeight:900, color:'#4ade80', margin:0 }}>¥{info.money.toLocaleString()}</p>
             </div>
           </div>
-          <p style={{ fontSize:11, color:'#9ca3af', margin:0, lineHeight:1.7 }}>
-            你未能在第 {info.debtDay} 天偿还债务 <span style={{ color:'#fecaca' }}>¥{info.debtAmount.toLocaleString()}</span>，
-            资金链断裂，只能黯然退场。也许换一种剧本、换一批 NPC，下次就能翻身。
-          </p>
+          {!isVictory && (
+            <p style={{ fontSize:11, color:'#9ca3af', margin:0, lineHeight:1.7 }}>
+              你未能在第 {info.debtDay} 天偿还债务 <span style={{ color:'#fecaca' }}>¥{info.debtAmount?.toLocaleString()}</span>，
+              资金链断裂，只能黯然退场。死了也变强——传承点已入账，下次开局长线加成。
+            </p>
+          )}
+          {isVictory && (
+            <p style={{ fontSize:11, color:'#9ca3af', margin:0, lineHeight:1.7 }}>
+              恭喜！你完成了「{info.modeName}」的全部挑战。传承点已入账，可在【家族祠堂】解锁更多天赋，让下一局开局更轻松。
+            </p>
+          )}
           <div style={{ display:'flex', gap:10, marginTop:4 }}>
             <button onClick={onBackMenu} style={{ flex:1, padding:'10px 0', borderRadius:10, border:'1px solid rgba(55,65,81,.9)', background:'rgba(15,23,42,.9)', color:'#9ca3af', fontSize:13, fontWeight:700, cursor:'pointer' }}>
               返回主菜单
             </button>
-            <button onClick={onRestartSame} style={{ flex:1, padding:'10px 0', borderRadius:10, border:'none', background:'linear-gradient(135deg,#ef4444,#f97316)', color:'#fff', fontSize:13, fontWeight:800, cursor:'pointer', boxShadow:'0 4px 14px rgba(248,113,113,.5)' }}>
+            <button onClick={onRestartSame} style={{ flex:1, padding:'10px 0', borderRadius:10, border:'none', background: isVictory ? 'linear-gradient(135deg,#059669,#10b981)' : 'linear-gradient(135deg,#ef4444,#f97316)', color:'#fff', fontSize:13, fontWeight:800, cursor:'pointer', boxShadow:'0 4px 14px rgba(16,185,129,.5)' }}>
               再来一局（同剧本重开）
             </button>
           </div>
@@ -4023,7 +4271,7 @@ function PhoneBubble({ m, isPlayer, onRedpacketOpen, onReply, redpacketFlipping 
     return (
       <div className="flex flex-col items-start max-w-[80%]" style={{ alignSelf: 'flex-start' }}>
         <div
-          className={`rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 ${redpacketFlipping === m.id ? 'animate-redpacket-flip' : ''}`}
+          className={`relative rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 ${redpacketFlipping === m.id ? 'animate-redpacket-flip' : ''}`}
           style={{
             background: 'linear-gradient(135deg,#e85c27,#f4a261)',
             boxShadow: '0 2px 8px rgba(232,92,39,.4)',
@@ -4040,7 +4288,10 @@ function PhoneBubble({ m, isPlayer, onRedpacketOpen, onReply, redpacketFlipping 
           {opened ? (
             <p className="text-white/90 text-xs mt-1">获得 ¥{(m.redpacketAmountReceived||0).toLocaleString()}</p>
           ) : (
-            <p className="text-white/80 text-xs mt-1">点击领取</p>
+            <>
+              <p className="text-white/80 text-xs mt-1">点击领取</p>
+              <span style={{ position:'absolute', top:-4, right:-4, background:'#fbbf24', color:'#78350f', fontSize:10, fontWeight:700, padding:'2px 6px', borderRadius:10 }}>可点</span>
+            </>
           )}
         </div>
       </div>
@@ -4112,7 +4363,7 @@ function PhoneBubble({ m, isPlayer, onRedpacketOpen, onReply, redpacketFlipping 
   )
 }
 
-function PhonePanel({ messages, npcList, onReply, onRedpacketOpen, onClose }) {
+function PhonePanel({ messages, npcList, onReply, onRedpacketOpen, onClose, money = 0, jadeAccessories = [], inventory = [], getQuestMinGrade }) {
   const [activeChat, setActiveChat] = useState(null)
   const [redpacketFlipping, setRedpacketFlipping] = useState(null)
   const msgsByNpc = {}
@@ -4172,13 +4423,51 @@ function PhonePanel({ messages, npcList, onReply, onRedpacketOpen, onClose }) {
                 </div>
               ))}
               {lastMsg && !lastMsg.isPlayer && lastMsg.options?.length > 0 && (
-                <div style={{ display:'flex', flexDirection:'column', gap:8, marginTop:8 }}>
-                  {lastMsg.options.map((opt, j) => (
-                    <button key={j} onClick={()=>handleOptionClick(lastMsg, opt)}
-                      style={{ alignSelf:'flex-end', padding:'8px 16px', background:'#07c160', border:'none', borderRadius:8, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>
-                      {opt.text}
-                    </button>
-                  ))}
+                <div style={{ display:'flex', flexDirection:'column', gap:8, marginTop:12, paddingTop:12, borderTop:'1px dashed rgba(100,116,139,.4)' }}>
+                  <div style={{ alignSelf:'flex-end', fontSize:11, color:'#64748b', marginBottom:4 }}>👇 可操作 · 点击选择</div>
+                  {lastMsg.options.map((opt, j) => {
+                    const at = opt.actionType || 'TEXT'
+                    const amount = opt.amount ?? 0
+                    const matchesOrderType = (typeVal, a) => {
+                      const n = (a.name || '').toString()
+                      const g = a.grade || ''
+                      if (typeVal === '冰种观音') return g === 'ice' && n.includes('观音')
+                      if (typeVal === '玻璃种手镯') return g === 'glass' && n.includes('手镯')
+                      if (typeVal === '帝王绿戒面') return g === 'imperial' && (n.includes('戒面') || n.includes('帝王绿'))
+                      if (typeVal === '高冰挂件') return (g === 'ice' || g === 'glass') && (n.includes('挂件') || n.includes('牌') || n.includes('观音') || n.includes('龙牌'))
+                      return false
+                    }
+                    const kgCount = inventory.filter(s => s.channel === 'kg').length
+                    const canSatisfy = at === 'PAY_MONEY' ? money >= amount
+                      : opt.requiresKgStones ? kgCount >= (opt.requiresKgStones || 0)
+                      : opt.requiresOrderItem ? (() => {
+                          const typeVal = lastMsg.orderTypeVal
+                          return typeVal && jadeAccessories.some(a => matchesOrderType(typeVal, a))
+                        })()
+                      : at === 'SEND_ITEM' ? (() => {
+                          const minGrade = getQuestMinGrade?.(lastMsg.msgId) || 'purple'
+                          const order = ['white', 'green', 'blue', 'purple', 'orange', 'red']
+                          return jadeAccessories.some(a => order.indexOf(a.grade || 'white') >= order.indexOf(minGrade))
+                        })()
+                      : at === 'OPEN_REDPACKET' ? !lastMsg.redpacketOpened : true
+                    const icon = at === 'OPEN_REDPACKET' ? '🧧' : at === 'PAY_MONEY' ? '💸' : at === 'SEND_ITEM' ? '📦' : opt.requiresKgStones ? '🧱' : '💬'
+                    return (
+                      <button key={j} onClick={() => canSatisfy && handleOptionClick(lastMsg, opt)} disabled={!canSatisfy}
+                        style={{
+                          alignSelf:'flex-end', padding:'10px 18px',
+                          background: canSatisfy ? '#07c160' : '#94a3b8',
+                          border: canSatisfy ? '2px solid rgba(255,255,255,.5)' : '2px solid rgba(148,163,184,.5)',
+                          borderRadius:12, color:'#fff', fontSize:13, fontWeight:600,
+                          cursor: canSatisfy ? 'pointer' : 'not-allowed',
+                          display:'flex', alignItems:'center', gap:8,
+                          boxShadow: canSatisfy ? '0 2px 8px rgba(7,193,96,.4)' : 'none',
+                          opacity: canSatisfy ? 1 : 0.85,
+                        }}>
+                        <span style={{ fontSize:16 }}>{icon}</span>
+                        <span>{opt.text}</span>
+                      </button>
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -4490,6 +4779,10 @@ export default function App() {
   const [reputation, setReputation] = useState(10)                             // 人品值，被识破卖假时 -1
   const [carvingStone, setCarvingStone] = useState(null)                       // 待送雕刻的石头
   const [jadeAccessories, setJadeAccessories] = useState([])                   // 背包：雕刻产出的翡翠饰品
+  const [expeditionActive, setExpeditionActive] = useState(false)              // 寻玉远征进行中
+  const [showExpeditionEntry, setShowExpeditionEntry] = useState(false)        // 寻玉远征入口弹窗
+  const [expeditionParams, setExpeditionParams] = useState({ days: 9, capital: 300000 })
+  const [difficulty, setDifficulty] = useState('normal')                       // 难度：normal|hard|hell|inferno
   const [showBackpack, setShowBackpack] = useState(false)                      // 背包面板
   const [liveSellStone, setLiveSellStone] = useState(null)                     // 待直播售卖的石头
   const [liveAuctionData, setLiveAuctionData] = useState(null)                 // 直播竞拍过程 { stone, bids, winner, isBlind? }
@@ -4508,6 +4801,12 @@ export default function App() {
   const [livestreamHypeFullDays, setLivestreamHypeFullDays] = useState(0)
   const [showGiftModal, setShowGiftModal] = useState(false)
   const [showWorkbenchLog, setShowWorkbenchLog] = useState(false)              // 工作台全部记录
+  const [showShop, setShowShop] = useState(false)                              // 实体商铺
+  const [showLegacyShrine, setShowLegacyShrine] = useState(false)              // 家族祠堂
+  const [legacyState, setLegacyState] = useState(() => loadLegacyState())       // 局外传承状态
+  const [shopLevel, setShopLevel] = useState(1)
+  const [shopShelves, setShopShelves] = useState([])                           // 上架商品 [{ type, raw, cutValue, sellPrice }]
+  const [shopVisitorsToday, setShopVisitorsToday] = useState(0)
   // NPC 关系：{ [npcId]: 累计交易次数 }
   const [npcRelations, setNpcRelations] = useState(() =>
     Object.fromEntries(NPC_LIST.map(n => [n.id, 0]))
@@ -4518,12 +4817,15 @@ export default function App() {
 
   const toastId     = useRef(0)
   const logId       = useRef(0)
-  const inventoryRef= useRef([])
+  const inventoryRef = useRef([])
+  const legacyBuffsRef = useRef({})
+  const moneyRef = useRef(0)
   const bangYigeTriggeredRef = useRef(false)
   inventoryRef.current = inventory
+  moneyRef.current = money
 
   // 弹窗打开时锁定 body 滚动，防止主界面在移动端被拖动
-  const hasModal = !!(stoneDetail || bargainStone || bargainQte || auctionBidStone || carvingStone || liveSellStone || liveAuctionData || liveSellAccessory || liveAuctionAccessoryData || showUpgrade || showLog || showWorkbenchLog || showCollection || showNpcRoster || npcTarget || npcAccessoryTarget || showPhone || showLaoChen || showGiftModal || pendingEvent || showBlackMarket || gameOverInfo || lastDebtInfo || showLiveStreamUpgrade || showViewerAdmin || showBackpack || phoneItemPickerTarget)
+  const hasModal = !!(stoneDetail || bargainStone || bargainQte || auctionBidStone || carvingStone || liveSellStone || liveAuctionData || liveSellAccessory || liveAuctionAccessoryData || showUpgrade || showLog || showWorkbenchLog || showCollection || showNpcRoster || npcTarget || npcAccessoryTarget || showPhone || showLaoChen || showGiftModal || pendingEvent || showBlackMarket || gameOverInfo || lastDebtInfo || showLiveStreamUpgrade || showViewerAdmin || showBackpack || phoneItemPickerTarget || showShop)
   useEffect(() => {
     if (hasModal) {
       const prev = document.body.style.overflow
@@ -4546,11 +4848,15 @@ export default function App() {
   // 遗物效果（effectiveDaySpeed 需在 currentDay 之前定义）
   const relicBrickReduce = equippedRelics.includes('purple_flashlight')
   const relicDetectPenaltyHalf = equippedRelics.includes('silver_tongue')
+  const relicCrookSet = getRelicSetBonus(equippedRelics, 'crook')
+  const relicStreamSet = getRelicSetBonus(equippedRelics, 'stream')
+  const relicMysticSet = getRelicSetBonus(equippedRelics, 'mystic')
+  const relicShopSet = getRelicSetBonus(equippedRelics, 'shop')
   const relicCutValueMult = equippedRelics.includes('gold_knife') ? 1.2 : 1
   const effectiveDaySpeed = daySpeed + (equippedRelics.includes('midnight_oil') ? 1 : 0)
 
-  // 聚合 modifiers（来自 activeEffects）
-  const modifiers = computeModifiers(activeEffects.map(e => e.event))
+  // 聚合 modifiers（难度基准 + activeEffects）
+  const modifiers = computeModifiers(activeEffects.map(e => e.event), difficulty)
 
   // 当前天数（所有模式共用，挑灯夜战油 +1 当日操作次数）
   const currentDay = Math.floor(opCount / effectiveDaySpeed) + 1
@@ -4564,6 +4870,7 @@ export default function App() {
 
     setActiveEffects(ef => ef.filter(e => e.expiresAtDay >= currentDay))
     setPremiumAngryToday([])
+    setShopVisitorsToday(0)
     setCarvingMasterUsesToday({})
     setArtistMasterState(prev => Object.fromEntries(Object.entries(prev).map(([id, s]) => {
       if (id === 'gui_shou_a9') return [id, { ...s, inspiration: Math.max(0, Math.min(100, (s.inspiration ?? 50) + rndInt(-25, 25))) }]
@@ -4576,6 +4883,7 @@ export default function App() {
       const t = PHONE_MSG_POOL.find(x => x.id === tid) || PHONE_MSG_POOL[0]
       const entry = { id: Date.now(), npcId: t.npcId, msg: t.msg, isPlayer: false, options: t.options, msgId: t.id, bubbleType: t.bubbleType }
       if (t.bubbleType === 'redpacket') entry.redpacketAmount = t.redpacketAmount
+      if (t.orderTypeVal) entry.orderTypeVal = t.orderTypeVal
       setPhoneMessages(ms => [...ms, entry])
     }
 
@@ -4620,12 +4928,14 @@ export default function App() {
     }
 
     if (Math.random() >= EVENT_TRIGGER_CHANCE) return
-    const pool = [...EVENT_POOL_POSITIVE, ...EVENT_POOL_NEGATIVE]
+    const diff = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.normal
+    const negBias = diff.eventNegativeBias || 0
+    const pool = (negBias > 0 && Math.random() < negBias) ? EVENT_POOL_NEGATIVE : [...EVENT_POOL_POSITIVE, ...EVENT_POOL_NEGATIVE]
     const raw = pick(pool)
     const [dMin, dMax] = raw.duration
     const duration = dMin === dMax ? dMin : rndInt(dMin, dMax)
     setPendingEvent({ ...raw, duration, expiresAtDay: currentDay + duration })
-  }, [currentDay, gameMode, isGameOver, marketLevel, addToast, livestreamHype, livestreamHypeFullDays, smugglerPaidDay])
+  }, [currentDay, gameMode, isGameOver, difficulty, marketLevel, addToast, livestreamHype, livestreamHypeFullDays, smugglerPaidDay])
 
   // 枯木禅师：到期订单自动交付（产出饰品入背包）
   useEffect(() => {
@@ -4651,7 +4961,7 @@ export default function App() {
   }, [gameMode, isGameOver])
 
   // ═══════════════════════════════════════════════════════════
-  //  剧本债务结算逻辑
+  //  剧本债务结算逻辑（难度乘算债务金额）
   // ═══════════════════════════════════════════════════════════
   useEffect(() => {
     if (gameMode === 'menu' || gameMode === 'sandbox' || isGameOver) return
@@ -4661,32 +4971,38 @@ export default function App() {
     if (debtIndex >= schedule.length) return
     const curDebt = schedule[debtIndex]
     if (currentDay < curDebt.day) return
+    const diff = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.normal
+    const effectiveAmount = Math.round(curDebt.amount * diff.debtMult)
 
     // 到达或超过结算日：尝试自动还款
-    if (money >= curDebt.amount) {
+    if (money >= effectiveAmount) {
       // 还得起：自动扣除 + 记录 + 弹鼓励窗
-      setMoney(m => m - curDebt.amount)
-      const after = money - curDebt.amount
+      setMoney(m => m - effectiveAmount)
+      const after = money - effectiveAmount
       setLastDebtInfo({
         modeKey: gameMode,
         day: curDebt.day,
-        amount: curDebt.amount,
+        amount: effectiveAmount,
         after,
         nextDay: schedule[debtIndex + 1]?.day ?? null,
-        nextAmount: schedule[debtIndex + 1]?.amount ?? null,
+        nextAmount: schedule[debtIndex + 1] ? Math.round(schedule[debtIndex + 1].amount * diff.debtMult) : null,
       })
       setDebtIndex(i => i + 1)
-      addToast(`✅ 第 ${curDebt.day} 天按时还款 ¥${curDebt.amount.toLocaleString()}，继续苟活。`)
+      addToast(`✅ 第 ${curDebt.day} 天按时还款 ¥${effectiveAmount.toLocaleString()}，继续苟活。`)
       addLog({
         type:'system',
         text:`偿还剧本债务（第 ${curDebt.day} 天）`,
-        detail:`扣除 ¥${curDebt.amount.toLocaleString()}，剩余资金 ¥${after.toLocaleString()}`,
+        detail:`扣除 ¥${effectiveAmount.toLocaleString()}，剩余资金 ¥${after.toLocaleString()}`,
         cashIn:0,
-        cashOut: curDebt.amount,
-        amount: -curDebt.amount,
+        cashOut: effectiveAmount,
+        amount: -effectiveAmount,
       })
     } else {
       // 还不起：Game Over
+      const legacyEarned = Math.max(1, Math.round(computeLegacyPoints({ money, collection, currentDay, npcRelations, jadeAccessories, inventory, isVictory: false }) * diff.legacyMult))
+      const legacyState = loadLegacyState()
+      legacyState.totalLegacyPoints = (legacyState.totalLegacyPoints || 0) + legacyEarned
+      saveLegacyState(legacyState)
       setIsGameOver(true)
       setGameOverInfo({
         modeKey: gameMode,
@@ -4694,37 +5010,69 @@ export default function App() {
         day: currentDay,
         money,
         debtDay: curDebt.day,
-        debtAmount: curDebt.amount,
+        debtAmount: effectiveAmount,
+        isVictory: false,
+        legacyEarned,
       })
       addLog({
         type:'system',
-        text:`破产清算：未能偿还第 ${curDebt.day} 天债务 ¥${curDebt.amount.toLocaleString()}`,
-        detail:`当前资金 ¥${money.toLocaleString()} < 目标 ¥${curDebt.amount.toLocaleString()}，游戏结束。`,
+        text:`破产清算：未能偿还第 ${curDebt.day} 天债务 ¥${effectiveAmount.toLocaleString()}`,
+        detail:`当前资金 ¥${money.toLocaleString()} < 目标 ¥${effectiveAmount.toLocaleString()}，游戏结束。`,
         cashIn:0,
         cashOut:0,
         amount:0,
       })
     }
-  }, [gameMode, currentDay, debtIndex, money, isGameOver, addLog, addToast])
+  }, [gameMode, currentDay, debtIndex, money, isGameOver, difficulty, collection, jadeAccessories, inventory, npcRelations, addLog, addToast])
+
+  // 通关检测：到达剧本最大天数
+  useEffect(() => {
+    if (gameMode === 'menu' || gameMode === 'sandbox' || isGameOver) return
+    const script = SCRIPT_MODES[gameMode]
+    if (!script || script.maxDay == null) return
+    if (currentDay <= script.maxDay) return
+    const diff = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.normal
+    const legacyEarned = Math.max(1, Math.round(computeLegacyPoints({ money, collection, currentDay, npcRelations, jadeAccessories, inventory, isVictory: true }) * diff.legacyMult))
+    const legacyState = loadLegacyState()
+    legacyState.totalLegacyPoints = (legacyState.totalLegacyPoints || 0) + legacyEarned
+    saveLegacyState(legacyState)
+    setIsGameOver(true)
+    setGameOverInfo({
+      modeKey: gameMode,
+      modeName: script.name,
+      day: currentDay,
+      money,
+      debtDay: null,
+      debtAmount: null,
+      isVictory: true,
+      legacyEarned,
+    })
+    addLog({ type: 'system', text: `🎉 通关！完成「${script.name}」第 ${script.maxDay} 天目标`, detail: `获得传承点 +${legacyEarned}`, cashIn: 0, cashOut: 0, amount: 0 })
+  }, [gameMode, currentDay, isGameOver, difficulty, money, collection, jadeAccessories, inventory, npcRelations, addLog])
 
   // 背包售罄时自动关闭
   useEffect(() => {
     if (showBackpack && jadeAccessories.length === 0) setShowBackpack(false)
   }, [showBackpack, jadeAccessories.length])
 
-  // 开始/重开指定剧本
+  // 开始/重开指定剧本（应用局外天赋）
   const startScript = useCallback((modeKey) => {
     const script = SCRIPT_MODES[modeKey]
     if (!script) return
+    const legacy = loadLegacyState()
+    const unlocked = new Set(legacy.unlockedTalents || [])
+    let initMoney = 50000
+    let initMarketLevel = 1
+    if (unlocked.has('initial_money')) initMoney += 500000
+    if (unlocked.has('vip_pass')) initMarketLevel = 3
     setGameMode(modeKey)
     setDebtIndex(0)
     setIsGameOver(false)
     setGameOverInfo(null)
     setLastDebtInfo(null)
-    setMoney(50000)
-    setMarketLevel(1)
-    setDaySpeed(3)
-    const g = generateMarketStones(1)
+    setMoney(initMoney)
+    setMarketLevel(initMarketLevel)
+    const g = generateMarketStones(initMarketLevel)
     setMarketData({ kgStones: g.kgStones, premiumStones: g.premiumStones, auctionStone: g.auctionStone })
     setInventory([])
     setCollection([])
@@ -4739,11 +5087,39 @@ export default function App() {
     setShowCollection(false)
     setShowNpcRoster(false)
     setNpcTarget(null)
-    setNpcRelations(Object.fromEntries(NPC_LIST.map(n => [n.id, 0])))
+    const baseRelations = Object.fromEntries(NPC_LIST.map(n => [n.id, 0]))
+    if (unlocked.has('npc_heritage')) {
+      const npc = NPC_LIST[Math.floor(Math.random() * NPC_LIST.length)]
+      baseRelations[npc.id] = NPC_EXP_TABLE[2]
+    }
+    if (unlocked.has('npc_start_bonus')) {
+      const two = [...NPC_LIST].sort(() => Math.random() - 0.5).slice(0, 2)
+      two.forEach(n => { baseRelations[n.id] = Math.min(NPC_EXP_TABLE[1], (baseRelations[n.id] || 0) + 3) })
+    }
+    setNpcRelations(baseRelations)
+    const artistState = Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50 + (unlocked.has('carving_inspiration') ? 10 : 0), energy: 100, strikeUntilDay: 0, sickUntilDay: 0 }]))
+    setDaySpeed(unlocked.has('day_speed') ? 4 : 3)
+    setReputation(unlocked.has('reputation_start') ? 13 : 10)
+    setLivestreamHype(unlocked.has('live_stream_boost') ? 50 : 30)
+    let initRelics = []
+    if (unlocked.has('jade_blessing')) {
+      const pool = Object.keys(RELICS).filter(id => !['jade_blessing'].includes(id))
+      initRelics = [pool[Math.floor(Math.random() * pool.length)]]
+    }
+    setEquippedRelics(initRelics)
+    legacyBuffsRef.current = {
+      flashlightAccurate: unlocked.has('ancestral_flashlight'),
+      cutQuality: unlocked.has('cut_quality') ? 0.03 : 0,
+      brickResist: unlocked.has('brick_resist') ? 0.05 : 0,
+      firstFlashlightAccurate: unlocked.has('first_flashlight'),
+      marketDiscount: unlocked.has('market_discount') ? 0.15 : 0,
+      blackMarketEarly: unlocked.has('black_market_early'),
+      shopCapitalEarly: unlocked.has('shop_capital'),
+    }
     setActiveEffects([])
     setPendingEvent(null)
     prevDayRef.current = 1
-    setEquippedRelics([])
+    setEquippedRelics(initRelics)
     setShowBlackMarket(false)
     setBlackMarketPurchasedDays([])
     setLiveStreamLevel(0)
@@ -4758,14 +5134,17 @@ export default function App() {
     setLiveAuctionAccessoryData(null)
     setShowLiveStreamUpgrade(false)
     setCarvingMasterRelations(Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, 0])))
-    setArtistMasterState(Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50, energy: 100, strikeUntilDay: 0, sickUntilDay: 0 }])))
+    setArtistMasterState(artistState)
     setArtistInteractCycleCount(0)
     setKuMuPendingOrders([])
     setReputation(10)
     setPhoneMessages([])
     setShowPhone(false)
     setShowLaoChen(false)
-    setLivestreamHype(30)
+    setShopLevel(1)
+    setShopShelves([])
+    setShopVisitorsToday(0)
+    setLivestreamHype(unlocked.has('live_stream_boost') ? 50 : 30)
     setLivestreamActive(false)
     setLivestreamBarrages([])
     setLivestreamHypeFullDays(0)
@@ -4781,7 +5160,21 @@ export default function App() {
     setGameOverInfo(null)
     setLastDebtInfo(null)
     setGameMode('menu')
+    setLegacyState(loadLegacyState())
   }, [])
+
+  const handleLegacyUnlock = useCallback((talentId) => {
+    const t = LEGACY_TALENTS.find(x => x.id === talentId)
+    if (!t) return
+    const ls = loadLegacyState()
+    const available = (ls.totalLegacyPoints || 0) - (ls.spentLegacyPoints || 0)
+    if (available < t.cost) return
+    ls.spentLegacyPoints = (ls.spentLegacyPoints || 0) + t.cost
+    ls.unlockedTalents = [...(ls.unlockedTalents || []), talentId]
+    saveLegacyState(ls)
+    setLegacyState(ls)
+    addToast(`✨ 解锁天赋「${t.name}」`)
+  }, [addToast])
 
   const restartSameScript = useCallback(() => {
     if (!gameOverInfo) return
@@ -4824,6 +5217,10 @@ export default function App() {
         livestreamHypeFullDays,
         npcRelations,
         isGameOver,
+        shopLevel,
+        shopShelves,
+        shopVisitorsToday,
+        difficulty,
         savedAt: Date.now(),
       }
       localStorage.setItem(SAVE_KEY, JSON.stringify(payload))
@@ -4831,7 +5228,7 @@ export default function App() {
     } catch (e) {
       addToast('存档失败：' + (e?.message || '未知错误'))
     }
-  }, [gameMode, debtIndex, money, marketLevel, marketData, marketTab, inventory, collection, jadeAccessories, totalProfit, totalDeals, opCount, daySpeed, activeEffects, equippedRelics, blackMarketPurchasedDays, liveStreamLevel, viewerFavorability, viewerState, carvingMasterUsesToday, carvingMasterRelations, artistMasterState, artistInteractCycleCount, kuMuPendingOrders, reputation, phoneMessages, smugglerPaidDay, livestreamHype, livestreamHypeFullDays, npcRelations, isGameOver, addToast])
+  }, [gameMode, debtIndex, money, marketLevel, marketData, marketTab, inventory, collection, jadeAccessories, totalProfit, totalDeals, opCount, daySpeed, activeEffects, equippedRelics, blackMarketPurchasedDays, liveStreamLevel, viewerFavorability, viewerState, carvingMasterUsesToday, carvingMasterRelations, artistMasterState, artistInteractCycleCount, kuMuPendingOrders, reputation, phoneMessages, smugglerPaidDay, livestreamHype, livestreamHypeFullDays, npcRelations, isGameOver, shopLevel, shopShelves, shopVisitorsToday, difficulty, addToast])
 
   // ── 读档（从 localStorage 恢复）
   const handleLoad = useCallback(() => {
@@ -4839,8 +5236,11 @@ export default function App() {
       const raw = localStorage.getItem(SAVE_KEY)
       if (!raw) { addToast('没有找到存档'); return }
       const data = JSON.parse(raw)
+      const legacy = loadLegacyState()
+      legacyBuffsRef.current = { flashlightAccurate: (legacy.unlockedTalents || []).includes('ancestral_flashlight') }
       if (!data || !data.gameMode) { addToast('存档格式无效'); return }
       setGameMode(data.gameMode)
+      setDifficulty(data.difficulty ?? 'normal')
       setDebtIndex(data.debtIndex ?? 0)
       setMoney(data.money ?? 50000)
       setMarketLevel(data.marketLevel ?? 1)
@@ -4879,6 +5279,9 @@ export default function App() {
       setIsGameOver(data.isGameOver ?? false)
       setGameOverInfo(null)
       setLastDebtInfo(null)
+      setShopLevel(data.shopLevel ?? 1)
+      setShopShelves(data.shopShelves ?? [])
+      setShopVisitorsToday(data.shopVisitorsToday ?? 0)
       const loadEffSpd = (data.daySpeed ?? 3) + (data.equippedRelics?.includes('midnight_oil') ? 1 : 0)
       prevDayRef.current = data.opCount != null ? Math.floor(data.opCount / loadEffSpd) + 1 : 1
       setStoneDetail(null)
@@ -5001,7 +5404,9 @@ export default function App() {
     const stone = inventoryRef.current.find(s => s.id === stoneId)
     if (!stone || stone.cutResult) return
 
-    const result    = rollCutResult(stone, modifiers.cutQuality, relicBrickReduce ? 0.10 : 0)
+    const cutBonus = modifiers.cutQuality + (legacyBuffsRef.current?.cutQuality || 0)
+    const brickBonus = (relicBrickReduce ? 0.10 : 0) + (legacyBuffsRef.current?.brickResist || 0)
+    const result    = rollCutResult(stone, cutBonus, brickBonus, relicMysticSet)
     const saleValue = Math.round(stone.price * result.multiplier * relicCutValueMult)
     const profit    = saleValue - stone.price
 
@@ -5014,14 +5419,14 @@ export default function App() {
     // 直播切石：更新热度、弹幕、打赏（弹幕数量随直播间等级：Lv1约3-4条，每升1级+2条）
     if (livestreamActive) {
       const isSuccess = profit >= 0
-      const hypeDelta = isSuccess ? LIVESTREAM_CUT.hypeCutSuccessAdd : -LIVESTREAM_CUT.hypeCutFailSub
+      const hypeDelta = isSuccess ? LIVESTREAM_CUT.hypeCutSuccessAdd : (relicStreamSet ? 0 : -LIVESTREAM_CUT.hypeCutFailSub)
       setLivestreamHype(h => Math.max(0, Math.min(LIVESTREAM_CUT.hypeMax, h + hypeDelta)))
       const count = 3 + Math.max(0, (liveStreamLevel || 1) - 1) * 2
       const barrages = generateViewerBarrages(isSuccess ? 'cutSuccess' : 'cutFail', count, isSuccess ? 'success' : 'fail')
       setLivestreamBarrages(b => [...b.slice(-8), ...barrages])
       const tips = isSuccess ? LIVESTREAM_CUT.tipPerHypeCutSuccess : LIVESTREAM_CUT.tipPerHypeCutFail
       setMoney(m => m + tips)
-      addToast(isSuccess ? `📺 切涨！热度+${LIVESTREAM_CUT.hypeCutSuccessAdd}，粉丝打赏 ¥${tips.toLocaleString()}` : `📺 切垮，热度-${LIVESTREAM_CUT.hypeCutFailSub}`)
+      addToast(isSuccess ? `📺 切涨！热度+${LIVESTREAM_CUT.hypeCutSuccessAdd}，粉丝打赏 ¥${tips.toLocaleString()}` : (relicStreamSet ? `📺 切垮，直播流套装生效，热度不减` : `📺 切垮，热度-${LIVESTREAM_CUT.hypeCutFailSub}`))
     }
 
     const phrase = getRandomCutPhrase(result.id, NPC_LIST)
@@ -5034,7 +5439,7 @@ export default function App() {
       detail: `成本 ¥${stone.price.toLocaleString()}  基础估值 ¥${saleValue.toLocaleString()}  参考盈亏 ${profit>=0?'+':''}¥${profit.toLocaleString()}`,
       cashIn:0, cashOut:0, amount:0,
     })
-  }, [currentDay, gameMode, isGameOver, livestreamActive, liveStreamLevel, modifiers.cutQuality, relicBrickReduce, relicCutValueMult, addToast, addLog])
+  }, [currentDay, gameMode, isGameOver, livestreamActive, liveStreamLevel, modifiers.cutQuality, relicBrickReduce, relicMysticSet, relicStreamSet, relicCutValueMult, addToast, addLog])
 
   // ── 手机私信回复 ──
   const handlePhoneReply = useCallback((msg, opt) => {
@@ -5047,15 +5452,43 @@ export default function App() {
       return
     }
 
+    if (opt.requiresKgStones && opt.requiresKgStones > 0) {
+      setInventory(inv => {
+        const kg = inv.filter(s => s.channel === 'kg')
+        if (kg.length < opt.requiresKgStones) return inv
+        const toRemove = kg.slice(0, opt.requiresKgStones).map(s => s.id)
+        return inv.filter(s => !toRemove.includes(s.id))
+      })
+      addToast(`🧱 已赞助 ${opt.requiresKgStones} 块公斤料给直播专场`)
+    }
+
+    let smugglerStone = null
     if (actionType === 'PAY_MONEY' && amount > 0) {
-      if (money < amount) { addToast('资金不足'); return }
+      const currentMoney = moneyRef.current
+      if (currentMoney < amount) { addToast('资金不足'); return }
       setMoney(m => m - amount)
-      if (opt.isSmuggler) setSmugglerPaidDay(currentDay)
-      addToast(`💸 已转账 ¥${amount.toLocaleString()}`)
+      addToast(`💸 已转账 ¥${amount.toLocaleString()}，余额 ¥${(currentMoney - amount).toLocaleString()}`)
+      if (opt.isSmuggler) {
+        const gotStone = Math.random() < 0.6
+        if (gotStone) {
+          smugglerStone = generateSmugglerPremiumStone()
+          setInventory(inv => [...inv, smugglerStone])
+          addToast(`✨ 走私客货到！「${smugglerStone.name}」已入库 ¥${Math.round(smugglerStone.price * smugglerStone.cutResult.multiplier).toLocaleString()}`)
+        } else {
+          addToast('💔 走私客拉黑了你，钱打水漂！')
+        }
+      }
     }
 
     if (npcId && opt.affinityDelta && npcRelations[npcId] !== undefined) {
-      setNpcRelations(prev => ({ ...prev, [npcId]: Math.max(0, (prev[npcId] || 0) + opt.affinityDelta) }))
+      const prevVal = npcRelations[npcId] || 0
+      const nextVal = Math.max(0, prevVal + opt.affinityDelta)
+      const delta = nextVal - prevVal
+      setNpcRelations(prev => ({ ...prev, [npcId]: nextVal }))
+      if (delta !== 0) {
+        const npcName = NPC_LIST.find(n => n.id === npcId)?.name || npcId
+        addToast(delta > 0 ? `💚 与${npcName}好感 +${delta}` : `💔 与${npcName}好感 ${delta}`)
+      }
     }
 
     setPhoneMessages(ms => {
@@ -5064,17 +5497,26 @@ export default function App() {
       if (idx >= 0) {
         next[idx] = { ...next[idx], options: null }
         const playerEntry = { id: Date.now(), npcId, msg: opt.reply || '', isPlayer: true, reply: opt.reply }
-        if (actionType === 'PAY_MONEY' && amount > 0) playerEntry.bubbleType = 'transfer'
-        if (actionType === 'PAY_MONEY' && amount > 0) playerEntry.transferAmount = amount
+        if (actionType === 'PAY_MONEY' && amount > 0) {
+          playerEntry.bubbleType = 'transfer'
+          playerEntry.transferAmount = amount
+        }
         next.splice(idx + 1, 0, playerEntry)
         if (opt.nextId) {
           const tpl = PHONE_MSG_POOL.find(x => x.id === opt.nextId)
-          if (tpl) next.push({ id: Date.now() + 1, npcId: tpl.npcId, msg: tpl.msg, isPlayer: false, options: tpl.options, msgId: tpl.id })
+          if (tpl) next.push({ id: Date.now() + 1, npcId: (tpl.id === 'borrow_ok' ? npcId : tpl.npcId), msg: tpl.msg, isPlayer: false, options: tpl.options, msgId: tpl.id })
+        }
+        if (opt.isSmuggler) {
+          if (smugglerStone) {
+            next.push({ id: Date.now() + 2, npcId: 'smuggler', msg: '货到了，老地方取。', isPlayer: false, options: null, msgId: 'smuggler_delivered', bubbleType: 'item', itemData: smugglerStone })
+          } else {
+            next.push({ id: Date.now() + 2, npcId: 'smuggler', msg: '消息已发出，但被对方拒收了', isPlayer: false, options: null, msgId: 'smuggler_scammed', bubbleType: 'system' })
+          }
         }
       }
       return next
     })
-  }, [npcRelations, money, currentDay, addToast])
+  }, [npcRelations, addToast])
 
   // ── 手机红包领取 ──
   const handlePhoneRedpacketOpen = useCallback((msg) => {
@@ -5226,28 +5668,34 @@ export default function App() {
         setReputation(r => Math.max(0, r - 1))
         return
       }
-      // 被识破！买卖失败，不收款不成交，人品值-1，扣好感度
+      // 被识破！买卖失败，不收款不成交，人品值-1，扣好感度（奸商流3件套则不掉好感）
       setReputation(r => Math.max(0, r - 1))
       const penalty = relicDetectPenaltyHalf ? Math.max(1, Math.ceil(npc.detectPenalty / 2)) : npc.detectPenalty
       const detectLine = pick(npc.detectDialogs || ['你以为骗得过我？！'])
       setTimeout(() => {
         addToast(`😡 ${npc.icon} ${npc.name}识破了！「${detectLine}」`)
         addToast(`❌ 此次买卖失败，人品值 -1`)
-        addToast(`💔 与「${npc.name}」好感度 -${penalty}${relicDetectPenaltyHalf ? '（巧舌如簧减半）' : ''}`)
-      }, 300)
-      setNpcRelations(prev => {
-        const oldDeals = prev[npc.id] || 0
-        const newDeals = Math.max(0, oldDeals - penalty)
-        const oldLv = getNpcLevel(oldDeals)
-        const newLv = getNpcLevel(newDeals)
-        if (newLv < oldLv) {
-          setTimeout(() => {
-            addToast(`📉 ${npc.icon}「${npc.name}」关系降级！${NPC_LEVEL_ICONS[oldLv]} ${NPC_LEVEL_NAMES[oldLv]} → ${NPC_LEVEL_ICONS[newLv]} ${NPC_LEVEL_NAMES[newLv]}`)
-          }, 600)
+        if (relicCrookSet) {
+          addToast(`😏 奸商流套装生效，与「${npc.name}」好感度不降`)
+        } else {
+          addToast(`💔 与「${npc.name}」好感度 -${penalty}${relicDetectPenaltyHalf ? '（巧舌如簧减半）' : ''}`)
         }
-        return { ...prev, [npc.id]: newDeals }
-      })
-      addLog({ type:'loss', text:`⚠️ [${npc.name}] 识破砖头料！买卖失败，人品值-1`, detail:`未成交  察觉率 ${Math.round(npc.detectChance*100)}%  好感度 -${penalty} 点` })
+      }, 300)
+      if (!relicCrookSet) {
+        setNpcRelations(prev => {
+          const oldDeals = prev[npc.id] || 0
+          const newDeals = Math.max(0, oldDeals - penalty)
+          const oldLv = getNpcLevel(oldDeals)
+          const newLv = getNpcLevel(newDeals)
+          if (newLv < oldLv) {
+            setTimeout(() => {
+              addToast(`📉 ${npc.icon}「${npc.name}」关系降级！${NPC_LEVEL_ICONS[oldLv]} ${NPC_LEVEL_NAMES[oldLv]} → ${NPC_LEVEL_ICONS[newLv]} ${NPC_LEVEL_NAMES[newLv]}`)
+            }, 600)
+          }
+          return { ...prev, [npc.id]: newDeals }
+        })
+      }
+      addLog({ type:'loss', text:`⚠️ [${npc.name}] 识破砖头料！买卖失败，人品值-1`, detail:`未成交  察觉率 ${Math.round(npc.detectChance*100)}%  ${relicCrookSet ? '奸商流套装：好感度不降' : `好感度 -${penalty} 点`}` })
       return
     }
 
@@ -5281,7 +5729,7 @@ export default function App() {
     if (!isBrick) addToast(`${npc.icon} ${npc.name} 成交 ¥${offer.toLocaleString()}，关系 +1`)
     const resultLabel = stone.cutResult?.name || (stone.windowOpened ? `半明料 · ${stone.windowOpened.hint || '开窗'}` : '未知')
     addLog({ type:'npc', text:`[${npc.name}（${npc.fullName}）] 购入「${stone.name}」→ ${resultLabel}${isBrick?' 🎭混入成功':''}`, detail:`成本 ¥${stone.price.toLocaleString()}  NPC出价 ¥${offer.toLocaleString()}  盈亏 ${profit>=0?'+':''}¥${profit.toLocaleString()}`, cashIn: offer, cashOut:0, amount: profit })
-  }, [gameMode, isGameOver, tickOp, modifiers.brickDetect, relicDetectPenaltyHalf, npcRelations, addToast, addLog])
+  }, [gameMode, isGameOver, tickOp, modifiers.brickDetect, relicDetectPenaltyHalf, relicCrookSet, npcRelations, addToast, addLog])
 
   // ── 出售已装备遗物（返还 50% 购入价）──
   const handleSellRelic = useCallback((relicId) => {
@@ -5392,12 +5840,14 @@ export default function App() {
     }
     setMoney(m => m - FLASHLIGHT_COST)
     const realAffix = stone.hiddenTag ? AFFIX_MAP[stone.hiddenTag] : null
+    const accBonus = legacyBuffsRef.current?.flashlightAccurate ? 0.10 : 0
+    const probs = { accurate: FLASHLIGHT_PROBS.accurate + accBonus, fuzzy: FLASHLIGHT_PROBS.fuzzy - accBonus, wrong: FLASHLIGHT_PROBS.wrong }
     const r = Math.random()
     let flashlightResult, flashlightHint
-    if (r < FLASHLIGHT_PROBS.accurate) {
+    if (r < probs.accurate) {
       flashlightResult = 'accurate'
       flashlightHint = realAffix?.name || '未知'
-    } else if (r < FLASHLIGHT_PROBS.accurate + FLASHLIGHT_PROBS.fuzzy) {
+    } else if (r < probs.accurate + probs.fuzzy) {
       flashlightResult = 'fuzzy'
       flashlightHint = '雾层很厚，看不透'
     } else {
@@ -5451,6 +5901,28 @@ export default function App() {
     addToast(`🎉 市场升级！当前：${nextLv.name}，每日行动次数 +1`)
     addLog({ type:'upgrade', text:`市场升级 → ${nextLv.name}（Lv${nextLv.level}）`, detail:`解锁：${nextLv.unlockTip}；每日行动次数 +1`, cashIn:0, cashOut: nextLv.upgradeCost, amount: -nextLv.upgradeCost })
   }, [money, gameMode, isGameOver, addToast, addLog])
+
+  // ── 寻玉远征 ──（5级市场专属，Slay the Spire式路线探索）
+  const generateExpeditionStone = useCallback(() => {
+    const prem = generatePremiumStones(5)
+    const s = prem[Math.floor(Math.random() * prem.length)] || prem[0]
+    return { ...s, id: `exp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}` }
+  }, [])
+  const handleExpeditionEnter = useCallback((days, capital) => {
+    if (money < capital || gameMode === 'menu' || isGameOver) return
+    setMoney(m => m - capital)
+    setExpeditionParams({ days, capital })
+    setExpeditionActive(true)
+    setShowExpeditionEntry(false)
+    addToast(`🗺️ 寻玉远征开始！耗时 ${days} 天，携带 ¥${capital.toLocaleString()}`)
+  }, [money, gameMode, isGameOver, addToast])
+  const handleExpeditionExit = useCallback((inv, remainingMoney, daysUsed) => {
+    setInventory(prev => [...prev, ...inv])
+    setMoney(m => m + remainingMoney)
+    for (let i = 0; i < (daysUsed || 7); i++) tickOp()
+    setExpeditionActive(false)
+    addToast(`🏁 寻玉远征结束！带回 ${inv.length} 块原石，剩余 ¥${remainingMoney?.toLocaleString() || 0}`)
+  }, [tickOp, addToast])
 
   // ── 直播间升级 ──
   const handleLiveStreamUpgrade = useCallback(() => {
@@ -5616,7 +6088,8 @@ export default function App() {
     let favDelta = 1
     if (isBlind) {
       favDelta = cutUp ? 5 : cutDown ? -10 : 0
-      setLivestreamHype(h => Math.max(0, Math.min(LIVESTREAM_CUT.hypeMax, h + (cutUp ? 80 : cutDown ? -50 : 0))))
+      const blindHypeDelta = cutUp ? 80 : cutDown ? (relicStreamSet ? 0 : -50) : 0
+      setLivestreamHype(h => Math.max(0, Math.min(LIVESTREAM_CUT.hypeMax, h + blindHypeDelta)))
       const count = 3 + Math.max(0, (liveStreamLevel || 1) - 1) * 2
       const blindBarrages = generateViewerBarrages(cutUp ? 'blindUp' : 'blindDown', count, cutUp ? 'success' : 'fail')
       setLivestreamBarrages(b => [...b.slice(-8), ...blindBarrages])
@@ -5643,7 +6116,7 @@ export default function App() {
     const msg = isBlind ? (cutUp ? `🎲 代客主刀切涨！${top.viewer.name} 赚了，好感+5` : cutDown ? `🎲 代客主刀切垮…${top.viewer.name} 血亏，好感-10` : `📺 ${top.viewer.name} 拍下 ¥${salePrice.toLocaleString()}`) : `📺 ${top.viewer.name} 拍下！¥${salePrice.toLocaleString()}`
     addToast(msg)
     addLog({ type:'profit', text: isBlind ? `直播盲拍「${stone.name}」` : `直播售卖「${stone.name}」`, detail: `${top.viewer.name} 出价 ¥${salePrice.toLocaleString()}${isBlind && cutResult ? ` · 切开${cutUp ? '涨' : cutDown ? '垮' : '平'} ${cutResult.name}` : ' | 好感+1'}`, cashIn: salePrice, amount: profit })
-  }, [gameMode, isGameOver, liveStreamLevel, relicCutValueMult, addToast, addLog, tickOp])
+  }, [gameMode, isGameOver, liveStreamLevel, relicCutValueMult, relicStreamSet, addToast, addLog, tickOp])
 
   const handleBuyerRegret = useCallback((penalty) => {
     if (!liveCutProgressData) return
@@ -5742,6 +6215,8 @@ export default function App() {
   const script    = SCRIPT_MODES[gameMode] || null
   const debtList  = script?.debts || []
   const nextDebt  = (script && debtList.length && debtIndex < debtList.length) ? debtList[debtIndex] : null
+  const diffCfg   = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.normal
+  const effectiveNextAmount = nextDebt ? Math.round(nextDebt.amount * diffCfg.debtMult) : null
   const isDebtMode= gameMode === 'sprint100' || gameMode === 'tycoon300'
   const daysToNextDebt = nextDebt ? Math.max(0, nextDebt.day - currentDay) : null
 
@@ -5755,6 +6230,7 @@ export default function App() {
     const refreshDiscount = getNpcSkillValue(influencer, 'refreshDiscount', influencerLv)
     if (typeof refreshDiscount === 'number' && refreshDiscount > 0) c = Math.round(c * (1 - refreshDiscount))
     if (equippedRelics.includes('old_newspaper')) c = Math.round(c * 0.92)
+    if (legacyBuffsRef.current?.marketDiscount) c = Math.round(c * (1 - legacyBuffsRef.current.marketDiscount))
     return c
   })()
   const hasSold     = inventory.some(s => s.sold)
@@ -5775,9 +6251,27 @@ export default function App() {
               </div>
             </div>
             <div style={{ textAlign:'right', fontSize:11, color:'#475569' }}>
-              <p style={{ margin:0 }}>版本：Roguelike Debt Survival</p>
-              <p style={{ margin:0 }}>初始资金：¥50,000</p>
+              <p style={{ margin:0 }}>版本：Roguelike Debt Survival · Meta 成长</p>
+              <p style={{ margin:0 }}>初始资金：¥{(50000 + ((legacyState?.unlockedTalents || []).includes('initial_money') ? 500000 : 0)).toLocaleString()}</p>
             </div>
+          </div>
+
+          {/* 难度选择 */}
+          <div style={{ background:'rgba(15,23,42,.6)', borderRadius:14, padding:14, border:'1px solid rgba(51,65,85,.6)' }}>
+            <p style={{ margin:'0 0 10px', fontSize:12, color:'#94a3b8', fontWeight:700 }}>⚔️ 难度</p>
+            <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+              {Object.values(DIFFICULTY_LEVELS).map(d => (
+                <button key={d.key} onClick={() => setDifficulty(d.key)}
+                  style={{
+                    padding:'8px 14px', borderRadius:10, border: `1px solid ${difficulty === d.key ? 'rgba(251,191,36,.6)' : 'rgba(51,65,85,.6)'}`,
+                    background: difficulty === d.key ? 'rgba(251,191,36,.2)' : 'rgba(30,41,59,.6)',
+                    color: difficulty === d.key ? '#fbbf24' : '#64748b', fontSize:12, fontWeight:700, cursor:'pointer',
+                  }}>
+                  {d.icon} {d.name}
+                </button>
+              ))}
+            </div>
+            <p style={{ margin:'8px 0 0', fontSize:10, color:'#64748b' }}>{(DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.normal).desc} · 高难度传承点收益更高</p>
           </div>
 
           <div className="menu-grid" style={{ display:'grid', gridTemplateColumns:'repeat(3,minmax(0,1fr))', gap:14 }}>
@@ -5805,11 +6299,21 @@ export default function App() {
             提示：剧本模式为一次性存档体验，每局从 ¥50,000 开始。死亡后只能重开或回主菜单。存档保存在浏览器本地，清理缓存会丢失。
           </p>
 
-          {hasSave && (
-            <button onClick={handleLoad} style={{ width:'100%', padding:12, background:'linear-gradient(135deg,rgba(59,130,246,.5),rgba(37,99,235,.4))', border:'1px solid rgba(59,130,246,.6)', borderRadius:14, color:'#93c5fd', fontSize:14, fontWeight:800, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
-              <span>📂</span> 载入存档
+          <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
+            <button onClick={() => { setLegacyState(loadLegacyState()); setShowLegacyShrine(true) }} style={{ flex:1, minWidth:140, padding:12, background:'linear-gradient(135deg,rgba(139,92,246,.5),rgba(124,58,237,.4))', border:'1px solid rgba(139,92,246,.6)', borderRadius:14, color:'#e9d5ff', fontSize:14, fontWeight:800, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+              <span>🏛️</span> 家族祠堂
+              {(legacyState?.totalLegacyPoints - legacyState?.spentLegacyPoints || 0) > 0 && (
+                <span style={{ background:'#a78bfa', color:'#1e1b4b', fontSize:10, padding:'2px 6px', borderRadius:10 }}>{(legacyState.totalLegacyPoints - legacyState.spentLegacyPoints)} 传承点</span>
+              )}
             </button>
-          )}
+            {hasSave && (
+              <button onClick={handleLoad} style={{ flex:1, minWidth:140, padding:12, background:'linear-gradient(135deg,rgba(59,130,246,.5),rgba(37,99,235,.4))', border:'1px solid rgba(59,130,246,.6)', borderRadius:14, color:'#93c5fd', fontSize:14, fontWeight:800, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
+                <span>📂</span> 载入存档
+              </button>
+            )}
+          </div>
+
+          {showLegacyShrine && <LegacyShrineModal legacyState={legacyState} onUnlock={handleLegacyUnlock} onClose={() => setShowLegacyShrine(false)} />}
 
           <Toast messages={toasts} />
         </div>
@@ -5838,7 +6342,11 @@ export default function App() {
 
           {/* 状态栏 */}
           <div className="app-header-stats" style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
-            {/* 剧本模式 */}
+            {/* 难度 + 剧本模式 */}
+            <div style={{ background:'rgba(15,23,42,.9)', border:'1px solid rgba(30,41,59,.9)', borderRadius:10, padding:'5px 12px', minWidth:100 }}>
+              <p style={{ fontSize:9, color:'#334155', margin:0, marginBottom:2 }}>难度</p>
+              <p style={{ fontSize:13, fontWeight:800, color: (diffCfg || DIFFICULTY_LEVELS.normal).color || '#94a3b8', margin:0 }}>{(diffCfg || DIFFICULTY_LEVELS.normal).icon} {(diffCfg || DIFFICULTY_LEVELS.normal).name}</p>
+            </div>
             <div style={{ background:'rgba(15,23,42,.9)', border:'1px solid rgba(30,41,59,.9)', borderRadius:10, padding:'5px 12px', minWidth:130 }}>
               <p style={{ fontSize:9, color:'#334155', margin:0, marginBottom:2 }}>剧本模式</p>
               <p style={{ fontSize:13, fontWeight:800, color: script ? '#22c55e' : '#64748b', margin:0 }}>
@@ -5858,7 +6366,7 @@ export default function App() {
                 {nextDebt ? (
                   <>
                     <p style={{ fontSize:9, color:'#7f1d1d', margin:0, marginBottom:2 }}>距离下次还款：<span style={{ color:'#fecaca', fontWeight:700 }}>{daysToNextDebt}</span> 天（结算日：第 {nextDebt.day} 天）</p>
-                    <p style={{ fontSize:12, color:'#fecaca', margin:0, fontWeight:800 }}>目标金额：¥{nextDebt.amount.toLocaleString()}</p>
+                    <p style={{ fontSize:12, color:'#fecaca', margin:0, fontWeight:800 }}>目标金额：¥{effectiveNextAmount?.toLocaleString()}</p>
                   </>
                 ) : (
                   <>
@@ -5937,6 +6445,34 @@ export default function App() {
             <span style={{ fontSize:18 }}>🔨</span>
             <span style={{ fontSize:12, fontWeight:700, color:'#e2e8f0' }}>雕刻师</span>
           </button>
+          {(() => {
+            const shopUnlockMoney = legacyBuffsRef.current?.shopCapitalEarly ? 2000000 : 3000000
+            const shopUnlocked = money >= shopUnlockMoney
+            return (
+              <button
+                onClick={() => {
+                  if (shopUnlocked) setShowShop(true)
+                  else addToast(`开启条件：持有资金达到 ¥${(shopUnlockMoney / 10000).toFixed(0)} 万`)
+                }}
+                style={{
+                  background: shopUnlocked ? 'linear-gradient(135deg,rgba(124,58,237,.5),rgba(139,92,246,.3))' : 'rgba(30,41,59,.6)',
+                  border: `1px solid ${shopUnlocked ? 'rgba(139,92,246,.5)' : 'rgba(51,65,85,.5)'}`,
+                  borderRadius: 10,
+                  padding: '8px 16px',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  minWidth: 72,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  opacity: shopUnlocked ? 1 : 0.65,
+                }}
+              >
+                <span style={{ fontSize: 18 }}>🏪</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: shopUnlocked ? '#e2e8f0' : '#64748b' }}>我的商铺</span>
+              </button>
+            )
+          })()}
           <button onClick={handleSave} style={{ background:'rgba(59,130,246,.4)', border:'1px solid rgba(59,130,246,.5)', borderRadius:10, padding:'8px 16px', cursor:'pointer', textAlign:'center', minWidth:72, display:'flex', alignItems:'center', gap:6 }}>
             <span style={{ fontSize:18 }}>💾</span>
             <span style={{ fontSize:12, fontWeight:700, color:'#e2e8f0' }}>保存</span>
@@ -6026,6 +6562,11 @@ export default function App() {
                 <MarketStoneCard stone={marketData.auctionStone} channel="auction" onBid={()=>setAuctionBidStone(marketData.auctionStone)} onFlashlight={handleFlashlight} onShowDetail={s=>setStoneDetail({ stone:s, originConfig: ORIGIN_CONFIG[s.originId] || ORIGIN_CONFIG['其他'] })} money={money} />
               </div>
             ))}
+            {marketLevel >= 5 && (
+              <button onClick={() => setShowExpeditionEntry(true)} style={{ marginTop: 12, width: '100%', padding: 12, background: 'linear-gradient(135deg,rgba(251,191,36,.25),rgba(245,158,11,.2))', border: '1px solid rgba(251,191,36,.5)', borderRadius: 12, color: '#fbbf24', fontWeight: 800, cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <span>🗺️</span> 寻玉远征
+              </button>
+            )}
             <OddsPanel />
           </div>
 
@@ -6132,9 +6673,9 @@ export default function App() {
       {/* ── 弹窗 ── */}
       {stoneDetail && <StoneDetailModal stone={stoneDetail.stone} originConfig={stoneDetail.originConfig} onClose={()=>setStoneDetail(null)} />}
       {carvingStone && <CarvingModal stone={carvingStone} money={money} cutValueMult={relicCutValueMult} masters={ARTIST_MASTERS} relations={carvingMasterRelations} masterState={artistMasterState} currentDay={currentDay} usesToday={carvingMasterUsesToday} onSelect={(mid)=>{handleCarving(carvingStone.id, mid); setCarvingStone(null);}} onClose={()=>setCarvingStone(null)} />}
-      {liveSellStone && <LiveSellModal stone={liveSellStone} cutValueMult={relicCutValueMult} onConfirm={()=>{ const result = runLiveAuction(liveSellStone, viewerFavorability, liveStreamLevel, relicCutValueMult, currentDay, viewerState, equippedRelics.includes('tiger_eye') ? 1 : 0); if (result.isRivalry && result.rivalNames?.length >= 2) setLivestreamBarrages(b => [...b.slice(-8), { id: Date.now() + Math.random(), text: `【系统】${result.rivalNames[0]}和${result.rivalNames[1]}杠上了！开始斗气竞价！`, type: 'rivalry' }]); setLiveAuctionData({ stone: liveSellStone, bids: result.bids, winner: result.winner, isBlind: !liveSellStone.cutResult }); setLiveSellStone(null); }} onClose={()=>setLiveSellStone(null)} />}
+      {liveSellStone && <LiveSellModal stone={liveSellStone} cutValueMult={relicCutValueMult} onConfirm={()=>{ const result = runLiveAuction(liveSellStone, viewerFavorability, liveStreamLevel, relicCutValueMult, currentDay, viewerState, equippedRelics.includes('tiger_eye') ? 1 : 0, relicStreamSet); if (result.isRivalry && result.rivalNames?.length >= 2) setLivestreamBarrages(b => [...b.slice(-8), { id: Date.now() + Math.random(), text: `【系统】${result.rivalNames[0]}和${result.rivalNames[1]}杠上了！开始斗气竞价！`, type: 'rivalry' }]); setLiveAuctionData({ stone: liveSellStone, bids: result.bids, winner: result.winner, isBlind: !liveSellStone.cutResult }); setLiveSellStone(null); }} onClose={()=>setLiveSellStone(null)} />}
       {liveAuctionData && <LiveAuctionProcessModal data={liveAuctionData} viewerState={viewerState} onComplete={()=>{ const w = liveAuctionData.winner; const stone = liveAuctionData.stone; if (liveAuctionData.isBlind) { setLivestreamBarrages(b => [...b.slice(-8), ...generatePredictionBarrages(stone)]); setLiveCutProgressData({ stone, winner: w, salePrice: w.bid }); setLiveAuctionData(null); } else { handleLiveSell(stone.id, { winner: w, salePrice: w.bid }); setLiveAuctionData(null); } }} />}
-      {liveCutProgressData && <BlindCutProgressModal stone={liveCutProgressData.stone} winner={liveCutProgressData.winner} salePrice={liveCutProgressData.salePrice} npcRelations={npcRelations} cutQualityBonus={modifiers.cutQuality} brickReduceBonus={relicBrickReduce ? 0.1 : 0} relicCutValueMult={relicCutValueMult} onCutComplete={(result, actualValue)=>{ handleLiveSell(liveCutProgressData.stone.id, { winner: liveCutProgressData.winner, salePrice: liveCutProgressData.salePrice }, { isBlind: true, cutResult: result, actualValue }); setLiveCutProgressData(null); }} onBuyerRegret={(penalty)=>handleBuyerRegret(penalty)} onNpcHijack={(npcId, price)=>handleNpcHijack(npcId, price)} />}
+      {liveCutProgressData && <BlindCutProgressModal stone={liveCutProgressData.stone} winner={liveCutProgressData.winner} salePrice={liveCutProgressData.salePrice} npcRelations={npcRelations} cutQualityBonus={modifiers.cutQuality} brickReduceBonus={relicBrickReduce ? 0.1 : 0} mysticFuzzyGuarantee={relicMysticSet} relicCutValueMult={relicCutValueMult} onCutComplete={(result, actualValue)=>{ handleLiveSell(liveCutProgressData.stone.id, { winner: liveCutProgressData.winner, salePrice: liveCutProgressData.salePrice }, { isBlind: true, cutResult: result, actualValue }); setLiveCutProgressData(null); }} onBuyerRegret={(penalty)=>handleBuyerRegret(penalty)} onNpcHijack={(npcId, price)=>handleNpcHijack(npcId, price)} />}
       {showLiveStreamUpgrade && <LiveStreamUpgradeModal level={liveStreamLevel} money={money} levels={LIVE_STREAM_LEVELS} onUpgrade={handleLiveStreamUpgrade} onClose={()=>setShowLiveStreamUpgrade(false)} viewerFavorability={viewerFavorability} />}
       {showViewerAdmin && <ViewerAdminModal viewerState={viewerState} onClose={()=>setShowViewerAdmin(false)} />}
       {bargainStone && <BargainModal stone={bargainStone} onChooseType={(s,t)=>setBargainQte({stone:s,type:t})} onClose={()=>setBargainStone(null)} />}
@@ -6169,7 +6710,7 @@ export default function App() {
         <LiveSellAccessoryModal
           accessory={liveSellAccessory}
           onConfirm={()=>{
-            const result = runLiveAuctionAccessory(liveSellAccessory, viewerFavorability, liveStreamLevel, currentDay, viewerState, equippedRelics.includes('tiger_eye') ? 1 : 0)
+            const result = runLiveAuctionAccessory(liveSellAccessory, viewerFavorability, liveStreamLevel, currentDay, viewerState, equippedRelics.includes('tiger_eye') ? 1 : 0, relicStreamSet)
             if (result.isRivalry && result.rivalNames?.length >= 2) {
               setLivestreamBarrages(b => [...b.slice(-8), { id: Date.now() + Math.random(), text: `【系统】${result.rivalNames[0]}和${result.rivalNames[1]}杠上了！开始斗气竞价！`, type: 'rivalry' }])
             }
@@ -6192,9 +6733,31 @@ export default function App() {
       {showNpcRoster && <NpcRosterPanel npcRelations={npcRelations} onClose={()=>setShowNpcRoster(false)} />}
       {npcStone      && <NpcModal stone={npcStone} npcRelations={npcRelations} onSellToNpc={handleSellToNpc} onClose={()=>setNpcTarget(null)} npcOfferMult={modifiers.npcOffer} cutValueMult={relicCutValueMult} />}
 
-      {showPhone && <PhonePanel messages={phoneMessages} npcList={[...NPC_LIST, BANG_YIGE_NPC, SMUGGLER_NPC]} onReply={handlePhoneReply} onRedpacketOpen={handlePhoneRedpacketOpen} onClose={()=>setShowPhone(false)} />}
+      {showPhone && <PhonePanel messages={phoneMessages} npcList={[...NPC_LIST, BANG_YIGE_NPC, SMUGGLER_NPC]} onReply={handlePhoneReply} onRedpacketOpen={handlePhoneRedpacketOpen} onClose={()=>setShowPhone(false)} money={money} jadeAccessories={jadeAccessories} inventory={inventory} getQuestMinGrade={(id)=>PHONE_MSG_POOL.find(x=>x.id===id)?.questMinGrade} />}
       {phoneItemPickerTarget && <PhoneItemPickerModal target={phoneItemPickerTarget} jadeAccessories={jadeAccessories} onSelect={handlePhoneSendItemConfirm} onClose={()=>setPhoneItemPickerTarget(null)} />}
       {showLaoChen && <ArtistMastersPanel masterState={artistMasterState} money={money} currentDay={currentDay} onInteract={handleArtistInteract} onClose={()=>setShowLaoChen(false)} remainingOpsToday={effectiveDaySpeed - (opCount % effectiveDaySpeed)} daySpeed={effectiveDaySpeed} artistInteractCycleCount={artistInteractCycleCount} />}
+      {showShop && money >= (legacyBuffsRef.current?.shopCapitalEarly ? 2000000 : 3000000) && (
+        <ShopPanel
+          shopLevel={shopLevel}
+          setShopLevel={setShopLevel}
+          shopShelves={shopShelves}
+          setShopShelves={setShopShelves}
+          inventory={inventory}
+          jadeAccessories={jadeAccessories}
+          setInventory={setInventory}
+          setJadeAccessories={setJadeAccessories}
+          money={money}
+          setMoney={setMoney}
+          cutValueMult={relicCutValueMult}
+          onClose={()=>setShowShop(false)}
+          addToast={addToast}
+          visitorsToday={shopVisitorsToday}
+          setVisitorsToday={setShopVisitorsToday}
+          dailyVisitorLimit={(relicShopSet ? 2 : 1) * ((SHOP_LEVELS[shopLevel-1]||SHOP_LEVELS[0]).dailyVisitors)}
+          relicShopSet={relicShopSet}
+          relicCrookSet={relicCrookSet}
+        />
+      )}
       {livestreamActive && <LiveStreamBarrageLayer barrages={livestreamBarrages} />}
       {cutResultFloat && <CutResultFloat float={cutResultFloat} cutResult={cutResultFloat.result} />}
       {showGiftModal && (
@@ -6216,8 +6779,38 @@ export default function App() {
       )}
 
       {pendingEvent && <EventModal event={pendingEvent} onConfirm={handleConfirmEvent} />}
+      {showExpeditionEntry && marketLevel >= 5 && (
+        <div style={{ position:'fixed', inset:0, zIndex:500, background:'rgba(0,0,0,.9)', display:'flex', alignItems:'center', justifyContent:'center', padding:24 }} onClick={()=>setShowExpeditionEntry(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{ background:'linear-gradient(160deg,#422006,#0f172a)', border:'2px solid rgba(251,191,36,.5)', borderRadius:22, padding:28, maxWidth:440, width:'100%' }}>
+            <h3 style={{ margin:'0 0 12px', color:'#fbbf24', fontSize:20 }}>🗺️ 寻玉远征</h3>
+            <p style={{ fontSize:12, color:'#94a3b8', margin:'0 0 20px' }}>消耗游戏日与启动资金，探索 Slay the Spire 式路线图。原石摊、走私客、突发事件、休息区，最后挑战军阀公盘标王！</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+              {[
+                { days: 7, capital: 200000 },
+                { days: 8, capital: 300000 },
+                { days: 9, capital: 400000 },
+                { days: 10, capital: 500000 },
+              ].map(opt => (
+                <button key={opt.days} onClick={()=>handleExpeditionEnter(opt.days, opt.capital)} disabled={money < opt.capital}
+                  style={{ padding:14, background: money >= opt.capital ? 'rgba(251,191,36,.15)' : 'rgba(51,65,85,.5)', border: `1px solid ${money >= opt.capital ? 'rgba(251,191,36,.5)' : '#334155'}`, borderRadius:12, color: money >= opt.capital ? '#fcd34d' : '#64748b', cursor: money >= opt.capital ? 'pointer' : 'not-allowed', textAlign:'left', fontWeight:700 }}>
+                  {opt.days} 天 · 启动资金 ¥{opt.capital.toLocaleString()}
+                </button>
+              ))}
+            </div>
+            <button onClick={()=>setShowExpeditionEntry(false)} style={{ marginTop:16, width:'100%', padding:10, background:'#334155', border:'none', borderRadius:8, color:'#94a3b8', cursor:'pointer' }}>取消</button>
+          </div>
+        </div>
+      )}
+      {expeditionActive && (
+        <div style={{ position:'fixed', inset:0, zIndex:600, background:'#020617', overflow:'auto' }}>
+          <ExpeditionPanel daysLeft={expeditionParams.days} capital={expeditionParams.capital} inventory={[]} setInventory={()=>{}}
+            money={0} generateStone={generateExpeditionStone} addToast={addToast} cutValueMult={relicCutValueMult}
+            ORIGIN_CONFIG={ORIGIN_CONFIG} CUT_RESULTS={CUT_RESULTS} onExit={handleExpeditionExit}
+          />
+        </div>
+      )}
       {showBlackMarket && <BlackMarketModal offers={blackMarketOffers} money={money} equippedRelics={equippedRelics} onBuy={(id)=>handleBuyRelic(id, ()=>{ setShowBlackMarket(false); setBlackMarketPurchasedDays(p=>[...p, currentDay]); })} onClose={()=>setShowBlackMarket(false)} />}
-      {currentDay > 0 && currentDay % 10 === 5 && !showBlackMarket && !blackMarketPurchasedDays.includes(currentDay) && (
+      {currentDay > 0 && (currentDay % 10 === 5 || (legacyBuffsRef.current?.blackMarketEarly && currentDay % 10 === 3)) && !showBlackMarket && !blackMarketPurchasedDays.includes(currentDay) && (
         <button onClick={handleOpenBlackMarket} style={{
           position:'fixed', bottom:24, right:24, zIndex:100,
           padding:'12px 20px', borderRadius:14, border:'1px solid rgba(251,191,36,.5)',
