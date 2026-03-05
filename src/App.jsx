@@ -392,57 +392,58 @@ function computeCarvingBoost(master, cutResultId) {
 //  50 名直播间观众：人设、买卖习惯、口头禅
 //  habit: aggressive=激进加价 | conservative=稳健 | impulsive=冲动 | steady=平稳 | bargain=捡漏型
 // ═══════════════════════════════════════════════════════════
+// favoriteProductTypes: 喜爱的饰品题材，匹配时出价+productPremium(10-30%)
 const LIVE_VIEWERS = [
-  { id:'viewer_1', name:'翠迷小王', icon:'👤', baseWillingness:0.7, habit:'steady', phrases:['这块我要了','翠翠的必须支持'] },
-  { id:'viewer_2', name:'玉姐', icon:'👩', baseWillingness:0.65, habit:'conservative', phrases:['再看看吧','好料不等人呐'] },
-  { id:'viewer_3', name:'收藏家老林', icon:'👨', baseWillingness:0.8, habit:'aggressive', phrases:['入藏！','传家宝级别'] },
-  { id:'viewer_4', name:'小白新手', icon:'🧑', baseWillingness:0.5, habit:'impulsive', phrases:['冲冲冲！','看不懂但好厉害'] },
-  { id:'viewer_5', name:'土豪阿明', icon:'💰', baseWillingness:0.9, habit:'aggressive', phrases:['钱不是问题','包圆了'] },
-  { id:'viewer_6', name:'行家老陈', icon:'👴', baseWillingness:0.75, habit:'conservative', phrases:['值这个价','老眼光不会错'] },
-  { id:'viewer_7', name:'学生小美', icon:'👧', baseWillingness:0.45, habit:'bargain', phrases:['省点生活费','再便宜点嘛'] },
-  { id:'viewer_8', name:'珠宝店老板', icon:'🏪', baseWillingness:0.85, habit:'steady', phrases:['进货价合适','店里好卖'] },
-  { id:'viewer_9', name:'路人甲', icon:'🙂', baseWillingness:0.55, habit:'steady', phrases:['凑个热闹','随便看看'] },
-  { id:'viewer_10', name:'网红主播', icon:'📱', baseWillingness:0.7, habit:'impulsive', phrases:['直播间老铁冲！','流量来了'] },
-  { id:'viewer_11', name:'赌石狂人', icon:'🎲', baseWillingness:0.95, habit:'aggressive', phrases:['梭哈！','不差这一口'] },
-  { id:'viewer_12', name:'低调富豪', icon:'🕴️', baseWillingness:0.6, habit:'conservative', phrases:['低调低调','闷声发财'] },
-  { id:'viewer_13', name:'翡翠发烧友', icon:'💎', baseWillingness:0.88, habit:'aggressive', phrases:['我的梦中情翠！','绝了绝了'] },
-  { id:'viewer_14', name:'萌新观望', icon:'👀', baseWillingness:0.4, habit:'bargain', phrases:['先学学','不敢乱跟'] },
-  { id:'viewer_15', name:'老主顾阿强', icon:'🤝', baseWillingness:0.82, habit:'steady', phrases:['老熟人了','回头客'] },
-  { id:'viewer_16', name:'宝妈翠翠', icon:'👩', baseWillingness:0.58, habit:'conservative', phrases:['给娃攒的','当嫁妆'] },
-  { id:'viewer_17', name:'企业家老李', icon:'👔', baseWillingness:0.78, habit:'steady', phrases:['送客户正好','面子工程'] },
-  { id:'viewer_18', name:'好奇宝宝', icon:'👶', baseWillingness:0.35, habit:'impulsive', phrases:['好漂亮呀','想摸摸'] },
-  { id:'viewer_19', name:'专业买手', icon:'📋', baseWillingness:0.9, habit:'steady', phrases:['客户指定款','转手有赚'] },
-  { id:'viewer_20', name:'佛系观众', icon:'😌', baseWillingness:0.5, habit:'bargain', phrases:['随缘随缘','不强求'] },
-  { id:'viewer_21', name:'拆迁户老刘', icon:'🏠', baseWillingness:0.92, habit:'aggressive', phrases:['拆迁款还没花完','任性一把'] },
-  { id:'viewer_22', name:'微商阿芳', icon:'💄', baseWillingness:0.62, habit:'impulsive', phrases:['发朋友圈有排面','代理拿货'] },
-  { id:'viewer_23', name:'矿二代小吴', icon:'⛏️', baseWillingness:0.85, habit:'aggressive', phrases:['我家矿出的','见多识广'] },
-  { id:'viewer_24', name:'退休张姨', icon:'👵', baseWillingness:0.52, habit:'conservative', phrases:['养老金省着花','攒一辈子了'] },
-  { id:'viewer_25', name:'程序员阿杰', icon:'💻', baseWillingness:0.48, habit:'bargain', phrases:['加班费不容易','理性消费'] },
-  { id:'viewer_26', name:'主播大V', icon:'🌟', baseWillingness:0.88, habit:'impulsive', phrases:['直播间家人们冲','带货素材'] },
-  { id:'viewer_27', name:'古玩摊主', icon:'🏺', baseWillingness:0.72, habit:'conservative', phrases:['搭着卖','老物件配翠'] },
-  { id:'viewer_28', name:'富二代小马', icon:'🚗', baseWillingness:0.95, habit:'aggressive', phrases:['零花钱而已','我爸买单'] },
-  { id:'viewer_29', name:'导游王姐', icon:'🗺️', baseWillingness:0.58, habit:'steady', phrases:['带团见过世面','游客爱买'] },
-  { id:'viewer_30', name:'风水大师', icon:'🔮', baseWillingness:0.75, habit:'impulsive', phrases:['此物旺财','开光必备'] },
-  { id:'viewer_31', name:'餐厅老板', icon:'🍜', baseWillingness:0.65, habit:'steady', phrases:['摆店里撑场面','镇店之宝'] },
-  { id:'viewer_32', name:'保险经理', icon:'📑', baseWillingness:0.55, habit:'conservative', phrases:['资产配置','抗通胀'] },
-  { id:'viewer_33', name:'健身教练', icon:'💪', baseWillingness:0.5, habit:'bargain', phrases:['戴手上显档次','蛋白粉钱省点'] },
-  { id:'viewer_34', name:'夜场妈咪', icon:'💃', baseWillingness:0.82, habit:'aggressive', phrases:['姑娘们要撑场面','不差钱'] },
-  { id:'viewer_35', name:'包工头老赵', icon:'🪚', baseWillingness:0.78, habit:'steady', phrases:['工程款下来了','送礼用'] },
-  { id:'viewer_36', name:'留学生小林', icon:'✈️', baseWillingness:0.6, habit:'impulsive', phrases:['带回去送导师','国粹'] },
-  { id:'viewer_37', name:'茶馆老板娘', icon:'🍵', baseWillingness:0.68, habit:'conservative', phrases:['雅间摆件','茶配翠'] },
-  { id:'viewer_38', name:'炒股大哥', icon:'📈', baseWillingness:0.7, habit:'impulsive', phrases:['今天涨停赚的','梭哈翡翠'] },
-  { id:'viewer_39', name:'瑜伽老师', icon:'🧘', baseWillingness:0.52, habit:'bargain', phrases:['能量石','平静心灵'] },
-  { id:'viewer_40', name:'房产中介', icon:'🏢', baseWillingness:0.8, habit:'steady', phrases:['客户看房送伴手礼','高端大气'] },
-  { id:'viewer_41', name:'纹身师阿龙', icon:'🖋️', baseWillingness:0.55, habit:'impulsive', phrases:['艺术感爆棚','收藏癖'] },
-  { id:'viewer_42', name:'律师陈女士', icon:'⚖️', baseWillingness:0.72, habit:'conservative', phrases:['婚前财产','保值'] },
-  { id:'viewer_43', name:'快递小哥', icon:'📦', baseWillingness:0.42, habit:'bargain', phrases:['跑腿赚的辛苦钱','先看看'] },
-  { id:'viewer_44', name:'美容院老板', icon:'💆', baseWillingness:0.76, habit:'steady', phrases:['VIP客户送礼','精致生活'] },
-  { id:'viewer_45', name:'书法爱好者', icon:'🖌️', baseWillingness:0.64, habit:'conservative', phrases:['文房雅玩','书配翠'] },
-  { id:'viewer_46', name:'电竞少年', icon:'🎮', baseWillingness:0.45, habit:'impulsive', phrases:['皮肤钱省下来','二次元配色'] },
-  { id:'viewer_47', name:'花店小妹', icon:'🌸', baseWillingness:0.5, habit:'bargain', phrases:['搭配花束用','小预算'] },
-  { id:'viewer_48', name:'寺庙住持', icon:'⛩️', baseWillingness:0.68, habit:'conservative', phrases:['结缘之物','开光供奉'] },
-  { id:'viewer_49', name:'海外代购', icon:'🛒', baseWillingness:0.9, habit:'aggressive', phrases:['老外抢着要','跨境爆款'] },
-  { id:'viewer_50', name:'榜一大哥', icon:'👑', baseWillingness:0.98, habit:'aggressive', phrases:['全场我包了','给主播面子'] },
+  { id:'viewer_1', name:'翠迷小王', icon:'👤', baseWillingness:0.7, habit:'steady', phrases:['这块我要了','翠翠的必须支持'], favoriteProductTypes:['bracelet','ring_face'], productPremium:0.18 },
+  { id:'viewer_2', name:'玉姐', icon:'👩', baseWillingness:0.65, habit:'conservative', phrases:['再看看吧','好料不等人呐'], favoriteProductTypes:['peace_buckle','pendant_guan_yin'], productPremium:0.22 },
+  { id:'viewer_3', name:'收藏家老林', icon:'👨', baseWillingness:0.8, habit:'aggressive', phrases:['入藏！','传家宝级别'], favoriteProductTypes:['carving_landscape','pendant_dragon','carving_animal'], productPremium:0.25 },
+  { id:'viewer_4', name:'小白新手', icon:'🧑', baseWillingness:0.5, habit:'impulsive', phrases:['冲冲冲！','看不懂但好厉害'], favoriteProductTypes:['bead_string'], productPremium:0.12 },
+  { id:'viewer_5', name:'土豪阿明', icon:'💰', baseWillingness:0.9, habit:'aggressive', phrases:['钱不是问题','包圆了'], favoriteProductTypes:['bracelet','pendant_buddha','carving_misc'], productPremium:0.28 },
+  { id:'viewer_6', name:'行家老陈', icon:'👴', baseWillingness:0.75, habit:'conservative', phrases:['值这个价','老眼光不会错'], favoriteProductTypes:['ring_face','carving_landscape'], productPremium:0.20 },
+  { id:'viewer_7', name:'学生小美', icon:'👧', baseWillingness:0.45, habit:'bargain', phrases:['省点生活费','再便宜点嘛'], favoriteProductTypes:['peace_buckle'], productPremium:0.10 },
+  { id:'viewer_8', name:'珠宝店老板', icon:'🏪', baseWillingness:0.85, habit:'steady', phrases:['进货价合适','店里好卖'], favoriteProductTypes:['bracelet','ring_face','bead_string'], productPremium:0.24 },
+  { id:'viewer_9', name:'路人甲', icon:'🙂', baseWillingness:0.55, habit:'steady', phrases:['凑个热闹','随便看看'], favoriteProductTypes:['carving_misc'], productPremium:0.15 },
+  { id:'viewer_10', name:'网红主播', icon:'📱', baseWillingness:0.7, habit:'impulsive', phrases:['直播间老铁冲！','流量来了'], favoriteProductTypes:['bracelet','pendant_dragon'], productPremium:0.20 },
+  { id:'viewer_11', name:'赌石狂人', icon:'🎲', baseWillingness:0.95, habit:'aggressive', phrases:['梭哈！','不差这一口'], favoriteProductTypes:['carving_animal','ring_face'], productPremium:0.30 },
+  { id:'viewer_12', name:'低调富豪', icon:'🕴️', baseWillingness:0.6, habit:'conservative', phrases:['低调低调','闷声发财'], favoriteProductTypes:['pendant_buddha','carving_landscape'], productPremium:0.22 },
+  { id:'viewer_13', name:'翡翠发烧友', icon:'💎', baseWillingness:0.88, habit:'aggressive', phrases:['我的梦中情翠！','绝了绝了'], favoriteProductTypes:['pendant_guan_yin','pendant_dragon','bracelet'], productPremium:0.26 },
+  { id:'viewer_14', name:'萌新观望', icon:'👀', baseWillingness:0.4, habit:'bargain', phrases:['先学学','不敢乱跟'], favoriteProductTypes:['peace_buckle','bead_string'], productPremium:0.11 },
+  { id:'viewer_15', name:'老主顾阿强', icon:'🤝', baseWillingness:0.82, habit:'steady', phrases:['老熟人了','回头客'], favoriteProductTypes:['pendant_buddha','carving_misc'], productPremium:0.18 },
+  { id:'viewer_16', name:'宝妈翠翠', icon:'👩', baseWillingness:0.58, habit:'conservative', phrases:['给娃攒的','当嫁妆'], favoriteProductTypes:['bracelet','pendant_buddha'], productPremium:0.21 },
+  { id:'viewer_17', name:'企业家老李', icon:'👔', baseWillingness:0.78, habit:'steady', phrases:['送客户正好','面子工程'], favoriteProductTypes:['carving_landscape','pendant_dragon'], productPremium:0.23 },
+  { id:'viewer_18', name:'好奇宝宝', icon:'👶', baseWillingness:0.35, habit:'impulsive', phrases:['好漂亮呀','想摸摸'], favoriteProductTypes:['bead_string','carving_misc'], productPremium:0.14 },
+  { id:'viewer_19', name:'专业买手', icon:'📋', baseWillingness:0.9, habit:'steady', phrases:['客户指定款','转手有赚'], favoriteProductTypes:['ring_face','bracelet','pendant_guan_yin'], productPremium:0.25 },
+  { id:'viewer_20', name:'佛系观众', icon:'😌', baseWillingness:0.5, habit:'bargain', phrases:['随缘随缘','不强求'], favoriteProductTypes:['peace_buckle'], productPremium:0.12 },
+  { id:'viewer_21', name:'拆迁户老刘', icon:'🏠', baseWillingness:0.92, habit:'aggressive', phrases:['拆迁款还没花完','任性一把'], favoriteProductTypes:['bracelet','pendant_buddha','carving_animal'], productPremium:0.28 },
+  { id:'viewer_22', name:'微商阿芳', icon:'💄', baseWillingness:0.62, habit:'impulsive', phrases:['发朋友圈有排面','代理拿货'], favoriteProductTypes:['bracelet','ring_face'], productPremium:0.19 },
+  { id:'viewer_23', name:'矿二代小吴', icon:'⛏️', baseWillingness:0.85, habit:'aggressive', phrases:['我家矿出的','见多识广'], favoriteProductTypes:['carving_landscape','pendant_dragon'], productPremium:0.24 },
+  { id:'viewer_24', name:'退休张姨', icon:'👵', baseWillingness:0.52, habit:'conservative', phrases:['养老金省着花','攒一辈子了'], favoriteProductTypes:['pendant_buddha','peace_buckle'], productPremium:0.18 },
+  { id:'viewer_25', name:'程序员阿杰', icon:'💻', baseWillingness:0.48, habit:'bargain', phrases:['加班费不容易','理性消费'], favoriteProductTypes:['ring_face'], productPremium:0.10 },
+  { id:'viewer_26', name:'主播大V', icon:'🌟', baseWillingness:0.88, habit:'impulsive', phrases:['直播间家人们冲','带货素材'], favoriteProductTypes:['bracelet','pendant_guan_yin'], productPremium:0.22 },
+  { id:'viewer_27', name:'古玩摊主', icon:'🏺', baseWillingness:0.72, habit:'conservative', phrases:['搭着卖','老物件配翠'], favoriteProductTypes:['carving_misc','carving_animal','pendant_dragon'], productPremium:0.23 },
+  { id:'viewer_28', name:'富二代小马', icon:'🚗', baseWillingness:0.95, habit:'aggressive', phrases:['零花钱而已','我爸买单'], favoriteProductTypes:['bracelet','carving_animal'], productPremium:0.30 },
+  { id:'viewer_29', name:'导游王姐', icon:'🗺️', baseWillingness:0.58, habit:'steady', phrases:['带团见过世面','游客爱买'], favoriteProductTypes:['peace_buckle','pendant_buddha'], productPremium:0.16 },
+  { id:'viewer_30', name:'风水大师', icon:'🔮', baseWillingness:0.75, habit:'impulsive', phrases:['此物旺财','开光必备'], favoriteProductTypes:['pendant_buddha','pendant_guan_yin','bead_string'], productPremium:0.25 },
+  { id:'viewer_31', name:'餐厅老板', icon:'🍜', baseWillingness:0.65, habit:'steady', phrases:['摆店里撑场面','镇店之宝'], favoriteProductTypes:['carving_landscape','carving_misc'], productPremium:0.19 },
+  { id:'viewer_32', name:'保险经理', icon:'📑', baseWillingness:0.55, habit:'conservative', phrases:['资产配置','抗通胀'], favoriteProductTypes:['ring_face','bracelet'], productPremium:0.20 },
+  { id:'viewer_33', name:'健身教练', icon:'💪', baseWillingness:0.5, habit:'bargain', phrases:['戴手上显档次','蛋白粉钱省点'], favoriteProductTypes:['bracelet','ring_face'], productPremium:0.13 },
+  { id:'viewer_34', name:'夜场妈咪', icon:'💃', baseWillingness:0.82, habit:'aggressive', phrases:['姑娘们要撑场面','不差钱'], favoriteProductTypes:['bracelet','pendant_dragon'], productPremium:0.27 },
+  { id:'viewer_35', name:'包工头老赵', icon:'🪚', baseWillingness:0.78, habit:'steady', phrases:['工程款下来了','送礼用'], favoriteProductTypes:['carving_animal','pendant_buddha'], productPremium:0.21 },
+  { id:'viewer_36', name:'留学生小林', icon:'✈️', baseWillingness:0.6, habit:'impulsive', phrases:['带回去送导师','国粹'], favoriteProductTypes:['pendant_guan_yin','carving_landscape'], productPremium:0.20 },
+  { id:'viewer_37', name:'茶馆老板娘', icon:'🍵', baseWillingness:0.68, habit:'conservative', phrases:['雅间摆件','茶配翠'], favoriteProductTypes:['carving_misc','peace_buckle'], productPremium:0.17 },
+  { id:'viewer_38', name:'炒股大哥', icon:'📈', baseWillingness:0.7, habit:'impulsive', phrases:['今天涨停赚的','梭哈翡翠'], favoriteProductTypes:['ring_face','carving_animal'], productPremium:0.24 },
+  { id:'viewer_39', name:'瑜伽老师', icon:'🧘', baseWillingness:0.52, habit:'bargain', phrases:['能量石','平静心灵'], favoriteProductTypes:['bead_string','pendant_buddha'], productPremium:0.15 },
+  { id:'viewer_40', name:'房产中介', icon:'🏢', baseWillingness:0.8, habit:'steady', phrases:['客户看房送伴手礼','高端大气'], favoriteProductTypes:['pendant_dragon','carving_landscape'], productPremium:0.23 },
+  { id:'viewer_41', name:'纹身师阿龙', icon:'🖋️', baseWillingness:0.55, habit:'impulsive', phrases:['艺术感爆棚','收藏癖'], favoriteProductTypes:['carving_animal','pendant_dragon'], productPremium:0.22 },
+  { id:'viewer_42', name:'律师陈女士', icon:'⚖️', baseWillingness:0.72, habit:'conservative', phrases:['婚前财产','保值'], favoriteProductTypes:['bracelet','ring_face'], productPremium:0.19 },
+  { id:'viewer_43', name:'快递小哥', icon:'📦', baseWillingness:0.42, habit:'bargain', phrases:['跑腿赚的辛苦钱','先看看'], favoriteProductTypes:['peace_buckle'], productPremium:0.11 },
+  { id:'viewer_44', name:'美容院老板', icon:'💆', baseWillingness:0.76, habit:'steady', phrases:['VIP客户送礼','精致生活'], favoriteProductTypes:['bracelet','pendant_guan_yin','ring_face'], productPremium:0.24 },
+  { id:'viewer_45', name:'书法爱好者', icon:'🖌️', baseWillingness:0.64, habit:'conservative', phrases:['文房雅玩','书配翠'], favoriteProductTypes:['carving_landscape','carving_misc'], productPremium:0.20 },
+  { id:'viewer_46', name:'电竞少年', icon:'🎮', baseWillingness:0.45, habit:'impulsive', phrases:['皮肤钱省下来','二次元配色'], favoriteProductTypes:['pendant_dragon','carving_animal'], productPremium:0.14 },
+  { id:'viewer_47', name:'花店小妹', icon:'🌸', baseWillingness:0.5, habit:'bargain', phrases:['搭配花束用','小预算'], favoriteProductTypes:['bead_string','peace_buckle'], productPremium:0.12 },
+  { id:'viewer_48', name:'寺庙住持', icon:'⛩️', baseWillingness:0.68, habit:'conservative', phrases:['结缘之物','开光供奉'], favoriteProductTypes:['pendant_buddha','pendant_guan_yin','bead_string'], productPremium:0.28 },
+  { id:'viewer_49', name:'海外代购', icon:'🛒', baseWillingness:0.9, habit:'aggressive', phrases:['老外抢着要','跨境爆款'], favoriteProductTypes:['bracelet','peace_buckle','pendant_buddha'], productPremium:0.26 },
+  { id:'viewer_50', name:'榜一大哥', icon:'👑', baseWillingness:0.98, habit:'aggressive', phrases:['全场我包了','给主播面子'], favoriteProductTypes:['pendant_dragon','carving_animal','bracelet'], productPremium:0.30 },
 ]
 
 // 粉丝等级 0=路人 1=铁粉 2=舰长 3=神豪
@@ -512,29 +513,50 @@ function evolveViewerAfterPurchase(viewerStateMap, vid, actualValue, paidPrice, 
 }
 
 // ═══════════════════════════════════════════════════════════
-//  手机私信：对话树 { id, npcId, type, msg, options: [{ text, affinityDelta, nextId? }] }
+//  手机私信：支持多种气泡类型与 actionType
+//  options.actionType: 'TEXT' | 'PAY_MONEY' | 'SEND_ITEM' | 'OPEN_REDPACKET'
+//  msg.bubbleType: 'text' | 'redpacket' | 'transfer' | 'item' | 'system'
 // ═══════════════════════════════════════════════════════════
 const PHONE_MSG_CHANCE = 0.25
-const PHONE_MSG_STARTERS = ['borrow_1','gossip_1','order_1','gossip_2']
+const PHONE_MSG_STARTERS = ['borrow_1', 'gossip_1', 'order_1', 'gossip_2', 'redpacket_1', 'quest_ice_1']
 const PHONE_MSG_POOL = [
-  { id:'borrow_1', npcId:'lao_wang', type:'borrow', msg:'兄弟，手头紧，能借我5000周转一下吗？三天后还你。', options:[
-    { text:'没问题，拿去用', affinityDelta:2, nextId:'borrow_1_ok', reply:'小事一桩！' },
-    { text:'不好意思，最近也紧张', affinityDelta:-1, nextId:null, reply:'理解理解...' },
+  { id: 'borrow_1', npcId: 'lao_wang', type: 'borrow', msg: '兄弟，手头紧，能借我5000周转一下吗？三天后还你。', options: [
+    { text: '没问题，拿去用', actionType: 'PAY_MONEY', amount: 5000, affinityDelta: 2, nextId: 'borrow_1_ok', reply: '小事一桩！' },
+    { text: '不好意思，最近也紧张', actionType: 'TEXT', affinityDelta: -1, nextId: null, reply: '理解理解...' },
   ]},
-  { id:'borrow_1_ok', npcId:'lao_wang', type:'borrow', msg:'太感谢了！三天后一定还！', options:[{ text:'[结束]', affinityDelta:0, nextId:null, reply:'' }]},
-  { id:'gossip_1', npcId:'xiao_mei', type:'gossip', msg:'听说最近缅甸那边矿难，好料要涨价了！你囤货了吗？', options:[
-    { text:'早囤了，谢啦', affinityDelta:1, nextId:null, reply:'哈哈行家！' },
-    { text:'没呢，马上去看看', affinityDelta:0, nextId:null, reply:'快去快去~' },
+  { id: 'borrow_1_ok', npcId: 'lao_wang', type: 'borrow', msg: '太感谢了！三天后一定还！', options: [{ text: '[结束]', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '' }]},
+  { id: 'gossip_1', npcId: 'xiao_mei', type: 'gossip', msg: '听说最近缅甸那边矿难，好料要涨价了！你囤货了吗？', options: [
+    { text: '早囤了，谢啦', actionType: 'TEXT', affinityDelta: 1, nextId: null, reply: '哈哈行家！' },
+    { text: '没呢，马上去看看', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '快去快去~' },
   ]},
-  { id:'order_1', npcId:'master_chen', type:'order', msg:'有一单冰种观音，客户指定要，你那边有货吗？有的话我溢价15%收。', options:[
-    { text:'有，明天带来', affinityDelta:3, nextId:null, reply:'好，等你' },
-    { text:'暂时没有', affinityDelta:0, nextId:null, reply:'有了联系我' },
+  { id: 'order_1', npcId: 'master_chen', type: 'order', msg: '有一单冰种观音，客户指定要，你那边有货吗？有的话我溢价15%收。', options: [
+    { text: '有，明天带来', actionType: 'TEXT', affinityDelta: 3, nextId: null, reply: '好，等你' },
+    { text: '暂时没有', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '有了联系我' },
   ]},
-  { id:'gossip_2', npcId:'influencer', type:'gossip', msg:'最近直播数据下滑，想搞个切石专场，你这边能赞助几块公斤料不？', options:[
-    { text:'可以，送你两块', affinityDelta:2, nextId:null, reply:'够意思！' },
-    { text:'下次吧', affinityDelta:-1, nextId:null, reply:'行吧...' },
+  { id: 'gossip_2', npcId: 'influencer', type: 'gossip', msg: '最近直播数据下滑，想搞个切石专场，你这边能赞助几块公斤料不？', options: [
+    { text: '可以，送你两块', actionType: 'TEXT', affinityDelta: 2, nextId: null, reply: '够意思！' },
+    { text: '下次吧', actionType: 'TEXT', affinityDelta: -1, nextId: null, reply: '行吧...' },
+  ]},
+  { id: 'redpacket_1', npcId: 'xiao_mei', type: 'redpacket', msg: '春节快乐！给你发个红包~', bubbleType: 'redpacket', redpacketAmount: [800, 2500], options: [
+    { text: '领取红包', actionType: 'OPEN_REDPACKET', affinityDelta: 1, nextId: null, reply: '谢谢！' },
+  ]},
+  { id: 'quest_ice_1', npcId: 'master_chen', type: 'quest', msg: '急单！客户要冰种及以上的翡翠成品，你背包里有的话赶紧发我，我按市价两倍收！', questMinGrade: 'purple', options: [
+    { text: '选择饰品发送', actionType: 'SEND_ITEM', affinityDelta: 0, nextId: null, reply: '' },
+    { text: '暂时没有', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '有了联系我' },
+  ]},
+  { id: 'smuggler_1', npcId: 'smuggler', type: 'scam', msg: '兄弟，我手里有一批缅甸过来的极品蒙头料，绝对好货！5万一口价，要的话转账，明天货到。', options: [
+    { text: '转账 50,000', actionType: 'PAY_MONEY', amount: 50000, affinityDelta: 0, nextId: null, reply: '已转，等货。', isSmuggler: true },
+    { text: '算了', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '下次再说' },
   ]},
 ]
+const BANG_YIGE_MSG = {
+  npcId: 'bang_yige',
+  msg: '老板，我是你直播间的榜一大哥，最近看中你手里一块好料，开个价，我全收。',
+  options: [{ text: '好的，改天聊', actionType: 'TEXT', affinityDelta: 0, nextId: null, reply: '改天聊' }],
+}
+const BANG_YIGE_NPC = { id: 'bang_yige', name: '榜一大哥', icon: '👑' }
+const SMUGGLER_NPC = { id: 'smuggler', name: '缅甸走私客', icon: '🕵' }
+const PHONE_SMUGGLER_CHANCE = 0.12
 
 // ═══════════════════════════════════════════════════════════
 //  雕刻老陈：常驻员工，明料→高溢价成品
@@ -562,6 +584,14 @@ const LIVESTREAM_CUT = {
   hypeCutSuccessAdd: 25,
   hypeCutFailSub: 20,
   hypeGiftAdd: 50,
+  // 送福利热度增益：按物品价值档位 几百→1-10 几千→5-30 几万→30-60 十万+→60-150
+  getHypeGainFromValue: (val) => {
+    const v = val || 0
+    if (v >= 100000) return rndInt(60, 150)
+    if (v >= 10000) return rndInt(30, 60)
+    if (v >= 1000) return rndInt(5, 30)
+    return rndInt(1, 10)
+  },
   hypeFullDaysForBangYige: 3,
   hypeFullDaysForBoss: 3,
   tipPerHypeCutSuccess: 800,
@@ -674,6 +704,7 @@ const NPC_LIST = [
     role: '珠宝批发商', icon: '👔', color: '#fbbf24',
     personality: ['稳重', '务实', '守信'],
     affinity: '偏好糯种·花青', affinityGrades: ['waxy','flower'], affinityBonus: 0.15,
+    favoriteProductTypes: ['bracelet','ring_face','bead_string'], productPremium: 0.18,
     desc: '从业三十年老行家，出价不高不低，但从不爽约',
     bonusRange: [0.90, 1.20], minGrade: 'brick',
     detectChance: 0.35, detectPenalty: 3,
@@ -697,6 +728,7 @@ const NPC_LIST = [
     role: '直播带货主播', icon: '📱', color: '#e879f9',
     personality: ['热情', '冲动', '爱颜值'],
     affinity: '偏好花青·冰种', affinityGrades: ['flower','ice'], affinityBonus: 0.20,
+    favoriteProductTypes: ['bracelet','pendant_guan_yin','ring_face'], productPremium: 0.22,
     desc: '粉丝三百万的翡翠主播，专挑颜色漂亮的，价格随心情',
     bonusRange: [0.80, 1.80], minGrade: 'brick',
     detectChance: 0.25, detectPenalty: 4,
@@ -720,6 +752,7 @@ const NPC_LIST = [
     role: '国家级玉雕大师', icon: '🗿', color: '#34d399',
     personality: ['严谨', '挑剔', '匠心'],
     affinity: '偏好冰种·玻璃种', affinityGrades: ['ice','glass'], affinityBonus: 0.25,
+    favoriteProductTypes: ['pendant_guan_yin','carving_landscape','pendant_dragon'], productPremium: 0.25,
     desc: '国家级玉雕大师，眼光极高，只收冰种以上，但出价豪爽',
     bonusRange: [1.10, 2.20], minGrade: 'ice',
     detectChance: 0.90, detectPenalty: 6,
@@ -743,6 +776,7 @@ const NPC_LIST = [
     role: '私人藏家', icon: '🎩', color: '#a78bfa',
     personality: ['博学', '低调', '极品控'],
     affinity: '偏好玻璃种·帝王绿', affinityGrades: ['glass','imperial'], affinityBonus: 0.30,
+    favoriteProductTypes: ['carving_landscape','pendant_dragon','ring_face'], productPremium: 0.28,
     desc: '神秘低调的资深藏家，专收顶级珍品，出手极为阔绰',
     bonusRange: [1.30, 3.00], minGrade: 'ice',
     detectChance: 0.85, detectPenalty: 7,
@@ -766,6 +800,7 @@ const NPC_LIST = [
     role: '土豪商人', icon: '🧳', color: '#fb923c',
     personality: ['豪爽', '随性', '不差钱'],
     affinity: '什么都爱', affinityGrades: ['brick','waxy','flower','ice','glass','imperial'], affinityBonus: 0.10,
+    favoriteProductTypes: ['bracelet','pendant_buddha','carving_animal'], productPremium: 0.15,
     desc: '从不讲价的土豪，出价完全随感觉，偶尔惊喜偶尔坑',
     bonusRange: [0.60, 2.50], minGrade: 'brick',
     detectChance: 0.10, detectPenalty: 2,
@@ -789,6 +824,7 @@ const NPC_LIST = [
     role: '翡翠鉴定专家', icon: '🔬', color: '#22d3ee',
     personality: ['严肃', '专业', '理性'],
     affinity: '偏好精品以上', affinityGrades: ['ice','glass','imperial'], affinityBonus: 0.18,
+    favoriteProductTypes: ['ring_face','carving_landscape','pendant_guan_yin'], productPremium: 0.20,
     desc: '国内顶级翡翠鉴定专家，出价有理有据，高等级溢价明显',
     bonusRange: [1.00, 2.00], minGrade: 'ice',
     detectChance: 0.95, detectPenalty: 8,
@@ -815,6 +851,7 @@ const NPC_LIST = [
     role: '菜市场摊主', icon: '🧅', color: '#86efac',
     personality: ['热心', '爱砍价', '口直心快'],
     affinity: '偏好糯种', affinityGrades: ['waxy'], affinityBonus: 0.08,
+    favoriteProductTypes: ['peace_buckle','carving_misc','bracelet'], productPremium: 0.12,
     desc: '菜市场卖菜兼职收翡翠，不懂行但嗅觉灵，砍价一流',
     bonusRange: [0.50, 1.00], minGrade: 'brick',
     detectChance: 0.15, detectPenalty: 1,
@@ -838,6 +875,7 @@ const NPC_LIST = [
     role: '货运司机', icon: '🚛', color: '#fcd34d',
     personality: ['豪爽', '直率', '爱占便宜'],
     affinity: '偏好糯种·花青', affinityGrades: ['waxy','flower'], affinityBonus: 0.12,
+    favoriteProductTypes: ['carving_animal','pendant_buddha'], productPremium: 0.16,
     desc: '跑了二十年缅甸路线，路上见过不少好料，懂一点但不精',
     bonusRange: [0.70, 1.30], minGrade: 'brick',
     detectChance: 0.30, detectPenalty: 2,
@@ -861,6 +899,7 @@ const NPC_LIST = [
     role: '典当行老板', icon: '🏦', color: '#f87171',
     personality: ['精明', '冷酷', '唯利是图'],
     affinity: '偏好冰种以上', affinityGrades: ['ice','glass','imperial'], affinityBonus: 0.10,
+    favoriteProductTypes: ['ring_face','bracelet','carving_misc'], productPremium: 0.14,
     desc: '一口价，不还价，但量大可谈，每笔都要赚',
     bonusRange: [0.60, 1.50], minGrade: 'brick',
     detectChance: 0.55, detectPenalty: 4,
@@ -884,6 +923,7 @@ const NPC_LIST = [
     role: '翡翠新手买家', icon: '🐣', color: '#a3e635',
     personality: ['天真', '好学', '容易被骗'],
     affinity: '什么都爱', affinityGrades: ['brick','waxy','flower','ice','glass','imperial'], affinityBonus: 0.05,
+    favoriteProductTypes: ['peace_buckle','bead_string'], productPremium: 0.10,
     desc: '刚入行的小白，什么都不懂，是欺负新人的最佳对象',
     bonusRange: [0.80, 1.60], minGrade: 'brick',
     detectChance: 0.05, detectPenalty: 1,
@@ -905,6 +945,7 @@ const NPC_LIST = [
     role: '五星酒店老板娘', icon: '🏨', color: '#f9a8d4',
     personality: ['优雅', '挑剔', '品味高'],
     affinity: '偏好冰种以上', affinityGrades: ['ice','glass','imperial'], affinityBonus: 0.20,
+    favoriteProductTypes: ['carving_landscape','pendant_dragon','ring_face'], productPremium: 0.22,
     desc: '经营连锁酒店，喜欢用翡翠装饰大堂，出手大方',
     bonusRange: [1.00, 2.20], minGrade: 'waxy',
     detectChance: 0.60, detectPenalty: 5,
@@ -928,6 +969,7 @@ const NPC_LIST = [
     role: '专业股民', icon: '📊', color: '#fb923c',
     personality: ['赌徒心态', '高风险偏好', '豪气'],
     affinity: '偏好高波动', affinityGrades: ['brick','imperial'], affinityBonus: 0.15,
+    favoriteProductTypes: ['carving_animal','ring_face','pendant_dragon'], productPremium: 0.18,
     desc: '股市失意后转战翡翠，喜欢搏一把，出价忽高忽低',
     bonusRange: [0.40, 3.00], minGrade: 'brick',
     detectChance: 0.20, detectPenalty: 3,
@@ -951,6 +993,7 @@ const NPC_LIST = [
     role: '风水大师', icon: '🧿', color: '#818cf8',
     personality: ['神秘', '口才好', '爱玄学'],
     affinity: '偏好绿色系', affinityGrades: ['waxy','flower','ice','glass','imperial'], affinityBonus: 0.12,
+    favoriteProductTypes: ['pendant_buddha','pendant_guan_yin','bead_string'], productPremium: 0.20,
     desc: '自称能感受翡翠气场，出价看"缘分"，难以捉摸',
     bonusRange: [0.70, 2.00], minGrade: 'brick',
     detectChance: 0.40, detectPenalty: 3,
@@ -974,6 +1017,7 @@ const NPC_LIST = [
     role: '婚庆公司老板', icon: '💒', color: '#f472b6',
     personality: ['浪漫', '感性', '重仪式感'],
     affinity: '偏好花青·冰种', affinityGrades: ['flower','ice'], affinityBonus: 0.22,
+    favoriteProductTypes: ['bracelet','pendant_buddha','ring_face'], productPremium: 0.24,
     desc: '专为豪门婚礼选配翡翠饰品，出价大方，但要求颜值高',
     bonusRange: [0.90, 2.00], minGrade: 'waxy',
     detectChance: 0.50, detectPenalty: 4,
@@ -999,6 +1043,7 @@ const NPC_LIST = [
     role: '博物馆馆长', icon: '🏛️', color: '#93c5fd',
     personality: ['严肃', '历史控', '眼光极高'],
     affinity: '偏好极品珍稀', affinityGrades: ['glass','imperial'], affinityBonus: 0.35,
+    favoriteProductTypes: ['carving_landscape','pendant_dragon','pendant_guan_yin'], productPremium: 0.30,
     desc: '只收博物馆级别的珍品，出手及其阔绰但极为挑剔',
     bonusRange: [1.50, 4.00], minGrade: 'ice',
     detectChance: 0.88, detectPenalty: 8,
@@ -1022,6 +1067,7 @@ const NPC_LIST = [
     role: '时尚博主', icon: '📸', color: '#e879f9',
     personality: ['潮流', '多变', '看流量'],
     affinity: '偏好颜值系', affinityGrades: ['flower','ice','glass'], affinityBonus: 0.18,
+    favoriteProductTypes: ['bracelet','pendant_dragon','ring_face'], productPremium: 0.21,
     desc: '只要流量高的翡翠，出价看心情，但粉丝效应带来高溢价',
     bonusRange: [0.70, 2.50], minGrade: 'flower',
     detectChance: 0.30, detectPenalty: 3,
@@ -1045,6 +1091,7 @@ const NPC_LIST = [
     role: '寺庙主持', icon: '🙏', color: '#fde68a',
     personality: ['淡泊', '慈悲', '看缘分'],
     affinity: '偏好绿色系', affinityGrades: ['waxy','flower','ice'], affinityBonus: 0.15,
+    favoriteProductTypes: ['pendant_buddha','pendant_guan_yin','bead_string'], productPremium: 0.25,
     desc: '寺庙主持，以缘分定价，出价不高但心诚，遇好货豁然开朗',
     bonusRange: [0.80, 1.60], minGrade: 'brick',
     detectChance: 0.35, detectPenalty: 2,
@@ -1070,6 +1117,7 @@ const NPC_LIST = [
     role: '香港珠宝商', icon: '🌃', color: '#38bdf8',
     personality: ['精明', '国际视野', '追求极品'],
     affinity: '偏好玻璃种·帝王绿', affinityGrades: ['glass','imperial'], affinityBonus: 0.28,
+    favoriteProductTypes: ['bracelet','ring_face','pendant_guan_yin'], productPremium: 0.26,
     desc: '香港老字号珠宝行，国际行情了如指掌，溢价高但要求极严',
     bonusRange: [1.20, 2.80], minGrade: 'ice',
     detectChance: 0.80, detectPenalty: 6,
@@ -1093,6 +1141,7 @@ const NPC_LIST = [
     role: '台湾富商太太', icon: '🌺', color: '#fb7185',
     personality: ['感性', '豪爽', '重感情'],
     affinity: '偏好花青·冰种', affinityGrades: ['flower','ice'], affinityBonus: 0.20,
+    favoriteProductTypes: ['bracelet','pendant_buddha','pendant_guan_yin'], productPremium: 0.23,
     desc: '台湾富商太太，感情用事，遇到喜欢的出价极高',
     bonusRange: [0.85, 2.40], minGrade: 'waxy',
     detectChance: 0.35, detectPenalty: 3,
@@ -1116,6 +1165,7 @@ const NPC_LIST = [
     role: '缅甸翡翠掮客', icon: '🌴', color: '#4ade80',
     personality: ['神秘', '信息灵通', '见多识广'],
     affinity: '偏好精品原石', affinityGrades: ['ice','glass','imperial'], affinityBonus: 0.22,
+    favoriteProductTypes: ['ring_face','carving_animal','carving_landscape'], productPremium: 0.20,
     desc: '直接对接缅甸矿区，能识别真假，出价公道但难以捉摸',
     bonusRange: [0.95, 2.10], minGrade: 'brick',
     detectChance: 0.70, detectPenalty: 5,
@@ -1141,6 +1191,7 @@ const NPC_LIST = [
     role: '富二代', icon: '🏎️', color: '#fbbf24',
     personality: ['任性', '冲动', '不差钱'],
     affinity: '什么都爱', affinityGrades: ['brick','waxy','flower','ice','glass','imperial'], affinityBonus: 0.08,
+    favoriteProductTypes: ['bracelet','pendant_dragon','carving_animal'], productPremium: 0.18,
     desc: '拿父母的钱买翡翠，完全不懂行，但有时候出价惊人',
     bonusRange: [0.50, 3.50], minGrade: 'brick',
     detectChance: 0.08, detectPenalty: 1,
@@ -1164,6 +1215,7 @@ const NPC_LIST = [
     role: '退休刑警', icon: '🔐', color: '#94a3b8',
     personality: ['老辣', '多疑', '眼光精准'],
     affinity: '偏好冰种以上', affinityGrades: ['ice','glass','imperial'], affinityBonus: 0.15,
+    favoriteProductTypes: ['ring_face','carving_landscape'], productPremium: 0.16,
     desc: '当过刑警，见过太多骗局，对砖头料极度敏感',
     bonusRange: [0.90, 1.80], minGrade: 'brick',
     detectChance: 0.85, detectPenalty: 6,
@@ -1187,6 +1239,7 @@ const NPC_LIST = [
     role: '医院院长太太', icon: '💐', color: '#c084fc',
     personality: ['高贵', '讲究', '爱攀比'],
     affinity: '偏好冰种·玻璃种', affinityGrades: ['ice','glass'], affinityBonus: 0.25,
+    favoriteProductTypes: ['bracelet','pendant_guan_yin','ring_face'], productPremium: 0.26,
     desc: '医院院长太太，购物标准就是"比谁的贵"，出价豪气',
     bonusRange: [1.10, 2.50], minGrade: 'waxy',
     detectChance: 0.55, detectPenalty: 4,
@@ -1210,6 +1263,7 @@ const NPC_LIST = [
     role: '澳门老赌客', icon: '🎲', color: '#f59e0b',
     personality: ['嗜赌', '迷信', '图个彩头'],
     affinity: '偏好帝王绿', affinityGrades: ['imperial','glass'], affinityBonus: 0.25,
+    favoriteProductTypes: ['carving_animal','pendant_dragon','ring_face'], productPremium: 0.22,
     desc: '澳门老赌客，相信翡翠带来好运，出价随运气，忽高忽低',
     bonusRange: [0.30, 4.00], minGrade: 'brick',
     detectChance: 0.15, detectPenalty: 2,
@@ -1233,6 +1287,7 @@ const NPC_LIST = [
     role: '古玩行商人', icon: '🏺', color: '#d97706',
     personality: ['老练', '见多识广', '难以蒙骗'],
     affinity: '偏好老料·精品', affinityGrades: ['glass','imperial'], affinityBonus: 0.28,
+    favoriteProductTypes: ['carving_misc','carving_landscape','pendant_guan_yin'], productPremium: 0.24,
     desc: '古玩行跨界翡翠，经验丰富，出价保守但稳，对砖头料极敏感',
     bonusRange: [0.95, 2.20], minGrade: 'brick',
     detectChance: 0.75, detectPenalty: 5,
@@ -1398,6 +1453,23 @@ const CUT_RESULTS = [
   { id:'imperial', name:'帝王绿',   grade:'天价', emoji:'👑', desc:'帝王绿，万里挑一！',   multiplier:24.0, baseProbability:0.01, gradientFrom:'#052e16', gradientTo:'#14532d', textColor:'#86efac', badgeBg:'#052e16', badgeText:'#bbf7d0', borderColor:'#22c55e', message:'🎉👑 帝王绿！一夜暴富！', sparkle:true  },
 ]
 const CUT_MAP = Object.fromEntries(CUT_RESULTS.map(r => [r.id, r]))
+
+function generateSmugglerPremiumStone() {
+  const pool = ROUGH_STONE_POOL.filter(s => ['rare', 'epic', 'legendary'].includes(s.quality))
+  const s = pick(pool.length ? pool : ROUGH_STONE_POOL)
+  const sz = generateSize()
+  const price = Math.round(s.basePrice * sz.priceMulti * rnd(0.9, 1.2) / 100) * 100
+  const goodResults = CUT_RESULTS.filter(r => ['ice', 'glass', 'imperial'].includes(r.id))
+  const cutResult = pick(goodResults)
+  return {
+    id: Date.now() + Math.random(),
+    ...s,
+    sizeData: sz,
+    price,
+    cutResult: { ...cutResult, multiplier: cutResult.multiplier * rnd(0.95, 1.1) },
+    channel: 'smuggler',
+  }
+}
 
 // 切石结果随机台词（不同 NPC 随机出字）
 const CUT_PHRASES = {
@@ -1597,6 +1669,7 @@ function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel,
   const blackFanIds = new Set(participants.filter(v => (viewerState[v.id]?.walletStatus) === 'black').map(v => v.id))
   const bids = []
   const active = new Map()
+  const productTypeId = accessory?.typeId
   participants.forEach(v => {
     const vs = viewerState[v.id] || {}
     const fav = (viewerFavorability[v.id] || 0) + viewerFavorabilityBonus
@@ -1606,8 +1679,9 @@ function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel,
     if (blackFanIds.has(v.id)) will *= 0.6
     let walletMult = (vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1
     if (isRivalry && rivalPair.some(r => r.id === v.id)) { will *= 3; walletMult *= 3 }
-    const init = blackFanIds.has(v.id) ? Math.round(cutVal * 0.2 / 100) * 100 : Math.round(cutVal * rnd(0.7, 0.9) / 100) * 100
-    active.set(v.id, { viewer: v, bid: Math.max(init, cutVal * 0.2), will, fanLevel: vs.fanLevel ?? 0, walletStatus: vs.walletStatus || 'normal', walletMult })
+    const productMult = (productTypeId && v.favoriteProductTypes?.includes(productTypeId) && v.productPremium) ? (1 + v.productPremium) : 1
+    const init = blackFanIds.has(v.id) ? Math.round(cutVal * 0.2 / 100) * 100 : Math.round(cutVal * rnd(0.7, 0.9) * productMult / 100) * 100
+    active.set(v.id, { viewer: v, bid: Math.max(init, cutVal * 0.2), will, fanLevel: vs.fanLevel ?? 0, walletStatus: vs.walletStatus || 'normal', walletMult, productMult })
   })
   const opening = [...active.entries()].sort((a, b) => b[1].bid - a[1].bid).slice(0, 3)
   opening.forEach(([vid, { viewer, bid }], i) => {
@@ -1624,7 +1698,7 @@ function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel,
     const leader = entries.reduce((a, b) => a[1].bid > b[1].bid ? a : b)
     const challengers = entries.filter(([vid]) => vid !== leader[0]).sort((a, b) => b[1].will - a[1].will)
     let raised = false
-    for (const [vid, { viewer, bid, will, fanLevel }] of challengers) {
+    for (const [vid, { viewer, bid, will, fanLevel, walletMult: wm0, productMult: pm = 1 }] of challengers) {
       const bandwagonBoost = bandwagonRoundsLeft > 0 ? 1.1 : 1
       const effWill = will * bandwagonBoost
       const h = viewer.habit || 'steady'
@@ -1633,11 +1707,11 @@ function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel,
       if (Math.random() < raiseChance) {
         const step = h === 'aggressive' ? rnd(0.05, 0.15) : h === 'impulsive' ? rnd(0.04, 0.12) : rnd(0.03, 0.08)
         const vs = viewerState[vid] || {}
-        const wm = active.get(vid)?.walletMult ?? ((vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1)
+        const wm = wm0 ?? active.get(vid)?.walletMult ?? ((vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1)
         const newBid = Math.round((leader[1].bid + cutVal * step) / 100) * 100
-        const maxBid = blackFanIds.has(vid) ? Math.round(cutVal * 0.25 / 100) * 100 : Math.round(cutVal * effWill * levelBonus * wm * rnd(1.3, 1.8) / 100) * 100
+        const maxBid = blackFanIds.has(vid) ? Math.round(cutVal * 0.25 / 100) * 100 : Math.round(cutVal * effWill * levelBonus * wm * rnd(1.3, 1.8) * pm / 100) * 100
         if (newBid > leader[1].bid && newBid <= maxBid) {
-          active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult: wm })
+          active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult: wm, productMult: pm })
           bids.push({ round: r + 1, viewer, bid: newBid, phrase: pick(viewer.phrases || ['跟']) })
           raised = true
           if (fanLevel >= 2) bandwagonRoundsLeft = 2
@@ -1646,14 +1720,14 @@ function runLiveAuctionAccessory(accessory, viewerFavorability, liveStreamLevel,
       }
     }
     if (!raised && challengers.length > 0 && Math.random() < 0.6) {
-      const [vid, { viewer, bid, will, fanLevel, walletMult: wm }] = pick(challengers)
+      const [vid, { viewer, bid, will, fanLevel, walletMult: wm, productMult: pm = 1 }] = pick(challengers)
       const vs = viewerState[vid] || {}
       const walletMult = wm ?? ((vs.walletStatus === 'rich' || vs.fanLevel === 3) ? 1.5 : 1)
       const effWill = will * (bandwagonRoundsLeft > 0 ? 1.1 : 1)
       const newBid = Math.round((leader[1].bid + cutVal * rnd(0.02, 0.08)) / 100) * 100
-      const maxBid = blackFanIds.has(vid) ? cutVal * 0.25 : cutVal * effWill * levelBonus * walletMult * 1.5
+      const maxBid = blackFanIds.has(vid) ? cutVal * 0.25 : cutVal * effWill * levelBonus * walletMult * 1.5 * pm
       if (newBid <= maxBid) {
-        active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult })
+        active.set(vid, { viewer, bid: newBid, will: effWill, fanLevel, walletStatus: vs.walletStatus || 'normal', walletMult, productMult: pm })
         bids.push({ round: r + 1, viewer, bid: newBid, phrase: pick(viewer.phrases || ['再加一点']) })
         if (fanLevel >= 2) bandwagonRoundsLeft = 2
       }
@@ -1786,13 +1860,17 @@ function tryGenerateCollectible(cutResultId, stoneCost) {
 }
 
 // NPC 报价：基础 bonusRange 随机，再乘技能树 offerMultiplier，再加相性加成
-function getNpcOffer(npc, baseValue, cutResultId, npcDeals) {
+// productTypeId: 饰品品类，若 NPC 喜爱该题材则额外加 productPremium(10-30%)
+function getNpcOffer(npc, baseValue, cutResultId, npcDeals, productTypeId) {
   const lv = getNpcLevel(npcDeals)
   const mod = getNpcOfferModifiers(npc, lv)
   const mult = mod.offerMultiplier ?? 1
   let bonus = rnd(npc.bonusRange[0], npc.bonusRange[1]) * mult
   if (npc.affinityGrades.includes(cutResultId)) {
     bonus += npc.affinityBonus
+  }
+  if (productTypeId && npc.favoriteProductTypes?.includes(productTypeId) && npc.productPremium) {
+    bonus += npc.productPremium
   }
   return Math.round(baseValue * bonus / 100) * 100
 }
@@ -2421,10 +2499,11 @@ function NpcAccessoryModal({ accessory, npcRelations, onSellToNpc, onClose, npcO
     availableNpcs.forEach(npc => {
       const deals = npcRelations[npc.id] || 0
       m[npc.id] = {
-        offer: getNpcOffer(npc, baseValue, cutResultId, deals),
+        offer: getNpcOffer(npc, baseValue, cutResultId, deals, accessory.typeId),
         deals,
         lv: getNpcLevel(deals),
         isAffinity: npc.affinityGrades.includes(cutResultId),
+        isProductAffinity: npc.favoriteProductTypes?.includes(accessory.typeId),
         dialog: (() => {
           const lv = getNpcLevel(deals)
           const g = npc.dialogs[Math.min(lv, npc.dialogs.length - 1)]
@@ -2456,7 +2535,8 @@ function NpcAccessoryModal({ accessory, npcRelations, onSellToNpc, onClose, npcO
               const isSelected = selectedId === npc.id
               return (
                 <div key={npc.id} onClick={()=>setSelectedId(isSelected ? null : npc.id)}
-                  style={{ background: isSelected ? `linear-gradient(135deg,${npc.color}22,${npc.color}11)` : 'rgba(10,18,32,.85)', border:`1.5px solid ${isSelected ? npc.color : `${npc.color}33`}`, borderRadius:14, padding:'10px 8px', cursor:'pointer', textAlign:'center' }}>
+                  style={{ background: isSelected ? `linear-gradient(135deg,${npc.color}22,${npc.color}11)` : 'rgba(10,18,32,.85)', border:`1.5px solid ${isSelected ? npc.color : `${npc.color}33`}`, borderRadius:14, padding:'10px 8px', cursor:'pointer', textAlign:'center', position:'relative' }}>
+                  {d.isProductAffinity && <span style={{ position:'absolute', top:4, right:4, fontSize:9, color:'#4ade80', background:'rgba(74,222,128,.2)', padding:'1px 4px', borderRadius:4 }}>题材+</span>}
                   <div style={{ width:44, height:44, borderRadius:12, margin:'0 auto 6px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, background:`linear-gradient(135deg,${npc.color}33,${npc.color}11)`, border:`2px solid ${npc.color}44` }}>{npc.icon}</div>
                   <p style={{ fontWeight:800, fontSize:11, color: npc.color, margin:'0 0 2px' }}>{npc.name}</p>
                   <p style={{ color:'#fbbf24', fontWeight:800, fontSize:13, margin:0 }}>¥{effOffer.toLocaleString()}</p>
@@ -3935,21 +4015,133 @@ function WorkbenchLogModal({ stones, onClose, onCut, onSell, onNpc, onCollect, o
 }
 
 // ═══════════════════════════════════════════════════════════
-//  子组件：手机私信面板（仿微信聊天气泡）
+//  子组件：手机私信面板（仿微信，支持红包/转账/物品/系统气泡）
 // ═══════════════════════════════════════════════════════════
-function PhonePanel({ messages, npcList, onReply, onClose }) {
+function PhoneBubble({ m, isPlayer, onRedpacketOpen, onReply, redpacketFlipping }) {
+  if (m.bubbleType === 'redpacket') {
+    const opened = m.redpacketOpened
+    return (
+      <div className="flex flex-col items-start max-w-[80%]" style={{ alignSelf: 'flex-start' }}>
+        <div
+          className={`rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-[1.02] active:scale-95 ${redpacketFlipping === m.id ? 'animate-redpacket-flip' : ''}`}
+          style={{
+            background: 'linear-gradient(135deg,#e85c27,#f4a261)',
+            boxShadow: '0 2px 8px rgba(232,92,39,.4)',
+            padding: '12px 16px',
+            minWidth: 140,
+            borderTopLeftRadius: 0,
+          }}
+          onClick={() => !opened && m.options?.[0]?.actionType === 'OPEN_REDPACKET' && onRedpacketOpen(m)}
+        >
+          <div className="flex items-center gap-2 text-white font-semibold text-sm">
+            <span>🧧</span>
+            <span>{opened ? '已领取' : '微信红包'}</span>
+          </div>
+          {opened ? (
+            <p className="text-white/90 text-xs mt-1">获得 ¥{(m.redpacketAmountReceived||0).toLocaleString()}</p>
+          ) : (
+            <p className="text-white/80 text-xs mt-1">点击领取</p>
+          )}
+        </div>
+      </div>
+    )
+  }
+  if (m.bubbleType === 'transfer' || (m.isPlayer && m.transferAmount)) {
+    return (
+      <div className="flex flex-col items-end max-w-[80%]" style={{ alignSelf: 'flex-end' }}>
+        <div
+          className="rounded-lg overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg,#34c759,#30d158)',
+            boxShadow: '0 2px 8px rgba(52,199,89,.35)',
+            padding: '10px 14px',
+            borderTopRightRadius: 0,
+          }}
+        >
+          <p className="text-white font-medium text-sm">已转账</p>
+          <p className="text-white/95 text-base font-bold">¥{(m.transferAmount||0).toLocaleString()}</p>
+        </div>
+      </div>
+    )
+  }
+  if (m.bubbleType === 'item' && m.itemData) {
+    const item = m.itemData
+    const isStone = item.cutResult
+    return (
+      <div className="flex flex-col max-w-[85%]" style={{ alignSelf: m.isPlayer ? 'flex-end' : 'flex-start' }}>
+        <div
+          className="rounded-xl overflow-hidden border border-slate-300/60"
+          style={{
+            background: '#fff',
+            boxShadow: '0 2px 10px rgba(0,0,0,.1)',
+            padding: 12,
+            maxWidth: 200,
+          }}
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <span style={{ fontSize: 28 }}>{item.emoji || '💎'}</span>
+            <span className="font-semibold text-slate-800 text-sm truncate">{item.name}</span>
+          </div>
+          {isStone ? (
+            <p className="text-xs text-slate-600">¥{Math.round((item.price || 0) * (item.cutResult?.multiplier || 1)).toLocaleString()}</p>
+          ) : (
+            <p className="text-xs text-slate-600">¥{(item.value||0).toLocaleString()}</p>
+          )}
+        </div>
+      </div>
+    )
+  }
+  if (m.bubbleType === 'system') {
+    return (
+      <div className="flex justify-center w-full py-2">
+        <span className="text-xs text-slate-500 bg-slate-200/80 px-3 py-1 rounded-full">{m.msg}</span>
+      </div>
+    )
+  }
+  if (!m.isPlayer) {
+    return (
+      <div style={{ maxWidth:'80%', padding:'10px 14px', background:'#fff', borderRadius:8, borderTopLeftRadius:0, boxShadow:'0 1px 3px rgba(0,0,0,.1)', alignSelf:'flex-start' }}>
+        <p style={{ margin:0, fontSize:14, color:'#1f2937', lineHeight:1.5 }}>{m.msg}</p>
+      </div>
+    )
+  }
+  return (
+    <div style={{ maxWidth:'80%', padding:'10px 14px', background:'#95ec69', borderRadius:8, borderTopRightRadius:0, boxShadow:'0 1px 3px rgba(0,0,0,.08)', alignSelf:'flex-end' }}>
+      <p style={{ margin:0, fontSize:14, color:'#1f2937', lineHeight:1.5 }}>{m.reply || m.msg}</p>
+    </div>
+  )
+}
+
+function PhonePanel({ messages, npcList, onReply, onRedpacketOpen, onClose }) {
   const [activeChat, setActiveChat] = useState(null)
+  const [redpacketFlipping, setRedpacketFlipping] = useState(null)
   const msgsByNpc = {}
   messages.forEach(m => {
     const key = m.npcId
     if (!msgsByNpc[key]) msgsByNpc[key] = []
     msgsByNpc[key].push(m)
   })
-  const chats = Object.entries(msgsByNpc)
+  const chats = Object.entries(msgsByNpc).sort((a, b) => {
+    const lastA = a[1][a[1].length - 1]?.id ?? 0
+    const lastB = b[1][b[1].length - 1]?.id ?? 0
+    return lastB - lastA
+  })
   const current = activeChat ? msgsByNpc[activeChat] : (chats[0] ? msgsByNpc[chats[0][0]] : null)
   const npcId = current ? current[0]?.npcId : null
   const npc = npcId ? npcList.find(n => n.id === npcId) : null
   const lastMsg = current ? current[current.length - 1] : null
+
+  const handleOptionClick = (msg, opt) => {
+    if (opt.actionType === 'OPEN_REDPACKET') {
+      setRedpacketFlipping(msg.id)
+      setTimeout(() => {
+        onRedpacketOpen(msg)
+        setRedpacketFlipping(null)
+      }, 400)
+      return
+    }
+    onReply(msg, opt)
+  }
 
   return (
     <div style={{ position:'fixed', inset:0, zIndex:500, background:'rgba(0,0,0,.9)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
@@ -3976,22 +4168,13 @@ function PhonePanel({ messages, npcList, onReply, onClose }) {
             <div style={{ flex:1, overflowY:'auto', padding:16, display:'flex', flexDirection:'column', gap:12, background:'#e5e7eb' }}>
               {current?.map((m, i) => (
                 <div key={i} style={{ display:'flex', flexDirection:'column', alignItems:m.isPlayer ? 'flex-end' : 'flex-start', gap:4 }}>
-                  {!m.isPlayer && (
-                    <div style={{ maxWidth:'80%', padding:'10px 14px', background:'#fff', borderRadius:4, borderTopLeftRadius:0, boxShadow:'0 1px 2px rgba(0,0,0,.08)', alignSelf:'flex-start' }}>
-                      <p style={{ margin:0, fontSize:14, color:'#1f2937', lineHeight:1.5 }}>{m.msg}</p>
-                    </div>
-                  )}
-                  {m.isPlayer && m.reply && (
-                    <div style={{ maxWidth:'80%', padding:'10px 14px', background:'#95ec69', borderRadius:4, borderTopRightRadius:0, boxShadow:'0 1px 2px rgba(0,0,0,.08)', alignSelf:'flex-end' }}>
-                      <p style={{ margin:0, fontSize:14, color:'#1f2937', lineHeight:1.5 }}>{m.reply}</p>
-                    </div>
-                  )}
+                  <PhoneBubble m={m} isPlayer={m.isPlayer} onRedpacketOpen={onRedpacketOpen} onReply={onReply} redpacketFlipping={redpacketFlipping} />
                 </div>
               ))}
               {lastMsg && !lastMsg.isPlayer && lastMsg.options?.length > 0 && (
                 <div style={{ display:'flex', flexDirection:'column', gap:8, marginTop:8 }}>
                   {lastMsg.options.map((opt, j) => (
-                    <button key={j} onClick={()=>onReply(lastMsg, opt)}
+                    <button key={j} onClick={()=>handleOptionClick(lastMsg, opt)}
                       style={{ alignSelf:'flex-end', padding:'8px 16px', background:'#07c160', border:'none', borderRadius:8, color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer' }}>
                       {opt.text}
                     </button>
@@ -4006,18 +4189,52 @@ function PhonePanel({ messages, npcList, onReply, onClose }) {
   )
 }
 
+function PhoneItemPickerModal({ target, jadeAccessories, onSelect, onClose }) {
+  if (!target) return null
+  const gradeOrder = ['white', 'green', 'blue', 'purple', 'orange', 'red']
+  const minIdx = gradeOrder.indexOf(target.questMinGrade || 'purple')
+  const eligible = jadeAccessories.filter(a => gradeOrder.indexOf(a.grade || 'white') >= minIdx)
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:510, background:'rgba(0,0,0,.7)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'#fff', borderRadius:16, padding:20, maxWidth:360, width:'100%', maxHeight:'70vh', overflowY:'auto', boxShadow:'0 20px 50px rgba(0,0,0,.3)' }}>
+        <h3 style={{ margin:'0 0 12px', fontSize:16, color:'#1f2937' }}>选择冰种及以上饰品发送</h3>
+        {eligible.length === 0 ? (
+          <p style={{ color:'#64748b', fontSize:14 }}>背包暂无符合条件的饰品（需冰种/玻璃/帝王）</p>
+        ) : (
+          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            {eligible.map(a => (
+              <button key={a.id} onClick={()=>onSelect(a.id)} style={{
+                display:'flex', alignItems:'center', gap:12, padding:12, background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:12, cursor:'pointer', textAlign:'left',
+              }}>
+                <span style={{ fontSize:28 }}>{a.emoji}</span>
+                <div style={{ flex:1 }}>
+                  <p style={{ margin:0, fontWeight:600, color:'#334155' }}>{a.name}</p>
+                  <p style={{ margin:0, fontSize:12, color:'#64748b' }}>¥{a.value?.toLocaleString()}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+        <button onClick={onClose} style={{ marginTop:16, width:'100%', padding:10, background:'#64748b', border:'none', borderRadius:8, color:'#fff', fontSize:14, cursor:'pointer' }}>取消</button>
+      </div>
+    </div>
+  )
+}
+
 // ═══════════════════════════════════════════════════════════
 //  子组件：专属雕刻大师面板（艺术家脾气与灵感）
 // ═══════════════════════════════════════════════════════════
-function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClose, remainingOpsToday = 0, daySpeed = 3 }) {
+function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClose, remainingOpsToday = 0, daySpeed = 3, artistInteractCycleCount = 0 }) {
   const ms = masterState || {}
+  const needOpsForNext = artistInteractCycleCount === 2  // 下次互动将消耗1行动
+  const opsBlocked = needOpsForNext && remainingOpsToday <= 0
   return (
     <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:450, background:'rgba(0,0,0,.85)', display:'flex', alignItems:'center', justifyContent:'center', padding:24, cursor:'default' }}>
       <div onClick={e=>e.stopPropagation()} style={{ position:'relative', background:'linear-gradient(160deg,#0f172a,#1e1b4b)', border:'1px solid rgba(139,92,246,.4)', borderRadius:20, padding:24, maxWidth:520, width:'100%', maxHeight:'90vh', overflowY:'auto' }}>
         <button onClick={onClose} aria-label="关闭" style={{ position:'absolute', top:12, right:12, width:32, height:32, background:'rgba(71,85,105,.6)', border:'1px solid rgba(148,163,184,.4)', borderRadius:8, color:'#94a3b8', fontSize:16, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1 }}>×</button>
         <h3 style={{ margin:'0 0 8px', paddingRight:36, color:'#e9d5ff' }}>🔨 专属雕刻大师</h3>
         <p style={{ color:'#94a3b8', fontSize:12, marginBottom:8 }}>请在工作台选择已切原石，点击「送雕刻大师盘货」选择大师</p>
-        <p style={{ color:'#a78bfa', fontSize:11, marginBottom:16 }}>互动消耗每日操作次数（今日剩余 {remainingOpsToday}/{daySpeed}）· 点击界面外可关闭</p>
+        <p style={{ color:'#a78bfa', fontSize:11, marginBottom:16 }}>每3次互动消耗1次行动（今日剩余 {remainingOpsToday}/{daySpeed}，本周期第{artistInteractCycleCount + 1}/3次）· 点击界面外可关闭</p>
         {ARTIST_MASTERS.map(m => {
           const s = ms[m.id] || {}
           const insp = s.inspiration ?? 50
@@ -4051,8 +4268,8 @@ function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClos
               </div>
               {(s.level ?? 1) < 5 && (() => {
                 const lv = s.level ?? 1
-                const expForLevel = [0, 2, 4, 7, 11]
-                const expNeeded = expForLevel[lv] ?? 11
+                const expForLevel = [0, 6, 15, 30, 55]
+                const expNeeded = expForLevel[lv] ?? 55
                 const expCur = s.exp ?? 0
                 const expPct = expNeeded > 0 ? Math.round((expCur / expNeeded) * 100) : 0
                 return (
@@ -4068,80 +4285,80 @@ function ArtistMastersPanel({ masterState, money, currentDay, onInteract, onClos
               <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
                 {m.id === 'chu_shi_weng' && (
                   <>
-                    <button onClick={()=>onInteract(m.id, 'dahongpao')} disabled={remainingOpsToday <= 0 || money < 25000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'dahongpao')} disabled={opsBlocked || money < 25000 || insp >= 100}
                       style={{ padding:'6px 12px', background: money >= 25000 && insp < 100 ? 'rgba(127,29,29,.6)' : '#334155', border:'1px solid rgba(180,83,9,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 25000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🍵 送极品大红袍</button>
-                    <button onClick={()=>onInteract(m.id, 'weiqi')} disabled={remainingOpsToday <= 0 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'weiqi')} disabled={opsBlocked || insp >= 100}
                       style={{ padding:'6px 12px', background: insp < 100 ? 'rgba(30,58,138,.5)' : '#334155', border:'1px solid rgba(59,130,246,.4)', borderRadius:8, color:'#93c5fd', fontSize:11, cursor: insp < 100 ? 'pointer' : 'not-allowed' }}>♟ 陪下围棋</button>
                   </>
                 )}
                 {m.id === 'gui_shou_a9' && (
                   <>
-                    <button onClick={()=>onInteract(m.id, 'qingba')} disabled={remainingOpsToday <= 0 || money < 12000 || sick}
+                    <button onClick={()=>onInteract(m.id, 'qingba')} disabled={opsBlocked || money < 12000 || sick}
                       style={{ padding:'6px 12px', background: money >= 12000 && !sick ? 'rgba(88,28,135,.5)' : '#334155', border:'1px solid rgba(192,132,252,.4)', borderRadius:8, color:'#e9d5ff', fontSize:11, cursor: money >= 12000 && !sick ? 'pointer' : 'not-allowed' }}>🍸 带去清吧</button>
-                    <button onClick={()=>onInteract(m.id, 'baijiu')} disabled={remainingOpsToday <= 0 || sick}
+                    <button onClick={()=>onInteract(m.id, 'baijiu')} disabled={opsBlocked || sick}
                       style={{ padding:'6px 12px', background: !sick ? 'rgba(127,29,29,.6)' : '#334155', border:'1px solid rgba(239,68,68,.4)', borderRadius:8, color:'#fecaca', fontSize:11, cursor: !sick ? 'pointer' : 'not-allowed' }}>🍶 灌白酒(100%灵感，次日病3天)</button>
                   </>
                 )}
                 {m.id === 'qiao_niang_jinyan' && (
                   <>
-                    <button onClick={()=>onInteract(m.id, 'hongbao')} disabled={remainingOpsToday <= 0 || money < 50000}
-                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 50000 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: remainingOpsToday > 0 && money >= 50000 ? 'pointer' : 'not-allowed' }}>🧧 发大红包 ¥50,000</button>
-                    <button onClick={()=>onInteract(m.id, 'xiaohongbao')} disabled={remainingOpsToday <= 0 || money < 15000}
-                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 15000 ? 'rgba(34,197,94,.3)' : '#334155', border:'1px solid rgba(34,197,94,.4)', borderRadius:8, color:'#86efac', fontSize:11, cursor: remainingOpsToday > 0 && money >= 15000 ? 'pointer' : 'not-allowed' }}>🧧 小红包 ¥15,000</button>
+                    <button onClick={()=>onInteract(m.id, 'hongbao')} disabled={opsBlocked || money < 50000}
+                      style={{ padding:'6px 12px', background: !opsBlocked && money >= 50000 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: !opsBlocked && money >= 50000 ? 'pointer' : 'not-allowed' }}>🧧 发大红包 ¥50,000</button>
+                    <button onClick={()=>onInteract(m.id, 'xiaohongbao')} disabled={opsBlocked || money < 15000}
+                      style={{ padding:'6px 12px', background: !opsBlocked && money >= 15000 ? 'rgba(34,197,94,.3)' : '#334155', border:'1px solid rgba(34,197,94,.4)', borderRadius:8, color:'#86efac', fontSize:11, cursor: !opsBlocked && money >= 15000 ? 'pointer' : 'not-allowed' }}>🧧 小红包 ¥15,000</button>
                   </>
                 )}
                 {m.id === 'kumu_chan_shi' && (
                   <>
-                    <button onClick={()=>onInteract(m.id, 'xianghuo')} disabled={remainingOpsToday <= 0 || money < 8000}
-                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 8000 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: remainingOpsToday > 0 && money >= 8000 ? 'pointer' : 'not-allowed' }}>🪔 捐赠香火 ¥8,000</button>
-                    <button onClick={()=>onInteract(m.id, 'chanzhen')} disabled={remainingOpsToday <= 0}
-                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 ? 'rgba(30,58,138,.5)' : '#334155', border:'1px solid rgba(59,130,246,.4)', borderRadius:8, color:'#93c5fd', fontSize:11, cursor: remainingOpsToday > 0 ? 'pointer' : 'not-allowed' }}>🧘 静坐论禅(免费)</button>
-                    <button onClick={()=>onInteract(m.id, 'fashi')} disabled={remainingOpsToday <= 0 || money < 20000 || insp >= 100}
-                      style={{ padding:'6px 12px', background: remainingOpsToday > 0 && money >= 20000 && insp < 100 ? 'rgba(139,69,19,.6)' : '#334155', border:'1px solid rgba(251,191,36,.5)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: remainingOpsToday > 0 && money >= 20000 && insp < 100 ? 'pointer' : 'not-allowed' }}>📿 请法师做法事 ¥20,000</button>
+                    <button onClick={()=>onInteract(m.id, 'xianghuo')} disabled={opsBlocked || money < 8000}
+                      style={{ padding:'6px 12px', background: !opsBlocked && money >= 8000 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: !opsBlocked && money >= 8000 ? 'pointer' : 'not-allowed' }}>🪔 捐赠香火 ¥8,000</button>
+                    <button onClick={()=>onInteract(m.id, 'chanzhen')} disabled={opsBlocked}
+                      style={{ padding:'6px 12px', background: !opsBlocked ? 'rgba(30,58,138,.5)' : '#334155', border:'1px solid rgba(59,130,246,.4)', borderRadius:8, color:'#93c5fd', fontSize:11, cursor: !opsBlocked ? 'pointer' : 'not-allowed' }}>🧘 静坐论禅(免费)</button>
+                    <button onClick={()=>onInteract(m.id, 'fashi')} disabled={opsBlocked || money < 20000 || insp >= 100}
+                      style={{ padding:'6px 12px', background: !opsBlocked && money >= 20000 && insp < 100 ? 'rgba(139,69,19,.6)' : '#334155', border:'1px solid rgba(251,191,36,.5)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: !opsBlocked && money >= 20000 && insp < 100 ? 'pointer' : 'not-allowed' }}>📿 请法师做法事 ¥20,000</button>
                   </>
                 )}
                 {m.id === 'shouzhuo_huatuo' && (
-                    <button onClick={()=>onInteract(m.id, 'kafei')} disabled={remainingOpsToday <= 0 || money < 5000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'kafei')} disabled={opsBlocked || money < 5000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 5000 && insp < 100 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(180,83,9,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 5000 && insp < 100 ? 'pointer' : 'not-allowed' }}>☕ 请喝咖啡 ¥5,000</button>
                 )}
                 {m.id === 'pingankou_tianwang' && (
-                    <button onClick={()=>onInteract(m.id, 'chabei')} disabled={remainingOpsToday <= 0 || money < 6000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'chabei')} disabled={opsBlocked || money < 6000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 6000 && insp < 100 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: money >= 6000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🫖 送茶具 ¥6,000</button>
                 )}
                 {m.id === 'zhuchuan_dashen' && (
-                    <button onClick={()=>onInteract(m.id, 'xianghuo')} disabled={remainingOpsToday <= 0 || money < 5000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'xianghuo')} disabled={opsBlocked || money < 5000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 5000 && insp < 100 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 5000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🪔 捐赠香火 ¥5,000</button>
                 )}
                 {m.id === 'kuai_shou_laotie' && (
-                    <button onClick={()=>onInteract(m.id, 'kafei')} disabled={remainingOpsToday <= 0 || money < 3000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'kafei')} disabled={opsBlocked || money < 3000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 3000 && insp < 100 ? 'rgba(120,53,15,.5)' : '#334155', border:'1px solid rgba(180,83,9,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 3000 && insp < 100 ? 'pointer' : 'not-allowed' }}>☕ 请喝咖啡 ¥3,000</button>
                 )}
                 {m.id === 'men_sao_ajie' && (
-                    <button onClick={()=>onInteract(m.id, 'chabei')} disabled={remainingOpsToday <= 0 || money < 5000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'chabei')} disabled={opsBlocked || money < 5000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 5000 && insp < 100 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: money >= 5000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🫖 送茶具 ¥5,000</button>
                 )}
                 {m.id === 'hua_lao_wang' && (
-                    <button onClick={()=>onInteract(m.id, 'laopi')} disabled={remainingOpsToday <= 0 || money < 8000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'laopi')} disabled={opsBlocked || money < 8000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 8000 && insp < 100 ? 'rgba(180,83,9,.5)' : '#334155', border:'1px solid rgba(251,191,36,.4)', borderRadius:8, color:'#fde68a', fontSize:11, cursor: money >= 8000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🍺 请喝老啤 ¥8,000</button>
                 )}
                 {m.id === 'du_tu_daobai' && (
-                    <button onClick={()=>onInteract(m.id, 'maotai')} disabled={remainingOpsToday <= 0 || money < 18000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'maotai')} disabled={opsBlocked || money < 18000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 18000 && insp < 100 ? 'rgba(127,29,29,.6)' : '#334155', border:'1px solid rgba(239,68,68,.4)', borderRadius:8, color:'#fecaca', fontSize:11, cursor: money >= 18000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🥃 送茅台 ¥18,000</button>
                 )}
                 {m.id === 'yang_sheng_lishu' && (
-                    <button onClick={()=>onInteract(m.id, 'hongzao')} disabled={remainingOpsToday <= 0 || money < 4000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'hongzao')} disabled={opsBlocked || money < 4000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 4000 && insp < 100 ? 'rgba(185,28,28,.5)' : '#334155', border:'1px solid rgba(248,113,113,.4)', borderRadius:8, color:'#fecaca', fontSize:11, cursor: money >= 4000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🍵 送红枣茶 ¥4,000</button>
                 )}
                 {m.id === 'wanmei_sujie' && (
-                    <button onClick={()=>onInteract(m.id, 'xiangnai')} disabled={remainingOpsToday <= 0 || money < 12000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'xiangnai')} disabled={opsBlocked || money < 12000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 12000 && insp < 100 ? 'rgba(139,92,246,.5)' : '#334155', border:'1px solid rgba(167,139,250,.4)', borderRadius:8, color:'#e9d5ff', fontSize:11, cursor: money >= 12000 && insp < 100 ? 'pointer' : 'not-allowed' }}>💄 送香奈儿 ¥12,000</button>
                 )}
                 {m.id === 'xue_tu_xiaodou' && (
-                    <button onClick={()=>onInteract(m.id, 'keben')} disabled={remainingOpsToday <= 0 || money < 2000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'keben')} disabled={opsBlocked || money < 2000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 2000 && insp < 100 ? 'rgba(34,197,94,.4)' : '#334155', border:'1px solid rgba(34,197,94,.5)', borderRadius:8, color:'#86efac', fontSize:11, cursor: money >= 2000 && insp < 100 ? 'pointer' : 'not-allowed' }}>📚 送刻刀课本 ¥2,000</button>
                 )}
                 {m.id === 'shenmi_ying' && (
-                    <button onClick={()=>onInteract(m.id, 'mima')} disabled={remainingOpsToday <= 0 || money < 15000 || insp >= 100}
+                    <button onClick={()=>onInteract(m.id, 'mima')} disabled={opsBlocked || money < 15000 || insp >= 100}
                     style={{ padding:'6px 12px', background: money >= 15000 && insp < 100 ? 'rgba(30,27,75,.8)' : '#334155', border:'1px solid rgba(139,92,246,.4)', borderRadius:8, color:'#c4b5fd', fontSize:11, cursor: money >= 15000 && insp < 100 ? 'pointer' : 'not-allowed' }}>🔐 给神秘暗号 ¥15,000</button>
                 )}
               </div>
@@ -4268,6 +4485,7 @@ export default function App() {
   const [artistMasterState, setArtistMasterState] = useState(() =>
     Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50, energy: 100, strikeUntilDay: 0, sickUntilDay: 0, level: 1, exp: 0 }]))
   )
+  const [artistInteractCycleCount, setArtistInteractCycleCount] = useState(0)  // 雕刻师互动计数，每3次消耗1行动
   const [kuMuPendingOrders, setKuMuPendingOrders] = useState([])  // [{ stoneId, readyAtDay }]
   const [reputation, setReputation] = useState(10)                             // 人品值，被识破卖假时 -1
   const [carvingStone, setCarvingStone] = useState(null)                       // 待送雕刻的石头
@@ -4278,8 +4496,10 @@ export default function App() {
   const [liveCutProgressData, setLiveCutProgressData] = useState(null)         // 盲拍代客主刀切割进度 { stone, winner, salePrice }
   const [showLiveStreamUpgrade, setShowLiveStreamUpgrade] = useState(false)
   const [showViewerAdmin, setShowViewerAdmin] = useState(false)               // 房管后台（50人成分）
-  const [phoneMessages, setPhoneMessages] = useState([])                       // [{ npcId, msgId, msg, options, isPlayer, reply }]
+  const [phoneMessages, setPhoneMessages] = useState([])                       // [{ id, npcId, msgId, msg, options, isPlayer, reply, bubbleType?, ... }]
   const [showPhone, setShowPhone] = useState(false)
+  const [phoneItemPickerTarget, setPhoneItemPickerTarget] = useState(null)     // { msg, npcId, questMinGrade } 用于 SEND_ITEM
+  const [smugglerPaidDay, setSmugglerPaidDay] = useState(null)                 // 昨日转账给走私客的天数，用于跨日结算
   const [showLaoChen, setShowLaoChen] = useState(false)
   const [livestreamHype, setLivestreamHype] = useState(30)
   const [livestreamActive, setLivestreamActive] = useState(false)
@@ -4288,7 +4508,6 @@ export default function App() {
   const [livestreamHypeFullDays, setLivestreamHypeFullDays] = useState(0)
   const [showGiftModal, setShowGiftModal] = useState(false)
   const [showWorkbenchLog, setShowWorkbenchLog] = useState(false)              // 工作台全部记录
-  const [bangYigeMessage, setBangYigeMessage] = useState(null)                 // 榜一大哥私聊
   // NPC 关系：{ [npcId]: 累计交易次数 }
   const [npcRelations, setNpcRelations] = useState(() =>
     Object.fromEntries(NPC_LIST.map(n => [n.id, 0]))
@@ -4304,7 +4523,7 @@ export default function App() {
   inventoryRef.current = inventory
 
   // 弹窗打开时锁定 body 滚动，防止主界面在移动端被拖动
-  const hasModal = !!(stoneDetail || bargainStone || bargainQte || auctionBidStone || carvingStone || liveSellStone || liveAuctionData || liveSellAccessory || liveAuctionAccessoryData || showUpgrade || showLog || showWorkbenchLog || showCollection || showNpcRoster || npcTarget || npcAccessoryTarget || showPhone || showLaoChen || showGiftModal || pendingEvent || showBlackMarket || gameOverInfo || lastDebtInfo || showLiveStreamUpgrade || showViewerAdmin || bangYigeMessage || showBackpack)
+  const hasModal = !!(stoneDetail || bargainStone || bargainQte || auctionBidStone || carvingStone || liveSellStone || liveAuctionData || liveSellAccessory || liveAuctionAccessoryData || showUpgrade || showLog || showWorkbenchLog || showCollection || showNpcRoster || npcTarget || npcAccessoryTarget || showPhone || showLaoChen || showGiftModal || pendingEvent || showBlackMarket || gameOverInfo || lastDebtInfo || showLiveStreamUpgrade || showViewerAdmin || showBackpack || phoneItemPickerTarget)
   useEffect(() => {
     if (hasModal) {
       const prev = document.body.style.overflow
@@ -4355,7 +4574,28 @@ export default function App() {
     if (Math.random() < PHONE_MSG_CHANCE) {
       const tid = pick(PHONE_MSG_STARTERS)
       const t = PHONE_MSG_POOL.find(x => x.id === tid) || PHONE_MSG_POOL[0]
-      setPhoneMessages(ms => [...ms, { id: Date.now(), npcId: t.npcId, msg: t.msg, isPlayer: false, options: t.options, msgId: t.id }])
+      const entry = { id: Date.now(), npcId: t.npcId, msg: t.msg, isPlayer: false, options: t.options, msgId: t.id, bubbleType: t.bubbleType }
+      if (t.bubbleType === 'redpacket') entry.redpacketAmount = t.redpacketAmount
+      setPhoneMessages(ms => [...ms, entry])
+    }
+
+    if (Math.random() < PHONE_SMUGGLER_CHANCE) {
+      const t = PHONE_MSG_POOL.find(x => x.id === 'smuggler_1')
+      if (t) setPhoneMessages(ms => [...ms, { id: Date.now(), npcId: t.npcId, msg: t.msg, isPlayer: false, options: t.options, msgId: t.id }])
+    }
+
+    // 走私客骗局：跨日结算（昨天转账，今天 40% 被拉黑 / 60% 收到极品原石）
+    if (smugglerPaidDay != null && smugglerPaidDay === currentDay - 1) {
+      setSmugglerPaidDay(null)
+      if (Math.random() < 0.4) {
+        setPhoneMessages(ms => [...ms, { id: Date.now(), npcId: 'smuggler', msg: '消息已发出，但被对方拒收了', isPlayer: false, options: null, msgId: 'smuggler_scammed', bubbleType: 'system' }])
+        addToast('💔 走私客拉黑了你，钱打水漂！')
+      } else {
+        const stone = generateSmugglerPremiumStone()
+        setInventory(inv => [...inv, stone])
+        setPhoneMessages(ms => [...ms, { id: Date.now(), npcId: 'smuggler', msg: '货到了，老地方取。', isPlayer: false, options: null, msgId: 'smuggler_delivered', bubbleType: 'item', itemData: stone }])
+        addToast(`✨ 走私客货到！「${stone.name}」已入库 ¥${Math.round(stone.price * stone.cutResult.multiplier).toLocaleString()}`)
+      }
     }
 
     setLivestreamHypeFullDays(d => {
@@ -4368,7 +4608,7 @@ export default function App() {
       const curFull = livestreamHypeFullDays
       if (curFull + 1 >= LIVESTREAM_CUT.hypeFullDaysForBangYige) {
         bangYigeTriggeredRef.current = true
-        setPhoneMessages(ms => [...ms, { id: Date.now(), npcId: 'bang_yige', msg: '老板，我是你直播间的榜一大哥，最近看中你手里一块好料，开个价，我全收。', isPlayer: false, options: [{ text:'好的，改天聊', affinityDelta:0, nextId:null, reply:'改天聊' }], isBangYige: true }])
+        setPhoneMessages(ms => [...ms, { id: Date.now(), npcId: BANG_YIGE_MSG.npcId, msg: BANG_YIGE_MSG.msg, isPlayer: false, options: BANG_YIGE_MSG.options, msgId: 'bang_yige' }])
       }
     }
 
@@ -4385,7 +4625,7 @@ export default function App() {
     const [dMin, dMax] = raw.duration
     const duration = dMin === dMax ? dMin : rndInt(dMin, dMax)
     setPendingEvent({ ...raw, duration, expiresAtDay: currentDay + duration })
-  }, [currentDay, gameMode, isGameOver, marketLevel, addToast, livestreamHype, livestreamHypeFullDays])
+  }, [currentDay, gameMode, isGameOver, marketLevel, addToast, livestreamHype, livestreamHypeFullDays, smugglerPaidDay])
 
   // 枯木禅师：到期订单自动交付（产出饰品入背包）
   useEffect(() => {
@@ -4519,6 +4759,7 @@ export default function App() {
     setShowLiveStreamUpgrade(false)
     setCarvingMasterRelations(Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, 0])))
     setArtistMasterState(Object.fromEntries(ARTIST_MASTERS.map(m => [m.id, { inspiration: 50, energy: 100, strikeUntilDay: 0, sickUntilDay: 0 }])))
+    setArtistInteractCycleCount(0)
     setKuMuPendingOrders([])
     setReputation(10)
     setPhoneMessages([])
@@ -4530,8 +4771,9 @@ export default function App() {
     setLivestreamHypeFullDays(0)
     setShowGiftModal(false)
     setShowWorkbenchLog(false)
-    setBangYigeMessage(null)
     bangYigeTriggeredRef.current = false
+    setSmugglerPaidDay(null)
+
   }, [])
 
   const backToMenu = useCallback(() => {
@@ -4573,9 +4815,11 @@ export default function App() {
         carvingMasterUsesToday,
         carvingMasterRelations,
         artistMasterState,
+        artistInteractCycleCount,
         kuMuPendingOrders,
         reputation,
         phoneMessages,
+        smugglerPaidDay,
         livestreamHype,
         livestreamHypeFullDays,
         npcRelations,
@@ -4587,7 +4831,7 @@ export default function App() {
     } catch (e) {
       addToast('存档失败：' + (e?.message || '未知错误'))
     }
-  }, [gameMode, debtIndex, money, marketLevel, marketData, marketTab, inventory, collection, jadeAccessories, totalProfit, totalDeals, opCount, daySpeed, activeEffects, equippedRelics, blackMarketPurchasedDays, liveStreamLevel, viewerFavorability, viewerState, carvingMasterUsesToday, carvingMasterRelations, artistMasterState, kuMuPendingOrders, reputation, phoneMessages, livestreamHype, livestreamHypeFullDays, npcRelations, isGameOver, addToast])
+  }, [gameMode, debtIndex, money, marketLevel, marketData, marketTab, inventory, collection, jadeAccessories, totalProfit, totalDeals, opCount, daySpeed, activeEffects, equippedRelics, blackMarketPurchasedDays, liveStreamLevel, viewerFavorability, viewerState, carvingMasterUsesToday, carvingMasterRelations, artistMasterState, artistInteractCycleCount, kuMuPendingOrders, reputation, phoneMessages, smugglerPaidDay, livestreamHype, livestreamHypeFullDays, npcRelations, isGameOver, addToast])
 
   // ── 读档（从 localStorage 恢复）
   const handleLoad = useCallback(() => {
@@ -4624,9 +4868,11 @@ export default function App() {
           return [m.id, { inspiration: cur.inspiration ?? 50, energy: cur.energy ?? 100, strikeUntilDay: cur.strikeUntilDay ?? 0, sickUntilDay: cur.sickUntilDay ?? 0, level: Math.min(5, cur.level ?? 1), exp: cur.exp ?? 0 }]
         }))
       })
+      setArtistInteractCycleCount(data.artistInteractCycleCount ?? 0)
       setKuMuPendingOrders(data.kuMuPendingOrders ?? [])
       setReputation(data.reputation ?? 10)
       setPhoneMessages(data.phoneMessages ?? [])
+      setSmugglerPaidDay(data.smugglerPaidDay ?? null)
       setLivestreamHype(data.livestreamHype ?? 30)
       setLivestreamHypeFullDays(data.livestreamHypeFullDays ?? 0)
       setNpcRelations(data.npcRelations ?? Object.fromEntries(NPC_LIST.map(n => [n.id, 0])))
@@ -4793,20 +5039,33 @@ export default function App() {
   // ── 手机私信回复 ──
   const handlePhoneReply = useCallback((msg, opt) => {
     const npcId = msg.npcId
+    const actionType = opt.actionType || 'TEXT'
+    const amount = opt.amount ?? 0
+
+    if (actionType === 'SEND_ITEM') {
+      setPhoneItemPickerTarget({ msg, npcId, questMinGrade: PHONE_MSG_POOL.find(x => x.id === msg.msgId)?.questMinGrade || 'purple' })
+      return
+    }
+
+    if (actionType === 'PAY_MONEY' && amount > 0) {
+      if (money < amount) { addToast('资金不足'); return }
+      setMoney(m => m - amount)
+      if (opt.isSmuggler) setSmugglerPaidDay(currentDay)
+      addToast(`💸 已转账 ¥${amount.toLocaleString()}`)
+    }
+
     if (npcId && opt.affinityDelta && npcRelations[npcId] !== undefined) {
       setNpcRelations(prev => ({ ...prev, [npcId]: Math.max(0, (prev[npcId] || 0) + opt.affinityDelta) }))
     }
-    const cashOut = (msg.msgId === 'borrow_1' && opt.nextId === 'borrow_1_ok') ? 5000 : 0
-    if (cashOut && money >= cashOut) {
-      setMoney(m => m - cashOut)
-      addToast(`💸 借出 ¥${cashOut.toLocaleString()} 给老王`)
-    }
+
     setPhoneMessages(ms => {
       const next = ms.map(m => m.id === msg.id ? { ...m } : m)
       const idx = next.findIndex(m => m.id === msg.id)
       if (idx >= 0) {
         next[idx] = { ...next[idx], options: null }
         const playerEntry = { id: Date.now(), npcId, msg: opt.reply || '', isPlayer: true, reply: opt.reply }
+        if (actionType === 'PAY_MONEY' && amount > 0) playerEntry.bubbleType = 'transfer'
+        if (actionType === 'PAY_MONEY' && amount > 0) playerEntry.transferAmount = amount
         next.splice(idx + 1, 0, playerEntry)
         if (opt.nextId) {
           const tpl = PHONE_MSG_POOL.find(x => x.id === opt.nextId)
@@ -4815,20 +5074,75 @@ export default function App() {
       }
       return next
     })
-  }, [npcRelations, money, addToast])
+  }, [npcRelations, money, currentDay, addToast])
 
-  // ── 专属雕刻大师：羁绊互动（消耗每日操作次数，大师可升级至Lv5）──
+  // ── 手机红包领取 ──
+  const handlePhoneRedpacketOpen = useCallback((msg) => {
+    if (msg.redpacketOpened) return
+    const [lo, hi] = msg.redpacketAmount || [500, 2000]
+    const amount = rndInt(lo, hi)
+    setMoney(m => m + amount)
+    addToast(`🧧 获得红包 ¥${amount.toLocaleString()}`)
+    const tpl = PHONE_MSG_POOL.find(x => x.id === msg.msgId)
+    const replyText = tpl?.options?.[0]?.reply || '谢谢！'
+    setPhoneMessages(ms => {
+      const next = ms.map(m => m.id === msg.id ? { ...m, options: null, redpacketOpened: true, redpacketAmountReceived: amount } : m)
+      const idx = next.findIndex(m => m.id === msg.id)
+      if (idx >= 0) next.splice(idx + 1, 0, { id: Date.now(), npcId: msg.npcId, msg: replyText, isPlayer: true, reply: replyText })
+      return next
+    })
+  }, [addToast])
+
+  // ── 手机 SEND_ITEM 选择饰品后 ──
+  const handlePhoneSendItemConfirm = useCallback((accessoryId) => {
+    const target = phoneItemPickerTarget
+    if (!target) return
+    const questMinGrade = target.questMinGrade || 'purple'
+    const gradeOrder = ['white', 'green', 'blue', 'purple', 'orange', 'red']
+    const minIdx = gradeOrder.indexOf(questMinGrade)
+    const acc = jadeAccessories.find(a => a.id === accessoryId)
+    if (!acc) return
+    const accGradeIdx = gradeOrder.indexOf(acc.grade || 'white')
+    if (accGradeIdx < minIdx) {
+      addToast('别拿破烂糊弄我！')
+      setPhoneMessages(ms => {
+        const npcId = target.npcId
+        const last = ms.filter(m => m.npcId === npcId).slice(-1)[0]
+        if (!last) return ms
+        return [...ms, { id: Date.now(), npcId, msg: '别拿破烂糊弄我！冰种以上的才有市场。', isPlayer: false, options: null, msgId: 'quest_reject' }]
+      })
+      setPhoneItemPickerTarget(null)
+      return
+    }
+    const payAmount = Math.round((acc.value || 0) * 2)
+    setJadeAccessories(a => a.filter(x => x.id !== accessoryId))
+    setMoney(m => m + payAmount)
+    addToast(`💰 陈师傅打款 ¥${payAmount.toLocaleString()}（2倍收购）`)
+    setPhoneMessages(ms => {
+      const idx = ms.findIndex(m => m.id === target.msg.id)
+      let next = [...ms]
+      if (idx >= 0) next[idx] = { ...next[idx], options: null }
+      next.push({ id: Date.now(), npcId: target.npcId, msg: '', isPlayer: true, bubbleType: 'item', itemData: acc })
+      next.push({ id: Date.now() + 1, npcId: target.npcId, msg: `太好了！这是 ¥${payAmount.toLocaleString()}，收好！`, isPlayer: false, options: null })
+      return next
+    })
+    setPhoneItemPickerTarget(null)
+  }, [phoneItemPickerTarget, jadeAccessories, addToast])
+
+  // ── 专属雕刻大师：羁绊互动（每3次互动消耗1次行动，大师可升级至Lv5）──
   const handleArtistInteract = useCallback((masterId, action) => {
     const master = ARTIST_MASTERS.find(m => m.id === masterId)
     if (!master) return
     const remainingOps = effectiveDaySpeed - (opCount % effectiveDaySpeed)
-    if (remainingOps <= 0) { addToast('今日操作次数已用完'); return }
+    const needConsumeAction = artistInteractCycleCount === 2  // 第3次互动时消耗1行动
+    if (needConsumeAction && remainingOps <= 0) { addToast('今日操作次数已用完'); return }
     const costs = master.interactCosts || {}
     const gains = master.interactGains || {}
     const cost = costs[action] ?? 0
     if (cost > 0 && money < cost) { addToast('资金不足'); return }
     if (cost > 0) setMoney(m => m - cost)
-    tickOp()
+    if (needConsumeAction) tickOp()
+    setArtistInteractCycleCount(c => c === 2 ? 0 : c + 1)
     const baseGain = gains[action] ?? 0
     let leveledUp = false
     let newLevel = 1
@@ -4842,8 +5156,9 @@ export default function App() {
         next.inspiration = 100
         next.sickUntilDay = currentDay + (master.sickDays ?? 3)
       }
-      const expForLevel = [0, 2, 4, 7, 11]
-      const expNeeded = expForLevel[Math.min(5, lv)] ?? 11
+      // 雕刻师最高5级，互动难度递增：Lv1→2需6次 Lv2→3需15次 Lv3→4需30次 Lv4→5需55次（原为2/4/7/11）
+      const expForLevel = [0, 6, 15, 30, 55]
+      const expNeeded = expForLevel[Math.min(5, lv)] ?? 55
       if (next.exp >= expNeeded && lv < 5) {
         next.level = lv + 1
         next.exp = 0
@@ -4857,16 +5172,18 @@ export default function App() {
     const totalGain = baseGain + (lv - 1)
     addToast(`${master.icon} ${master.name}：${msgs[action] || action}，灵感 +${totalGain}`)
     if (leveledUp) setTimeout(() => addToast(`⭐ ${master.name} 升级至 Lv.${newLevel}！雕刻+2%、灵感+1`), 400)
-  }, [money, currentDay, effectiveDaySpeed, opCount, artistMasterState, tickOp, addToast])
+  }, [money, currentDay, effectiveDaySpeed, opCount, artistMasterState, artistInteractCycleCount, tickOp, addToast])
 
-  // ── 直播发福利（送低级料拉满热度）──
+  // ── 直播发福利（送料/饰品，热度按价值档位：几百1-10 几千5-30 几万30-60 十万+60-150）
   const handleLivestreamGift = useCallback((stoneId) => {
     const stone = inventoryRef.current.find(s => s.id === stoneId)
     if (!stone || !stone.cutResult || stone.sold || livestreamActive) return
+    const val = Math.round(stone.price * (stone.cutResult?.multiplier || 1))
+    const gain = LIVESTREAM_CUT.getHypeGainFromValue(val)
     setInventory(inv => inv.filter(s => s.id !== stoneId))
-    setLivestreamHype(h => Math.min(LIVESTREAM_CUT.hypeMax, h + LIVESTREAM_CUT.hypeGiftAdd))
+    setLivestreamHype(h => Math.min(LIVESTREAM_CUT.hypeMax, h + gain))
     setShowGiftModal(false)
-    addToast(`🎁 发福利送料，热度 +${LIVESTREAM_CUT.hypeGiftAdd}`)
+    addToast(`🎁 发福利送料，热度 +${gain}`)
   }, [livestreamActive, addToast])
 
   // ── 直接售出 ──
@@ -5161,8 +5478,11 @@ export default function App() {
     const cutId = stone.cutResult.id
     const lv = Math.min(5, ms.level ?? 1)
     const levelBonus = 1 + (lv - 1) * 0.02  // 每级+2%雕刻效果，最高Lv5
-    const carveVariance = () => rnd(0.9, 1.1)   // 每次加工 ±10% 随机波动
-    const stoneMasterFit = () => rnd(0.85, 1.15)  // 每块石头与每位雕刻师的契合度 ±15%
+    // 等级越低随机性越强：Lv1 carve±20% fit±25%，Lv5 carve±5% fit±10%
+    const carveSpread = 0.4 - (lv - 1) * 0.075
+    const fitSpread = 0.5 - (lv - 1) * 0.075
+    const carveVariance = () => rnd(1 - carveSpread / 2, 1 + carveSpread / 2)
+    const stoneMasterFit = () => rnd(1 - fitSpread / 2, 1 + fitSpread / 2)
 
     if (masterId === 'chu_shi_weng') {
       if (CHU_HATE.includes(cutId)) {
@@ -5408,9 +5728,11 @@ export default function App() {
   const handleLivestreamGiftAccessory = useCallback((accessoryId) => {
     const acc = jadeAccessories.find(a => a.id === accessoryId)
     if (!acc || !livestreamActive) return
+    const val = acc.value || 0
+    const gain = LIVESTREAM_CUT.getHypeGainFromValue(val)
     setJadeAccessories(a => a.filter(x => x.id !== accessoryId))
-    setLivestreamHype(h => Math.min(LIVESTREAM_CUT.hypeMax, h + LIVESTREAM_CUT.hypeGiftAdd))
-    addToast(`🎁 发福利送「${acc.name}」，热度 +${LIVESTREAM_CUT.hypeGiftAdd}`)
+    setLivestreamHype(h => Math.min(LIVESTREAM_CUT.hypeMax, h + gain))
+    addToast(`🎁 发福利送「${acc.name}」，热度 +${gain}`)
   }, [jadeAccessories, livestreamActive, addToast])
 
   const handleClearCut = useCallback(() => {
@@ -5604,7 +5926,12 @@ export default function App() {
           <button onClick={()=>setShowPhone(true)} style={{ background:'linear-gradient(135deg,rgba(7,193,96,.4),rgba(6,173,86,.3))', border:'1px solid rgba(34,197,94,.5)', borderRadius:10, padding:'8px 16px', cursor:'pointer', textAlign:'center', minWidth:72, display:'flex', alignItems:'center', gap:6 }}>
             <span style={{ fontSize:18 }}>📱</span>
             <span style={{ fontSize:12, fontWeight:700, color:'#e2e8f0' }}>私信</span>
-            {phoneMessages.length > 0 && <span style={{ fontSize:9, background:'#ef4444', color:'#fff', padding:'1px 5px', borderRadius:10, marginLeft:2 }}>{phoneMessages.length}</span>}
+            {(() => {
+              const latestByNpc = {}
+              phoneMessages.forEach(m => { latestByNpc[m.npcId] = m })
+              const unreplied = Object.values(latestByNpc).filter(m => !m.isPlayer && m.options?.length).length
+              return unreplied > 0 ? <span style={{ fontSize:9, background:'#ef4444', color:'#fff', padding:'1px 5px', borderRadius:10, marginLeft:2 }}>{unreplied}</span> : null
+            })()}
           </button>
           <button onClick={()=>setShowLaoChen(true)} style={{ background:'linear-gradient(135deg,rgba(22,101,52,.5),rgba(34,197,94,.3))', border:'1px solid rgba(34,197,94,.5)', borderRadius:10, padding:'8px 16px', cursor:'pointer', textAlign:'center', minWidth:72, display:'flex', alignItems:'center', gap:6 }}>
             <span style={{ fontSize:18 }}>🔨</span>
@@ -5865,8 +6192,9 @@ export default function App() {
       {showNpcRoster && <NpcRosterPanel npcRelations={npcRelations} onClose={()=>setShowNpcRoster(false)} />}
       {npcStone      && <NpcModal stone={npcStone} npcRelations={npcRelations} onSellToNpc={handleSellToNpc} onClose={()=>setNpcTarget(null)} npcOfferMult={modifiers.npcOffer} cutValueMult={relicCutValueMult} />}
 
-      {showPhone && <PhonePanel messages={phoneMessages} npcList={[...NPC_LIST, { id:'bang_yige', name:'榜一大哥', icon:'👑' }]} onReply={handlePhoneReply} onClose={()=>setShowPhone(false)} />}
-      {showLaoChen && <ArtistMastersPanel masterState={artistMasterState} money={money} currentDay={currentDay} onInteract={handleArtistInteract} onClose={()=>setShowLaoChen(false)} remainingOpsToday={effectiveDaySpeed - (opCount % effectiveDaySpeed)} daySpeed={effectiveDaySpeed} />}
+      {showPhone && <PhonePanel messages={phoneMessages} npcList={[...NPC_LIST, BANG_YIGE_NPC, SMUGGLER_NPC]} onReply={handlePhoneReply} onRedpacketOpen={handlePhoneRedpacketOpen} onClose={()=>setShowPhone(false)} />}
+      {phoneItemPickerTarget && <PhoneItemPickerModal target={phoneItemPickerTarget} jadeAccessories={jadeAccessories} onSelect={handlePhoneSendItemConfirm} onClose={()=>setPhoneItemPickerTarget(null)} />}
+      {showLaoChen && <ArtistMastersPanel masterState={artistMasterState} money={money} currentDay={currentDay} onInteract={handleArtistInteract} onClose={()=>setShowLaoChen(false)} remainingOpsToday={effectiveDaySpeed - (opCount % effectiveDaySpeed)} daySpeed={effectiveDaySpeed} artistInteractCycleCount={artistInteractCycleCount} />}
       {livestreamActive && <LiveStreamBarrageLayer barrages={livestreamBarrages} />}
       {cutResultFloat && <CutResultFloat float={cutResultFloat} cutResult={cutResultFloat.result} />}
       {showGiftModal && (
